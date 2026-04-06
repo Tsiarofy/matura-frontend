@@ -1,25 +1,29 @@
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+} from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface RadioGroupChoiceCardProps {
-  value: string
-  onChange: (value: string) => void  // ← reçoit les props de Controller
+  value: string;
+  onChange: (value: string) => void; // ← reçoit les props de Controller
 }
 
-export function RadioGroupChoiceCard({value,onChange}: RadioGroupChoiceCardProps) {
+export function RadioGroupChoiceCard({
+  value,
+  onChange,
+}: RadioGroupChoiceCardProps) {
   return (
-    <RadioGroup 
-    value={value}          // ← valeur contrôlée
-    onValueChange={onChange} 
-    defaultValue="entrepreneur" className="md:w-50 w-full grid gap-4">
-      <FieldLabel  htmlFor="entrepreneur-register">
-        <Field  orientation="horizontal">
+    <RadioGroup
+      value={value} // ← valeur contrôlée
+      onValueChange={onChange}
+      defaultValue="entrepreneur"
+      className="md:w-50 w-full grid gap-4"
+    >
+      <FieldLabel htmlFor="entrepreneur-register">
+        <Field orientation="horizontal">
           <RadioGroupItem value="entrepreneur" id="entrepreneur-register" />
           <FieldContent>
             <FieldTitle>Entrepreneur</FieldTitle>
@@ -27,7 +31,6 @@ export function RadioGroupChoiceCard({value,onChange}: RadioGroupChoiceCardProps
               créer et innover
             </FieldDescription> */}
           </FieldContent>
-
         </Field>
       </FieldLabel>
       <FieldLabel htmlFor="mentor-register">
@@ -50,5 +53,5 @@ export function RadioGroupChoiceCard({value,onChange}: RadioGroupChoiceCardProps
         </Field>
       </FieldLabel>
     </RadioGroup>
-  )
+  );
 }

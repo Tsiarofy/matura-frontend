@@ -1,19 +1,11 @@
-// Login.tsx
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { registerSchema, type RegisterFormData } from "@schemas/registerSchema"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { createFileRoute } from "@tanstack/react-router"
-// import {
-//   Form,
-//   FormControl,
-//   FormDescription,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage
-// } from "@components/ui/form"
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  registerSchema,
+  type RegisterFormData,
+} from "@/schemas/registerSchema";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import * as axios from "axios";
 import {
   Card,
@@ -21,8 +13,8 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
-} from "@/components/ui/card"
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Field,
   FieldGroup,
@@ -34,16 +26,11 @@ import {
   FieldContent,
   FieldTitle,
 } from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {} from "axios"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 
-export const Route = createFileRoute('/login')({
-  component: Login,
-})
-
-export default function Login() {
-
+export default function LoginPage() {
+  
   const axiosInstance = axios.default.create({
     baseURL: "http://localhost:3000/api",
     headers: {
@@ -52,39 +39,48 @@ export default function Login() {
   });
 
   const form = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema), // ← validation automatique
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       nom: "",
       password: "",
       email: "",
       role: "entrepreneur",
-    }
-  })
+    },
+  });
 
-  // Cette fonction s'exécute SEULEMENT si le formulaire est valide
   const onSubmit = async (data: RegisterFormData) => {
-        try {
-        console.log(data)
-        const response = await axiosInstance.post("user/register", data)
-        console.log(response.data)
-        form.reset() // Réinitialise le formulaire après une soumission réussie
-        }catch (error) {
-          console.error("Erreur lors de l'inscription :", error)
-        }
+    try {
+      console.log(data);
+      const response = await axiosInstance.post("user/register", data);
+      console.log(response.data);
+      form.reset();
+    } catch (error) {
+      console.error("Erreur lors de l'inscription :", error);
+    }
+  };
 
-  }
   const roles = [
-    { id: "entrepreneur", title: "Entrepreneur", description: "Inscrire entantqu'entrepreneur" },
+    {
+      id: "entrepreneur",
+      title: "Entrepreneur",
+      description: "Inscrire entantqu'entrepreneur",
+    },
     { id: "mentor", title: "Mentor", description: "Inscrire entantque mentor" },
-    { id: "investisseur", title: "Investisseur", description: "Inscrire entantqu'investisseur" },
-  ]
+    {
+      id: "investisseur",
+      title: "Investisseur",
+      description: "Inscrire entantqu'investisseur",
+    },
+  ];
 
   return (
     <div className="flex  items-center justify-center p-10">
       <Card className="w-100 h-2xl shadow-2xs">
         <CardHeader>
           <CardTitle>Maturproj</CardTitle>
-          <CardDescription>Une plateforme de maturation de projet</CardDescription>
+          <CardDescription>
+            Une plateforme de maturation de projet
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -105,8 +101,7 @@ export default function Login() {
                       <FieldError errors={[fieldState.error]} />
                     )}
                   </Field>
-                )
-                }
+                )}
               />
               <Controller
                 name="email"
@@ -124,8 +119,7 @@ export default function Login() {
                       <FieldError errors={[fieldState.error]} />
                     )}
                   </Field>
-                )
-                }
+                )}
               />
               <Controller
                 name="password"
@@ -134,6 +128,7 @@ export default function Login() {
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>Mot de passe</FieldLabel>
                     <Input
+                      type="password"
                       {...field}
                       id="form-rhf-demo-title"
                       aria-invalid={fieldState.invalid}
@@ -143,8 +138,7 @@ export default function Login() {
                       <FieldError errors={[fieldState.error]} />
                     )}
                   </Field>
-                )
-                }
+                )}
               />
               <Controller
                 name="role"
@@ -153,7 +147,8 @@ export default function Login() {
                   <FieldSet>
                     <FieldLegend>S'insrire entant que</FieldLegend>
                     <FieldDescription>
-                      Choisissez votre rôle pour accéder aux fonctionnalités adaptées à vos besoins.
+                      Choisissez votre rôle pour accéder aux fonctionnalités
+                      adaptées à vos besoins.
                     </FieldDescription>
                     <RadioGroup
                       name={field.name}
@@ -161,8 +156,15 @@ export default function Login() {
                       onValueChange={field.onChange}
                     >
                       {roles.map((role) => (
-                        <FieldLabel key={role.id} htmlFor={`form-rhf-radiogroup-${role.id}`}>
-                          <Field orientation="horizontal" className="flex" data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          key={role.id}
+                          htmlFor={`form-rhf-radiogroup-${role.id}`}
+                        >
+                          <Field
+                            orientation="horizontal"
+                            className="flex"
+                            data-invalid={fieldState.invalid}
+                          >
                             <RadioGroupItem
                               value={role.id}
                               id={`form-rhf-radiogroup-${role.id}`}
@@ -170,14 +172,17 @@ export default function Login() {
                             />
                             <FieldContent className="ml-2">
                               <FieldTitle>{role.title}</FieldTitle>
-                              <FieldDescription>{role.description}</FieldDescription>
+                              <FieldDescription>
+                                {role.description}
+                              </FieldDescription>
                             </FieldContent>
-
                           </Field>
                         </FieldLabel>
                       ))}
                     </RadioGroup>
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
                   </FieldSet>
                 )}
               />
@@ -186,7 +191,13 @@ export default function Login() {
         </CardContent>
         <CardFooter>
           <Field orientation="horizontal">
-            <Button type="button" variant="outline" onClick={() => { form.reset() }}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                form.reset();
+              }}
+            >
               Reset
             </Button>
             <Button type="submit" form="form-rhf-demo">
@@ -195,7 +206,6 @@ export default function Login() {
           </Field>
         </CardFooter>
       </Card>
-
     </div>
-  )
+  );
 }

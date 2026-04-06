@@ -2,14 +2,9 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group"
-import {
-  CheckIcon,
-  UserPen,
-  MailIcon,
-  LockIcon
-} from "lucide-react"
-import { Button } from "@components/ui/button"
+} from "@/components/ui/input-group";
+import { CheckIcon, UserPen, MailIcon, LockIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function InputGroupIcon() {
   return (
@@ -49,5 +44,5 @@ export function InputGroupIcon() {
 
       <Button className="bg-green-600"> Valider </Button>
     </div>
-  )
+  );
 }

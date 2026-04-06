@@ -1,11 +1,8 @@
-import { createFileRoute, Link, Outlet } from '@tanstack/react-router'
+import { Link, Outlet} from '@tanstack/react-router'
 import {HomeIcon,LucideUser} from "lucide-react"
 
-export const Route = createFileRoute('/_tabs')({
-  component: TabsLayout,
-})
 
-function TabsLayout() {
+export default function DashboardLayout() {
   return (
     <div className="flex flex-row h-screen">
       {/* 1. ZONE DE CONTENU (L'écran de l'onglet) */}
@@ -13,7 +10,7 @@ function TabsLayout() {
       <nav className="w-64 h-full bg-white text-gray-300  flex flex-col p-4  border-r gap-6">
         
         <Link 
-          to="/" 
+          to="/dashboard" 
           // 'activeProps' permet d'ajouter des styles automatiquement 
           // quand on est sur cette page (comme Expo Router)
           activeProps={{ className: 'text-blue-600 font-bold' }}
@@ -26,7 +23,7 @@ function TabsLayout() {
         </Link>
 
         <Link 
-          to="/profile" 
+          to="/profil" 
           activeProps={{ className: 'text-blue-600 font-bold' }}
           className="text-gray-500 flex flex-col items-center text-sm"
         >
@@ -36,7 +33,7 @@ function TabsLayout() {
         </div>
         </Link>
       </nav>
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className=" bg-amber-600 flex-1 overflow-y-auto p-4">
         {/* L'Outlet est indispensable : c'est ici que s'afficheront 
             index.tsx ou profile.tsx */}
         <Outlet />

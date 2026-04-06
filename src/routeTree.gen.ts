@@ -8,134 +8,178 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as TabsRouteImport } from './routes/_tabs'
-import { Route as TabsIndexRouteImport } from './routes/_tabs/index'
-import { Route as TabsProfileRouteImport } from './routes/_tabs/profile'
+import { createFileRoute } from '@tanstack/react-router'
 
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+import { Route as rootRouteImport } from './routes/__root'
+
+const AndexLazyRouteImport = createFileRoute('/andex')()
+const dashboardLayoutLazyRouteImport = createFileRoute('/(dashboard)/_layout')()
+const authRegisterLazyRouteImport = createFileRoute('/(auth)/register')()
+const authLoginLazyRouteImport = createFileRoute('/(auth)/login')()
+const dashboardLayoutProfilLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/profil',
+)()
+const dashboardLayoutDashboardLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/dashboard',
+)()
+
+const AndexLazyRoute = AndexLazyRouteImport.update({
+  id: '/andex',
+  path: '/andex',
   getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TabsRoute = TabsRouteImport.update({
-  id: '/_tabs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TabsIndexRoute = TabsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TabsRoute,
-} as any)
-const TabsProfileRoute = TabsProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => TabsRoute,
-} as any)
+} as any).lazy(() => import('./routes/andex.lazy').then((d) => d.Route))
+const dashboardLayoutLazyRoute = dashboardLayoutLazyRouteImport
+  .update({
+    id: '/(dashboard)/_layout',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+  .lazy(() => import('./routes/(dashboard)/_layout.lazy').then((d) => d.Route))
+const authRegisterLazyRoute = authRegisterLazyRouteImport
+  .update({
+    id: '/(auth)/register',
+    path: '/register',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+  .lazy(() => import('./routes/(auth)/register.lazy').then((d) => d.Route))
+const authLoginLazyRoute = authLoginLazyRouteImport
+  .update({
+    id: '/(auth)/login',
+    path: '/login',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+  .lazy(() => import('./routes/(auth)/login.lazy').then((d) => d.Route))
+const dashboardLayoutProfilLazyRoute = dashboardLayoutProfilLazyRouteImport
+  .update({
+    id: '/profil',
+    path: '/profil',
+    getParentRoute: () => dashboardLayoutLazyRoute,
+  } as any)
+  .lazy(() =>
+    import('./routes/(dashboard)/_layout/profil.lazy').then((d) => d.Route),
+  )
+const dashboardLayoutDashboardLazyRoute =
+  dashboardLayoutDashboardLazyRouteImport
+    .update({
+      id: '/dashboard',
+      path: '/dashboard',
+      getParentRoute: () => dashboardLayoutLazyRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/dashboard.lazy').then(
+        (d) => d.Route,
+      ),
+    )
 
 export interface FileRoutesByFullPath {
-  '/': typeof TabsIndexRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/profile': typeof TabsProfileRoute
+  '/andex': typeof AndexLazyRoute
+  '/login': typeof authLoginLazyRoute
+  '/register': typeof authRegisterLazyRoute
+  '/dashboard': typeof dashboardLayoutDashboardLazyRoute
+  '/profil': typeof dashboardLayoutProfilLazyRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/profile': typeof TabsProfileRoute
-  '/': typeof TabsIndexRoute
+  '/andex': typeof AndexLazyRoute
+  '/login': typeof authLoginLazyRoute
+  '/register': typeof authRegisterLazyRoute
+  '/dashboard': typeof dashboardLayoutDashboardLazyRoute
+  '/profil': typeof dashboardLayoutProfilLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_tabs': typeof TabsRouteWithChildren
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/_tabs/profile': typeof TabsProfileRoute
-  '/_tabs/': typeof TabsIndexRoute
+  '/andex': typeof AndexLazyRoute
+  '/(auth)/login': typeof authLoginLazyRoute
+  '/(auth)/register': typeof authRegisterLazyRoute
+  '/(dashboard)/_layout': typeof dashboardLayoutLazyRouteWithChildren
+  '/(dashboard)/_layout/dashboard': typeof dashboardLayoutDashboardLazyRoute
+  '/(dashboard)/_layout/profil': typeof dashboardLayoutProfilLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/profile'
+  fullPaths: '/andex' | '/login' | '/register' | '/dashboard' | '/profil'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/profile' | '/'
+  to: '/andex' | '/login' | '/register' | '/dashboard' | '/profil'
   id:
     | '__root__'
-    | '/_tabs'
-    | '/login'
-    | '/register'
-    | '/_tabs/profile'
-    | '/_tabs/'
+    | '/andex'
+    | '/(auth)/login'
+    | '/(auth)/register'
+    | '/(dashboard)/_layout'
+    | '/(dashboard)/_layout/dashboard'
+    | '/(dashboard)/_layout/profil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  TabsRoute: typeof TabsRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
+  AndexLazyRoute: typeof AndexLazyRoute
+  authLoginLazyRoute: typeof authLoginLazyRoute
+  authRegisterLazyRoute: typeof authRegisterLazyRoute
+  dashboardLayoutLazyRoute: typeof dashboardLayoutLazyRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
+    '/andex': {
+      id: '/andex'
+      path: '/andex'
+      fullPath: '/andex'
+      preLoaderRoute: typeof AndexLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(dashboard)/_layout': {
+      id: '/(dashboard)/_layout'
+      path: '/'
+      fullPath: ''
+      preLoaderRoute: typeof dashboardLayoutLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/register': {
+      id: '/(auth)/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
+      preLoaderRoute: typeof authRegisterLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
+    '/(auth)/login': {
+      id: '/(auth)/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+      preLoaderRoute: typeof authLoginLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_tabs': {
-      id: '/_tabs'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof TabsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/(dashboard)/_layout/profil': {
+      id: '/(dashboard)/_layout/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof dashboardLayoutProfilLazyRouteImport
+      parentRoute: typeof dashboardLayoutLazyRoute
     }
-    '/_tabs/': {
-      id: '/_tabs/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof TabsIndexRouteImport
-      parentRoute: typeof TabsRoute
-    }
-    '/_tabs/profile': {
-      id: '/_tabs/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof TabsProfileRouteImport
-      parentRoute: typeof TabsRoute
+    '/(dashboard)/_layout/dashboard': {
+      id: '/(dashboard)/_layout/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof dashboardLayoutDashboardLazyRouteImport
+      parentRoute: typeof dashboardLayoutLazyRoute
     }
   }
 }
 
-interface TabsRouteChildren {
-  TabsProfileRoute: typeof TabsProfileRoute
-  TabsIndexRoute: typeof TabsIndexRoute
+interface dashboardLayoutLazyRouteChildren {
+  dashboardLayoutDashboardLazyRoute: typeof dashboardLayoutDashboardLazyRoute
+  dashboardLayoutProfilLazyRoute: typeof dashboardLayoutProfilLazyRoute
 }
 
-const TabsRouteChildren: TabsRouteChildren = {
-  TabsProfileRoute: TabsProfileRoute,
-  TabsIndexRoute: TabsIndexRoute,
+const dashboardLayoutLazyRouteChildren: dashboardLayoutLazyRouteChildren = {
+  dashboardLayoutDashboardLazyRoute: dashboardLayoutDashboardLazyRoute,
+  dashboardLayoutProfilLazyRoute: dashboardLayoutProfilLazyRoute,
 }
 
-const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
+const dashboardLayoutLazyRouteWithChildren =
+  dashboardLayoutLazyRoute._addFileChildren(dashboardLayoutLazyRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  TabsRoute: TabsRouteWithChildren,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
+  AndexLazyRoute: AndexLazyRoute,
+  authLoginLazyRoute: authLoginLazyRoute,
+  authRegisterLazyRoute: authRegisterLazyRoute,
+  dashboardLayoutLazyRoute: dashboardLayoutLazyRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

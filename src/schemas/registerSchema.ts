@@ -6,9 +6,7 @@ export const registerSchema = z.object({
   prenom : z.string().min(2, "Le prénom doit contenir au moins 2 caractères"),
   email: z.string().email("Email invalide"),
   password: z.string().min(8, "Minimum 8 caractères"),
-  role: z.enum(["entrepreneur", "mentor", "investisseur"], {
-    required_error: "Veuillez choisir un rôle",
-  }),
+  role: z.enum(["entrepreneur", "mentor", "investisseur"]),
  region:z.string().min(2, "La région doit contenir au moins 2 caractères"),
  telephone: z.string().min(10, "Le numéro de téléphone doit contenir au moins 10 chiffres"),
 })
