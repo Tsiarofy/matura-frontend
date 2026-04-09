@@ -29,10 +29,11 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 
+
 export default function LoginPage() {
   
   const axiosInstance = axios.default.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL:import.meta.env.VITE_BASE_URL,
     headers: {
       "Content-Type": "application/json",
     },
