@@ -1,12 +1,13 @@
-import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  registerSchema,
-  type RegisterFormData,
-} from "@/schemas/registerSchema";
+  type ConnexionDto,
+  ConnexionSchema,
+  type AuthResponse,
+} from "@matura/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import * as axios from "axios";
 import {
   Card,
   CardContent,
@@ -16,197 +17,219 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  Field,
-  FieldGroup,
-  FieldLabel,
-  FieldError,
-  FieldSet,
-  FieldLegend,
-  FieldDescription,
-  FieldContent,
-  FieldTitle,
-} from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { apiClient } from "@/lib/apiClient";
+import { authStore } from "@/stores/authStore";
+import { Sprout, Users, TrendingUp, Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
-  
-  const axiosInstance = axios.default.create({
-    baseURL:import.meta.env.VITE_BASE_URL,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const store = authStore();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const form = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<ConnexionDto>({
+    resolver: zodResolver(ConnexionSchema),
     defaultValues: {
-      nom: "",
-      password: "",
       email: "",
-      role: "entrepreneur",
+      password: "",
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (dto: ConnexionDto) => {
+    setIsLoading(true);
+    setError(null);
     try {
-      console.log(data);
-      const response = await axiosInstance.post("user/register", data);
-      console.log(response.data);
+      const { data }: { data: AuthResponse } = await apiClient.post(
+        "auth/connexion",
+        dto,
+      );
+      await store.setAuth(data.token, data.utilisateur);
+      navigate({ to: "/dashboard" });
       form.reset();
-    } catch (error) {
-      console.error("Erreur lors de l'inscription :", error);
+    } catch (err: any) {
+      console.error("Erreur de connexion :", err);
+      setError(
+        err.response?.data?.message || 
+        "Une erreur est survenue lors de la connexion. Veuillez vérifier vos identifiants."
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const roles = [
-    {
-      id: "entrepreneur",
-      title: "Entrepreneur",
-      description: "Inscrire entantqu'entrepreneur",
-    },
-    { id: "mentor", title: "Mentor", description: "Inscrire entantque mentor" },
-    {
-      id: "investisseur",
-      title: "Investisseur",
-      description: "Inscrire entantqu'investisseur",
-    },
-  ];
-
   return (
-    <div className="flex  items-center justify-center p-10">
-      <Card className="w-100 h-2xl shadow-2xs">
-        <CardHeader>
-          <CardTitle>Maturproj</CardTitle>
-          <CardDescription>
-            Une plateforme de maturation de projet
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
-              <Controller
-                name="nom"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Nom</FieldLabel>
-                    <Input
-                      {...field}
-                      id="form-rhf-demo-title"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Entrer le nom"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="email"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Email</FieldLabel>
-                    <Input
-                      {...field}
-                      id="form-rhf-demo-title"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Entrer votre mail"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Mot de passe</FieldLabel>
-                    <Input
-                      type="password"
-                      {...field}
-                      id="form-rhf-demo-title"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Entrer le mot de passe"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="role"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <FieldSet>
-                    <FieldLegend>S'insrire entant que</FieldLegend>
-                    <FieldDescription>
-                      Choisissez votre rôle pour accéder aux fonctionnalités
-                      adaptées à vos besoins.
-                    </FieldDescription>
-                    <RadioGroup
-                      name={field.name}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      {roles.map((role) => (
-                        <FieldLabel
-                          key={role.id}
-                          htmlFor={`form-rhf-radiogroup-${role.id}`}
+    <div className="flex min-h-screen flex-col md:flex-row bg-zinc-50">
+      {/* Left Panel – Branding */}
+      <div className="flex-1 flex flex-col justify-between p-6 md:p-10 lg:p-12 border-b md:border-b-0 md:border-r border-zinc-200">
+        <div>
+          <div className="flex items-center gap-2 mb-6">
+            <div className="h-8 w-8 rounded-md bg-green-600 flex items-center justify-center">
+              <span className="text-white text-xs font-medium">M</span>
+            </div>
+            <span className="text-lg font-medium text-zinc-900">MaturaProj</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-medium text-zinc-900 mb-3">
+            Structurez votre projet,<br />trouvez des financements.
+          </h1>
+          <p className="text-sm text-zinc-500 max-w-md">
+            La plateforme qui guide les entrepreneurs malgaches de l'idée à la
+            réalisation, avec l'accompagnement de mentors et d'investisseurs.
+          </p>
+        </div>
+
+        {/* Features / Stats */}
+        <div className="mt-8 space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-green-50 rounded-md border border-green-200">
+              <Sprout className="h-4 w-4 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-zinc-800">7 stades de maturation</p>
+              <p className="text-xs text-zinc-500">Un parcours structuré, validé par des experts</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-green-50 rounded-md border border-green-200">
+              <Users className="h-4 w-4 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-zinc-800">Mentors qualifiés</p>
+              <p className="text-xs text-zinc-500">Bénéficiez de retours d'expérience terrain</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-green-50 rounded-md border border-green-200">
+              <TrendingUp className="h-4 w-4 text-green-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-zinc-800">Accès aux financements</p>
+              <p className="text-xs text-zinc-500">Subventions, prêts d'honneur, capital</p>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-xs text-zinc-400 mt-8">
+          © 2026 MaturaProj — Tous droits réservés
+        </p>
+      </div>
+
+      {/* Right Panel – Login Form */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 lg:p-12">
+        <Card className="w-full max-w-md border-0.5 border-zinc-200 shadow-none bg-white">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-medium text-zinc-900">Connexion</CardTitle>
+            <CardDescription className="text-sm text-zinc-500">
+              Accédez à votre espace personnel
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {error && (
+              <div className="mb-4 p-3 rounded-md bg-red-50 border border-red-100 flex items-start gap-2 text-red-800 text-xs animate-in fade-in slide-in-from-top-1">
+                <AlertCircle className="h-4 w-4 text-red-600 shrink-0" />
+                <p>{error}</p>
+              </div>
+            )}
+            <Form {...form}>
+              <form id="login-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="vous@exemple.mg"
+                          className="h-9 text-sm"
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <FormLabel>Mot de passe</FormLabel>
+                        <Link
+                          to="/mot-de-passe-oublie"
+                          className="text-xs text-green-600 hover:underline"
                         >
-                          <Field
-                            orientation="horizontal"
-                            className="flex"
-                            data-invalid={fieldState.invalid}
+                          Mot de passe oublié ?
+                        </Link>
+                      </div>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            {...field}
+                            type={showPassword ? "text" : "password"}
+                            placeholder="••••••••"
+                            className="h-9 text-sm pr-10"
+                            disabled={isLoading}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
                           >
-                            <RadioGroupItem
-                              value={role.id}
-                              id={`form-rhf-radiogroup-${role.id}`}
-                              aria-invalid={fieldState.invalid}
-                            />
-                            <FieldContent className="ml-2">
-                              <FieldTitle>{role.title}</FieldTitle>
-                              <FieldDescription>
-                                {role.description}
-                              </FieldDescription>
-                            </FieldContent>
-                          </Field>
-                        </FieldLabel>
-                      ))}
-                    </RadioGroup>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </FieldSet>
-                )}
-              />
-            </FieldGroup>
-          </form>
-        </CardContent>
-        <CardFooter>
-          <Field orientation="horizontal">
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
             <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                form.reset();
-              }}
+              type="submit"
+              form="login-form"
+              className="w-full bg-green-600 hover:bg-green-700 text-white h-9 text-sm font-medium"
+              disabled={isLoading}
             >
-              Reset
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Connexion en cours...
+                </>
+              ) : (
+                "Se connecter"
+              )}
             </Button>
-            <Button type="submit" form="form-rhf-demo">
-              Submit
-            </Button>
-          </Field>
-        </CardFooter>
-      </Card>
+            <p className="text-sm text-zinc-500 text-center">
+              Pas encore de compte ?{" "}
+              <Link
+                to="/register"
+                className="text-green-600 font-medium hover:underline"
+              >
+                Créer un compte
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }

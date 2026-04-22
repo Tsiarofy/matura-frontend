@@ -1,15 +1,14 @@
 // src/routes/(auth)/register.page.tsx
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import {
-  registerSchema,
-  type RegisterFormData,
-} from "@/schemas/registerSchema";
-
+  InscriptionSchema,
+  type InscriptionDto,
+  type AuthResponse,
+} from "@matura/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";   // ← mieux que * as axios
-
 import {
   Card,
   CardContent,
@@ -18,198 +17,253 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import {
   Field,
   FieldGroup,
   FieldLabel,
   FieldError,
+  FieldDescription,
   FieldSet,
   FieldLegend,
-  FieldDescription,
-  FieldContent,
-  FieldTitle,
 } from "@/components/ui/field";
-
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useNavigate, Link } from "@tanstack/react-router";
+import { apiClient } from "@/lib/apiClient";
+import { authStore } from "@/stores/authStore";
+import { Sprout, Users, Briefcase } from "lucide-react";
 
 export default function RegisterPage() {
-  const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
-    headers: { "Content-Type": "application/json" },
-  });
+  const navigate = useNavigate();
+  const store = authStore();
 
-  const form = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  const form = useForm<InscriptionDto>({
+    resolver: zodResolver(InscriptionSchema),
     defaultValues: {
       nom: "",
       prenom: "",
-      password: "",
       email: "",
-      telephone: "",
-      role: "entrepreneur",
-      region: "Antsirabe",
+      password: "",
+      role: "ENTREPRENEUR",
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (formData: InscriptionDto) => {
     try {
-      console.log("Envoi des données :", data);
-      const response = await axiosInstance.post("/auth/signup", data);  // ← corrigé "singup" → "signup"
-      console.log("Réponse :", response.data);
+      const { data }: { data: AuthResponse } = await apiClient.post(
+        "/auth/inscription",
+        formData,
+      );
+      store.setAuth(data.token, data.utilisateur);
       form.reset();
-      // Tu peux ajouter ici une redirection vers login ou dashboard
+      navigate({ to: "/dashboard" });
     } catch (error) {
-      console.error("Erreur d'inscription :", error);
-      // Gère l'erreur (toast, message, etc.)
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Erreur d'inscription :",
+          error.response?.data?.message || error.message,
+        );
+      } else {
+        console.error("Une erreur inattendue est survenue", error);
+      }
     }
   };
 
-  const roles = [
-    { id: "entrepreneur", title: "Entrepreneur", description: "Inscrire en tant qu'entrepreneur" },
-    { id: "mentor", title: "Mentor", description: "Inscrire en tant que mentor" },
-    { id: "investisseur", title: "Investisseur", description: "Inscrire en tant qu'investisseur" },
+  const rolesDisponibles = [
+    {
+      id: "ENTREPRENEUR",
+      label: "Entrepreneur",
+      desc: "Structurez votre projet et accédez aux financements.",
+      icon: Sprout,
+    },
+    {
+      id: "MENTOR",
+      label: "Mentor",
+      desc: "Accompagnez des porteurs de projet avec votre expertise.",
+      icon: Users,
+    },
+    {
+      id: "INVESTISSEUR",
+      label: "Investisseur",
+      desc: "Découvrez des projets innovants à financer.",
+      icon: Briefcase,
+    },
   ];
 
   return (
-    <div className="flex items-center justify-center p-10 min-h-screen  bg-salte-800">
-      <Card className="w-full max-w-2xl shadow-xl">
-        <CardHeader className="bg-blue-500 justify-center">
-          <CardTitle className="text-3xl">Maturproj</CardTitle>
-          <CardDescription>Une plateforme de maturation de projet</CardDescription>
-        </CardHeader>
+    <div className="flex min-h-screen flex-col md:flex-row bg-zinc-50">
+      {/* Left Panel – Branding (identique à login, cohérence) */}
+      <div className="flex-1 flex flex-col justify-between p-6 md:p-10 lg:p-12 border-b md:border-b-0 md:border-r border-zinc-200">
+        <div>
+          <div className="flex items-center gap-2 mb-6">
+            <div className="h-8 w-8 rounded-md bg-green-600 flex items-center justify-center">
+              <span className="text-white text-xs font-medium">M</span>
+            </div>
+            <span className="text-lg font-medium text-zinc-900">MaturaProj</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-medium text-zinc-900 mb-3">
+            Rejoignez l'écosystème<br />de l'innovation malgache.
+          </h1>
+          <p className="text-sm text-zinc-500 max-w-md">
+            Créez votre compte en quelques secondes et commencez à donner vie à
+            vos idées.
+          </p>
+        </div>
 
-        <CardContent>
-          <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
-              {/* Nom */}
-              <Controller
-                name="nom"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Nom</FieldLabel>
-                    <Input {...field} placeholder="Votre nom" />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
+        <div className="mt-8 space-y-4">
+          {rolesDisponibles.map((role) => {
+            const Icon = role.icon;
+            return (
+              <div key={role.id} className="flex items-start gap-3">
+                <div className="p-2 bg-green-50 rounded-md border border-green-200">
+                  <Icon className="h-4 w-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-zinc-800">{role.label}</p>
+                  <p className="text-xs text-zinc-500">{role.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-              {/* Prénom */}
-              <Controller
-                name="prenom"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Prénom</FieldLabel>
-                    <Input {...field} placeholder="Votre prénom" />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
+        <p className="text-xs text-zinc-400 mt-8">
+          © 2026 MaturaProj — Tous droits réservés
+        </p>
+      </div>
 
-              {/* Email */}
-              <Controller
-                name="email"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Email</FieldLabel>
-                    <Input type="email" {...field} placeholder="exemple@email.com" />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
+      {/* Right Panel – Registration Form */}
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 lg:p-12">
+        <Card className="w-full max-w-xl border-0.5 border-zinc-200 shadow-none bg-white">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-medium text-zinc-900">
+              Créer un compte
+            </CardTitle>
+            <CardDescription className="text-sm text-zinc-500">
+              Choisissez votre profil et commencez l'aventure
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldGroup>
+                <div className="grid grid-cols-2 gap-4">
+                  <Controller
+                    name="nom"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel>Nom</FieldLabel>
+                        <Input {...field} placeholder="Rakoto" className="h-9 text-sm" />
+                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="prenom"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel>Prénom</FieldLabel>
+                        <Input {...field} placeholder="Jean" className="h-9 text-sm" />
+                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                      </Field>
+                    )}
+                  />
+                </div>
 
-              {/* Mot de passe */}
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Mot de passe</FieldLabel>
-                    <Input type="password" {...field} placeholder="••••••••" />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Email professionnel</FieldLabel>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="jean.rakoto@exemple.mg"
+                        className="h-9 text-sm"
+                      />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </Field>
+                  )}
+                />
 
-              {/* Région */}
-              <Controller
-                name="region"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Région</FieldLabel>
-                    <Input {...field} placeholder="Antsirabe" />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Mot de passe</FieldLabel>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="••••••••"
+                        className="h-9 text-sm"
+                      />
+                      <FieldDescription className="text-xs">
+                        8 caractères min. (1 majuscule, 1 chiffre)
+                      </FieldDescription>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </Field>
+                  )}
+                />
 
-              {/* Téléphone */}
-              <Controller
-                name="telephone"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Téléphone</FieldLabel>
-                    <Input {...field} placeholder="+261 34 00 000 00" />
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                )}
-              />
-
-              {/* Rôle */}
-              <Controller
-                name="role"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <FieldSet>
-                    <FieldLegend>S'inscrire en tant que</FieldLegend>
-                    <FieldDescription>
-                      Choisissez votre rôle pour accéder aux fonctionnalités adaptées.
-                    </FieldDescription>
-                    <RadioGroup
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
-                      {roles.map((role) => (
-                        <FieldLabel key={role.id} htmlFor={`role-${role.id}`}>
-                          <Field orientation="horizontal" className="flex items-start">
-                            <RadioGroupItem
-                              value={role.id}
-                              id={`role-${role.id}`}
-                            />
-                            <FieldContent className="ml-3">
-                              <FieldTitle>{role.title}</FieldTitle>
-                              <FieldDescription>{role.description}</FieldDescription>
-                            </FieldContent>
-                          </Field>
-                        </FieldLabel>
-                      ))}
-                    </RadioGroup>
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </FieldSet>
-                )}
-              />
-            </FieldGroup>
-          </form>
-        </CardContent>
-
-        <CardFooter className="flex justify-end gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => form.reset()}
-          >
-            Réinitialiser
-          </Button>
-          <Button type="submit" form="register-form">
-            S'inscrire
-          </Button>
-        </CardFooter>
-      </Card>
+                <Controller
+                  name="role"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <FieldSet>
+                      <FieldLegend>Type de profil</FieldLegend>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="grid grid-cols-1 gap-2"
+                      >
+                        {rolesDisponibles.map((r) => (
+                          <label
+                            key={r.id}
+                            className={`flex items-start gap-3 p-3 rounded-md border-0.5 cursor-pointer transition-colors ${
+                              field.value === r.id
+                                ? "border-green-500 bg-green-50/50"
+                                : "border-zinc-200 hover:bg-zinc-50"
+                            }`}
+                          >
+                            <RadioGroupItem value={r.id} id={r.id} className="mt-0.5" />
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium text-zinc-800">
+                                {r.label}
+                              </span>
+                              <span className="text-xs text-zinc-500">{r.desc}</span>
+                            </div>
+                          </label>
+                        ))}
+                      </RadioGroup>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                    </FieldSet>
+                  )}
+                />
+              </FieldGroup>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-3">
+            <Button
+              type="submit"
+              form="register-form"
+              className="w-full bg-green-600 hover:bg-green-700 text-white h-9 text-sm font-medium"
+            >
+              Créer mon compte
+            </Button>
+            <p className="text-sm text-zinc-500 text-center">
+              Vous avez déjà un compte ?{" "}
+              <Link
+                to="/login"
+                className="text-green-600 font-medium hover:underline"
+              >
+                Se connecter
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router' // AJOUTÉ
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { QueryClientProvider,QueryClient} from '@tanstack/react-query'
+// AJOUTÉ
 import './index.css'
 
 // 1. Importer l'arbre de routes généré par le plugin
@@ -17,9 +19,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* 4. On remplace <App /> par le fournisseur du Router */}
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>,
 )

@@ -1,0 +1,9 @@
+// Exports groupés des composants shared
+export { StatCard } from './StatCard'
+export { BRLBadge } from './BRLBadge'
+export { StatutBadge } from './StatutBadge'
+export { StadeStepperH } from './StadeStepperH'
+export { AlerteStade } from './AlerteStade'
+export { ProgressBar } from './ProgressBar'
+export { ProfilCard } from './ProfilCard'
+export { EmptyState } from './EmptyState'

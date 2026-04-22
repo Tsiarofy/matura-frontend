@@ -12,7 +12,6 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 
-const AndexLazyRouteImport = createFileRoute('/andex')()
 const dashboardLayoutLazyRouteImport = createFileRoute('/(dashboard)/_layout')()
 const authRegisterLazyRouteImport = createFileRoute('/(auth)/register')()
 const authLoginLazyRouteImport = createFileRoute('/(auth)/login')()
@@ -22,12 +21,16 @@ const dashboardLayoutProfilLazyRouteImport = createFileRoute(
 const dashboardLayoutDashboardLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/dashboard',
 )()
+const dashboardLayoutProjetsIndexLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/projets/',
+)()
+const dashboardLayoutStadesNumStadeLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/stades/$numStade',
+)()
+const dashboardLayoutProjetsProjetIdIndexLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/projets/$projetId/',
+)()
 
-const AndexLazyRoute = AndexLazyRouteImport.update({
-  id: '/andex',
-  path: '/andex',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/andex.lazy').then((d) => d.Route))
 const dashboardLayoutLazyRoute = dashboardLayoutLazyRouteImport
   .update({
     id: '/(dashboard)/_layout',
@@ -69,47 +72,104 @@ const dashboardLayoutDashboardLazyRoute =
         (d) => d.Route,
       ),
     )
+const dashboardLayoutProjetsIndexLazyRoute =
+  dashboardLayoutProjetsIndexLazyRouteImport
+    .update({
+      id: '/projets/',
+      path: '/projets/',
+      getParentRoute: () => dashboardLayoutLazyRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/projets/index.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+const dashboardLayoutStadesNumStadeLazyRoute =
+  dashboardLayoutStadesNumStadeLazyRouteImport
+    .update({
+      id: '/stades/$numStade',
+      path: '/stades/$numStade',
+      getParentRoute: () => dashboardLayoutLazyRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/stades/$numStade.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+const dashboardLayoutProjetsProjetIdIndexLazyRoute =
+  dashboardLayoutProjetsProjetIdIndexLazyRouteImport
+    .update({
+      id: '/projets/$projetId/',
+      path: '/projets/$projetId/',
+      getParentRoute: () => dashboardLayoutLazyRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/projets/$projetId/index.lazy').then(
+        (d) => d.Route,
+      ),
+    )
 
 export interface FileRoutesByFullPath {
-  '/andex': typeof AndexLazyRoute
   '/login': typeof authLoginLazyRoute
   '/register': typeof authRegisterLazyRoute
   '/dashboard': typeof dashboardLayoutDashboardLazyRoute
   '/profil': typeof dashboardLayoutProfilLazyRoute
+  '/stades/$numStade': typeof dashboardLayoutStadesNumStadeLazyRoute
+  '/projets/': typeof dashboardLayoutProjetsIndexLazyRoute
+  '/projets/$projetId/': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
 }
 export interface FileRoutesByTo {
-  '/andex': typeof AndexLazyRoute
   '/login': typeof authLoginLazyRoute
   '/register': typeof authRegisterLazyRoute
   '/dashboard': typeof dashboardLayoutDashboardLazyRoute
   '/profil': typeof dashboardLayoutProfilLazyRoute
+  '/stades/$numStade': typeof dashboardLayoutStadesNumStadeLazyRoute
+  '/projets': typeof dashboardLayoutProjetsIndexLazyRoute
+  '/projets/$projetId': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/andex': typeof AndexLazyRoute
   '/(auth)/login': typeof authLoginLazyRoute
   '/(auth)/register': typeof authRegisterLazyRoute
   '/(dashboard)/_layout': typeof dashboardLayoutLazyRouteWithChildren
   '/(dashboard)/_layout/dashboard': typeof dashboardLayoutDashboardLazyRoute
   '/(dashboard)/_layout/profil': typeof dashboardLayoutProfilLazyRoute
+  '/(dashboard)/_layout/stades/$numStade': typeof dashboardLayoutStadesNumStadeLazyRoute
+  '/(dashboard)/_layout/projets/': typeof dashboardLayoutProjetsIndexLazyRoute
+  '/(dashboard)/_layout/projets/$projetId/': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/andex' | '/login' | '/register' | '/dashboard' | '/profil'
+  fullPaths:
+    | '/login'
+    | '/register'
+    | '/dashboard'
+    | '/profil'
+    | '/stades/$numStade'
+    | '/projets/'
+    | '/projets/$projetId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/andex' | '/login' | '/register' | '/dashboard' | '/profil'
+  to:
+    | '/login'
+    | '/register'
+    | '/dashboard'
+    | '/profil'
+    | '/stades/$numStade'
+    | '/projets'
+    | '/projets/$projetId'
   id:
     | '__root__'
-    | '/andex'
     | '/(auth)/login'
     | '/(auth)/register'
     | '/(dashboard)/_layout'
     | '/(dashboard)/_layout/dashboard'
     | '/(dashboard)/_layout/profil'
+    | '/(dashboard)/_layout/stades/$numStade'
+    | '/(dashboard)/_layout/projets/'
+    | '/(dashboard)/_layout/projets/$projetId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AndexLazyRoute: typeof AndexLazyRoute
   authLoginLazyRoute: typeof authLoginLazyRoute
   authRegisterLazyRoute: typeof authRegisterLazyRoute
   dashboardLayoutLazyRoute: typeof dashboardLayoutLazyRouteWithChildren
@@ -117,13 +177,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/andex': {
-      id: '/andex'
-      path: '/andex'
-      fullPath: '/andex'
-      preLoaderRoute: typeof AndexLazyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(dashboard)/_layout': {
       id: '/(dashboard)/_layout'
       path: '/'
@@ -159,24 +212,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutDashboardLazyRouteImport
       parentRoute: typeof dashboardLayoutLazyRoute
     }
+    '/(dashboard)/_layout/projets/': {
+      id: '/(dashboard)/_layout/projets/'
+      path: '/projets'
+      fullPath: '/projets/'
+      preLoaderRoute: typeof dashboardLayoutProjetsIndexLazyRouteImport
+      parentRoute: typeof dashboardLayoutLazyRoute
+    }
+    '/(dashboard)/_layout/stades/$numStade': {
+      id: '/(dashboard)/_layout/stades/$numStade'
+      path: '/stades/$numStade'
+      fullPath: '/stades/$numStade'
+      preLoaderRoute: typeof dashboardLayoutStadesNumStadeLazyRouteImport
+      parentRoute: typeof dashboardLayoutLazyRoute
+    }
+    '/(dashboard)/_layout/projets/$projetId/': {
+      id: '/(dashboard)/_layout/projets/$projetId/'
+      path: '/projets/$projetId'
+      fullPath: '/projets/$projetId/'
+      preLoaderRoute: typeof dashboardLayoutProjetsProjetIdIndexLazyRouteImport
+      parentRoute: typeof dashboardLayoutLazyRoute
+    }
   }
 }
 
 interface dashboardLayoutLazyRouteChildren {
   dashboardLayoutDashboardLazyRoute: typeof dashboardLayoutDashboardLazyRoute
   dashboardLayoutProfilLazyRoute: typeof dashboardLayoutProfilLazyRoute
+  dashboardLayoutStadesNumStadeLazyRoute: typeof dashboardLayoutStadesNumStadeLazyRoute
+  dashboardLayoutProjetsIndexLazyRoute: typeof dashboardLayoutProjetsIndexLazyRoute
+  dashboardLayoutProjetsProjetIdIndexLazyRoute: typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
 }
 
 const dashboardLayoutLazyRouteChildren: dashboardLayoutLazyRouteChildren = {
   dashboardLayoutDashboardLazyRoute: dashboardLayoutDashboardLazyRoute,
   dashboardLayoutProfilLazyRoute: dashboardLayoutProfilLazyRoute,
+  dashboardLayoutStadesNumStadeLazyRoute:
+    dashboardLayoutStadesNumStadeLazyRoute,
+  dashboardLayoutProjetsIndexLazyRoute: dashboardLayoutProjetsIndexLazyRoute,
+  dashboardLayoutProjetsProjetIdIndexLazyRoute:
+    dashboardLayoutProjetsProjetIdIndexLazyRoute,
 }
 
 const dashboardLayoutLazyRouteWithChildren =
   dashboardLayoutLazyRoute._addFileChildren(dashboardLayoutLazyRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  AndexLazyRoute: AndexLazyRoute,
   authLoginLazyRoute: authLoginLazyRoute,
   authRegisterLazyRoute: authRegisterLazyRoute,
   dashboardLayoutLazyRoute: dashboardLayoutLazyRouteWithChildren,
