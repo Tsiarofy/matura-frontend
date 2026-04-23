@@ -30,6 +30,8 @@ const dashboardLayoutStadesNumStadeLazyRouteImport = createFileRoute(
 const dashboardLayoutProjetsProjetIdIndexLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/projets/$projetId/',
 )()
+const dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteImport =
+  createFileRoute('/(dashboard)/_layout/projets/$projetId/stades/$numStade')()
 
 const dashboardLayoutLazyRoute = dashboardLayoutLazyRouteImport
   .update({
@@ -108,6 +110,18 @@ const dashboardLayoutProjetsProjetIdIndexLazyRoute =
         (d) => d.Route,
       ),
     )
+const dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute =
+  dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteImport
+    .update({
+      id: '/projets/$projetId/stades/$numStade',
+      path: '/projets/$projetId/stades/$numStade',
+      getParentRoute: () => dashboardLayoutLazyRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/projets/$projetId/stades/$numStade.lazy').then(
+        (d) => d.Route,
+      ),
+    )
 
 export interface FileRoutesByFullPath {
   '/login': typeof authLoginLazyRoute
@@ -117,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/stades/$numStade': typeof dashboardLayoutStadesNumStadeLazyRoute
   '/projets/': typeof dashboardLayoutProjetsIndexLazyRoute
   '/projets/$projetId/': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  '/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginLazyRoute
@@ -126,6 +141,7 @@ export interface FileRoutesByTo {
   '/stades/$numStade': typeof dashboardLayoutStadesNumStadeLazyRoute
   '/projets': typeof dashboardLayoutProjetsIndexLazyRoute
   '/projets/$projetId': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  '/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -137,6 +153,7 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/stades/$numStade': typeof dashboardLayoutStadesNumStadeLazyRoute
   '/(dashboard)/_layout/projets/': typeof dashboardLayoutProjetsIndexLazyRoute
   '/(dashboard)/_layout/projets/$projetId/': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  '/(dashboard)/_layout/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,6 +165,7 @@ export interface FileRouteTypes {
     | '/stades/$numStade'
     | '/projets/'
     | '/projets/$projetId/'
+    | '/projets/$projetId/stades/$numStade'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -157,6 +175,7 @@ export interface FileRouteTypes {
     | '/stades/$numStade'
     | '/projets'
     | '/projets/$projetId'
+    | '/projets/$projetId/stades/$numStade'
   id:
     | '__root__'
     | '/(auth)/login'
@@ -167,6 +186,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/stades/$numStade'
     | '/(dashboard)/_layout/projets/'
     | '/(dashboard)/_layout/projets/$projetId/'
+    | '/(dashboard)/_layout/projets/$projetId/stades/$numStade'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -233,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutProjetsProjetIdIndexLazyRouteImport
       parentRoute: typeof dashboardLayoutLazyRoute
     }
+    '/(dashboard)/_layout/projets/$projetId/stades/$numStade': {
+      id: '/(dashboard)/_layout/projets/$projetId/stades/$numStade'
+      path: '/projets/$projetId/stades/$numStade'
+      fullPath: '/projets/$projetId/stades/$numStade'
+      preLoaderRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteImport
+      parentRoute: typeof dashboardLayoutLazyRoute
+    }
   }
 }
 
@@ -242,6 +269,7 @@ interface dashboardLayoutLazyRouteChildren {
   dashboardLayoutStadesNumStadeLazyRoute: typeof dashboardLayoutStadesNumStadeLazyRoute
   dashboardLayoutProjetsIndexLazyRoute: typeof dashboardLayoutProjetsIndexLazyRoute
   dashboardLayoutProjetsProjetIdIndexLazyRoute: typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute
 }
 
 const dashboardLayoutLazyRouteChildren: dashboardLayoutLazyRouteChildren = {
@@ -252,6 +280,8 @@ const dashboardLayoutLazyRouteChildren: dashboardLayoutLazyRouteChildren = {
   dashboardLayoutProjetsIndexLazyRoute: dashboardLayoutProjetsIndexLazyRoute,
   dashboardLayoutProjetsProjetIdIndexLazyRoute:
     dashboardLayoutProjetsProjetIdIndexLazyRoute,
+  dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute:
+    dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute,
 }
 
 const dashboardLayoutLazyRouteWithChildren =

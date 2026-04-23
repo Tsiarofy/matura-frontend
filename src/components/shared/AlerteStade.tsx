@@ -1,5 +1,5 @@
 import { Alert } from '@/components/ui/alert'
-import { Alerte } from '@matura/shared'
+import {type Alerte } from '@matura/shared'
 import { cn } from '@/lib/utils'
 import { AlertCircle, Info, CheckCircle2, XCircle } from 'lucide-react'
 

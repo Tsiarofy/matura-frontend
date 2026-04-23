@@ -1,4 +1,4 @@
-import { TypeStade, StatutStade } from '@matura/shared'
+import { type TypeStade, type StatutStade } from '@matura/shared'
 import { cn } from '@/lib/utils'
 import { Check } from 'lucide-react'
 

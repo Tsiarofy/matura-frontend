@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card'
-import { UtilisateurPublic } from '@matura/shared'
+import {type  UtilisateurPublic } from '@matura/shared'
 import { cn, getInitiales } from '@/lib/utils'
 import { ROLE_LABELS } from '@/lib/constants'
 import { ChevronRight } from 'lucide-react'
