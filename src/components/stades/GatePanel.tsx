@@ -43,10 +43,10 @@ export function GatePanel({ gate, statut, onSoumettre, submitting }: GatePanelPr
       peutSoumettre ? 'border-green-200' : 'border-zinc-200',
     )}>
       {/* Header cliquable */}
-      <button
+      <div
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          'w-full flex items-center justify-between px-4 py-3 text-left transition-colors',
+          'w-full flex items-center justify-between px-4 py-3 text-left transition-colors cursor-pointer',
           peutSoumettre ? 'bg-green-50 hover:bg-green-100' : 'bg-zinc-50 hover:bg-zinc-100',
         )}
       >
@@ -62,19 +62,23 @@ export function GatePanel({ gate, statut, onSoumettre, submitting }: GatePanelPr
           </span>
         </div>
         <div className="flex items-center gap-3">
-          {peutSoumettre && (
-            <button
-              onClick={(e) => { e.stopPropagation(); onSoumettre() }}
-              disabled={submitting}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[11px] font-medium transition-colors disabled:opacity-50"
-            >
-              {submitting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-              Soumettre au mentor
-            </button>
-          )}
           {open ? <ChevronUp className="w-4 h-4 text-zinc-400" /> : <ChevronDown className="w-4 h-4 text-zinc-400" />}
         </div>
-      </button>
+      </div>
+
+      {/* Bouton soumettre séparé */}
+      {peutSoumettre && (
+        <div className="px-4 py-2 bg-green-50 border-t border-green-200">
+          <button
+            onClick={onSoumettre}
+            disabled={submitting}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[11px] font-medium transition-colors disabled:opacity-50"
+          >
+            {submitting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+            Soumettre au mentor
+          </button>
+        </div>
+      )}
 
       {/* Conditions détail */}
       {open && (

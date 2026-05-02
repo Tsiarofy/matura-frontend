@@ -93,23 +93,13 @@ export const STATUT_COMPTE_LABELS: Record<string, string> = {
 // ─── LABELS DOMAINES ────────────────────────────────────────────
 
 export const DOMAINE_LABELS: Record<string, string> = {
-  TECH: '💻 Tech',
-  AGRICULTURE: '🌾 Agriculture',
-  COMMERCE: '🏪 Commerce',
-  SERVICE: '🤝 Service',
-  SOCIAL: '❤️ Social',
-  INDUSTRIE: '🏭 Industrie',
-  AUTRE: '📌 Autre',
-}
-
-export const DOMAINE_ICONS: Record<string, string> = {
-  TECH: '💻',
-  AGRICULTURE: '🌾',
-  COMMERCE: '🏪',
-  SERVICE: '🤝',
-  SOCIAL: '❤️',
-  INDUSTRIE: '🏭',
-  AUTRE: '📌',
+  TECH: 'Tech',
+  AGRICULTURE: 'Agriculture',
+  COMMERCE: 'Commerce',
+  SERVICE: 'Service',
+  SOCIAL: 'Social',
+  INDUSTRIE: 'Industrie',
+  AUTRE: 'Autre',
 }
 
 // ─── LABELS TYPE CIBLE ──────────────────────────────────────────

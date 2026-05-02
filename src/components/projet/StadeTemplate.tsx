@@ -1,9 +1,10 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode, useState, useEffect } from 'react'
 import {type  StadeDetail } from '@matura/shared'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { FileText, Upload, LineChart, UserCheck } from 'lucide-react'
+import { FileText, Upload, LineChart, UserCheck, HelpCircle } from 'lucide-react'
+import { authStore } from '@/stores/authStore'
 
 interface StadeTemplateProps {
   stade: StadeDetail
@@ -11,6 +12,7 @@ interface StadeTemplateProps {
     saisie: ReactNode
     preuves: ReactNode
     metriques: ReactNode
+    aide?: ReactNode // Optionnel — contenu d'aide pour le stade
     evaluation?: ReactNode // Optionnel — visible uniquement si stade SOUMIS/VALIDE/EN_REVISION
   }
   className?: string
@@ -18,16 +20,27 @@ interface StadeTemplateProps {
 
 const TABS_CONFIG = [
   { value: 'saisie', label: 'Saisie', icon: FileText },
+  { value: 'aide', label: 'Aide', icon: HelpCircle },
   { value: 'preuves', label: 'Preuves', icon: Upload },
   { value: 'metriques', label: 'Métriques', icon: LineChart },
   { value: 'evaluation', label: 'Évaluation', icon: UserCheck },
 ]
 
 export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplateProps) {
-  const [activeTab, setActiveTab] = useState('saisie')
+  const user = authStore((state) => state.utilisateur)
+  const isMentor = user?.role === 'MENTOR'
   
-  // L'onglet Évaluation n'est visible que si le stade a été soumis
-  const showEvaluation = ['SOUMIS', 'VALIDE', 'EN_REVISION'].includes(stade.statut)
+  // L'onglet Évaluation n'est visible que si le stade a été soumis, ou si c'est le mentor
+  const showEvaluation = isMentor || ['SOUMIS', 'VALIDE', 'EN_REVISION'].includes(stade.statut)
+
+  const [activeTab, setActiveTab] = useState('saisie')
+
+  // Auto-sélectionner l'onglet Évaluation pour le Mentor si le stade est soumis
+  useEffect(() => {
+    if (isMentor && stade.statut === 'SOUMIS') {
+      setActiveTab('evaluation')
+    }
+  }, [isMentor, stade.statut])
 
   return (
     <div className={cn('w-full', className)}>
@@ -63,6 +76,14 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
             {ongletsContent.saisie}
           </Card>
         </TabsContent>
+
+        {ongletsContent.aide && (
+          <TabsContent value="aide" className="mt-0">
+            <Card className="bg-white border-zinc-200 rounded-xl p-6">
+              {ongletsContent.aide}
+            </Card>
+          </TabsContent>
+        )}
 
         <TabsContent value="preuves" className="mt-0">
           <Card className="bg-white border-zinc-200 rounded-xl p-6">

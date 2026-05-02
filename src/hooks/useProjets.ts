@@ -33,6 +33,7 @@ export function useProjets(params: GetProjetsParams = { page: 1, limite: 5 }) {
       const response = await apiClient.get<GetProjetsResponse>('/projets/mes-projets', {
         params,
       })
+      
       return response.data
       } catch (error:any) {
         console.error('Erreur lors de la récupération des projets:', error)
@@ -43,6 +44,6 @@ export function useProjets(params: GetProjetsParams = { page: 1, limite: 5 }) {
     
     // Options de cache
     staleTime: 5 * 60 * 1000, // Les données sont considérées "fraîches" pendant 5 min
-    retry: 2,                 // Tentatives automatiques en cas d'échec réseau
+    retry: 0,                 // Tentatives automatiques en cas d'échec réseau
   })
 }

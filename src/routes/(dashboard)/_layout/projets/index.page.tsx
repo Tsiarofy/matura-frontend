@@ -18,7 +18,7 @@ export default function ProjetsIndexPage() {
   const { data, isLoading, isError, error } = useProjets()
 
   // console.log("log apres appelle du hooks");
-  console.log(data,isLoading,isError,error)
+  // console.log(data,isLoading,isError,error)
   
   // Mutation création
   const createProjet = useCreateProjet()

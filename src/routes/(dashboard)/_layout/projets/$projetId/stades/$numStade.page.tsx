@@ -1,5 +1,6 @@
-import { useParams, Link } from '@tanstack/react-router'
-import { useStade, useEnregistrerStade, useSoumettre, useStadeGate } from '@/hooks/useStades'
+import { useParams, Link, useNavigate } from '@tanstack/react-router'
+import { useStade, useEnregistrerStade, useSoumettre, useStadeGate, useProjetDetail } from '@/hooks/useStades'
+import { toast } from 'sonner'
 import { StadeTemplate } from '@/components/projet/StadeTemplate'
 import { authStore } from '@/stores/authStore'
 import { Loader2, AlertCircle, ChevronLeft } from 'lucide-react'
@@ -11,6 +12,7 @@ import { Stade4Form } from '@/components/stades/Stade4Form'
 import { Stade5Form } from '@/components/stades/Stade5Form'
 import { Stade6Form } from '@/components/stades/Stade6Form'
 import { Stade7Form } from '@/components/stades/Stade7Form'
+import { AideStade1 } from '@/components/stades/AideStade1'
 import { MetriquesStade } from '@/components/stades/MetriquesStade'
 import { EvaluationStade } from '@/components/stades/EvaluationStade'
 import { GatePanel } from '@/components/stades/GatePanel'
@@ -39,8 +41,10 @@ export default function StadeNumPage() {
 
   const { data: stade, isLoading, isError } = useStade(projetId, numStade)
   const { data: gate } = useStadeGate(projetId, numStade)
+  const { data: projet } = useProjetDetail(projetId)
   const enregistrer = useEnregistrerStade(projetId, numStade)
   const soumettre = useSoumettre(projetId, numStade)
+  const navigate = useNavigate()
 
   if (isLoading) {
     return (
@@ -94,7 +98,16 @@ export default function StadeNumPage() {
         <GatePanel
           gate={gate}
           statut={stade.statut}
-          onSoumettre={() => soumettre.mutate()}
+          onSoumettre={() => {
+            if (projet && !projet.mentor) {
+              toast.error("Veuillez d'abord choisir un mentor", {
+                description: "Un mentor est requis pour évaluer vos stades.",
+              })
+              navigate({ to: '/mentors' })
+              return
+            }
+            soumettre.mutate()
+          }}
           submitting={soumettre.isPending}
         />
       )}
@@ -120,6 +133,7 @@ export default function StadeNumPage() {
           ) : (
             <p className="text-zinc-500 text-[13px]">Formulaire non disponible</p>
           ),
+          aide: numStade === 1 ? <AideStade1 /> : undefined,
           preuves: (
             <div className="text-center py-8 text-[12px] text-zinc-400">
               Upload de preuves — à implémenter

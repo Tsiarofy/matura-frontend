@@ -27,7 +27,8 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: 'FolderOpen', lien: '/projets-suivis', label: 'Projets suivis' },
     { icon: 'Bell', lien: '/demandes', label: 'Demandes' },
     { icon: 'User', lien: '/profil', label: 'Profil' },
-  ],
+  ]
+  ,
   INVESTISSEUR: [
     { icon: 'Home', lien: '/dashboard', label: 'Accueil' },
     { icon: 'BadgeDollarSign', lien: '/financements', label: 'Mes financements' },

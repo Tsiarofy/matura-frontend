@@ -72,25 +72,42 @@ export function useEnregistrerStade(projetId: string, numStade: number) {
     mutationFn: async (donnees) => {
       // console.log("AVANT LE RESUETE PUT");     
       // console.log(donnees);
-      const { data } = await apiClient.put<EnregistrementResult>(
+    const { data } = await apiClient.put<EnregistrementResult>(
         `/projets/${projetId}/stades/${numStade}`,
         donnees,
       )
-      // console.log(data);
-      // console.log("AVANT LE RESUETE PUT");   
-      return data
+    return data
+
+      // try {
+      //   const { data } = await apiClient.put<EnregistrementResult>(
+      //   `/projets/${projetId}/stades/${numStade}`,
+      //   donnees,
+      // )
+      // // console.log(data);
+      // // console.log("AVANT LE RESUETE PUT");   
+      // return data
+      // } catch (error) {
+      //   console.log("ERREUR - - - - - - - - - - - - - - - ")
+      //   console.log(`L'erreur est ${error}`)
+      // const data:EnregistrementResult={
+
+      // }
+      // return data;
+
+      // }
+
     },
     onSuccess: (result) => {
       qc.invalidateQueries({ queryKey: ['stade', projetId, numStade] })
       qc.invalidateQueries({ queryKey: ['projet', projetId] })
       qc.invalidateQueries({ queryKey: ['stade-gate', projetId, numStade] })
       qc.invalidateQueries({ queryKey: ['projet-courant'] })
-      console.log("LOG APRES SUCCES");
-      console.log(result);
+      // console.log("LOG APRES SUCCES");
+      // console.log(result);
       const critiques = result.alertes?.filter((a) => a.niveau === 'CRITIQUE') ?? []
       if (critiques.length > 0) {
-        console.log("dans le log cacth")
-        console.log(critiques)
+          // console.log("dans le log cacth")
+          // console.log(critiques)
         toast.warning(`Enregistré — ${critiques.length} alerte(s) critique(s)`, {
           description: critiques[0].message,
         })
@@ -113,9 +130,9 @@ export function useSoumettre(projetId: string, numStade: number) {
 
   return useMutation<{ statut: string; soumis_le: string; message: string }, Error, void>({
     mutationFn: async () => {
-      console.log('AVANT LA SOUMISSION');
+      // console.log('AVANT LA SOUMISSION');
       const { data } = await apiClient.post(`/projets/${projetId}/stades/${numStade}/soumettre`, {})
-       console.log('APRES LA SOUMISSION');
+      //  console.log('APRES LA SOUMISSION');
       return data
     },
     onSuccess: (result) => {

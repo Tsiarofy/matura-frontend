@@ -52,6 +52,7 @@ export default function LoginPage() {
         "auth/connexion",
         dto,
       );
+      // console.log(data.)
       await store.setAuth(data.token, data.utilisateur);
       navigate({ to: "/dashboard" });
       form.reset();

@@ -4,10 +4,10 @@ import { BRLBadge } from '@/components/shared/BRLBadge'
 import { StatutBadge } from '@/components/shared/StatutBadge'
 import { StadeStepperH } from '@/components/shared/StadeStepperH'
 import { cn } from '@/lib/utils'
-import { DOMAINE_ICONS, STADE_LABELS } from '@/lib/constants'
+import { STADE_LABELS } from '@/lib/constants'
 import {
   CheckCircle2, Lock, ChevronRight, //MapPin,
-  User, ArrowRight, Loader2, AlertCircle, Star,
+  User, ArrowRight, Loader2, AlertCircle, Star, Briefcase,
 } from 'lucide-react'
 import type { StatutStade, TypeStade } from '@matura/shared'
 
@@ -147,7 +147,7 @@ export default function ProjetDetailPage() {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-xl">{DOMAINE_ICONS[projet.domaine] ?? '📌'}</span>
+            <Briefcase className="w-5 h-5 text-zinc-500 shrink-0" />
             <BRLBadge brl={projet.brl_actuel} />
             <StatutBadge statut={projet.statut} />
           </div>

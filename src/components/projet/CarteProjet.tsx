@@ -4,9 +4,8 @@ import { BRLBadge } from '@/components/shared/BRLBadge'
 import { StatutBadge } from '@/components/shared/StatutBadge'
 import { ProgressBar } from '@/components/shared/ProgressBar'
 import { cn, formatDate } from '@/lib/utils'
-import { DOMAINE_ICONS } from '@/lib/constants'
 import { Link } from '@tanstack/react-router'
-import { MapPin, User, TrendingUp } from 'lucide-react'
+import { MapPin, User, TrendingUp, Briefcase } from 'lucide-react'
 
 interface CarteProjetProps {
   projet: ProjetResume
@@ -28,7 +27,7 @@ export function CarteProjet({ projet, className }: CarteProjetProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg leading-none">
-                {DOMAINE_ICONS[projet.domaine] || '📌'}
+                <Briefcase className="w-5 h-5 text-zinc-500" />
               </span>
               <h3 className="text-[13px] font-medium text-zinc-800 truncate">
                 {projet.titre}

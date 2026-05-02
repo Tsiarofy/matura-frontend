@@ -55,7 +55,7 @@ export default function RegisterPage() {
       );
       store.setAuth(data.token, data.utilisateur);
       form.reset();
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/profil" });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(

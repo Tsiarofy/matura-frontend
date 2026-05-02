@@ -15,5 +15,4 @@
       "@routes/*": ["./src/routes/*"]
     }
   }
-
 }
