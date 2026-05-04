@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 import { Star, CheckCircle2, RotateCcw, Loader2 } from 'lucide-react'
 import type { StadeData } from '@/hooks/useStades'
 import { AffichageCalculsInformatifs } from './AffichageCalculsInformatifs'
-import type { CalculsInformatifs } from '@matura/shared'
 
 const CRITERES_PAR_STADE: Record<number, string[]> = {
   1: ['clarte_probleme', 'validation_terrain', 'realisme_contexte'],
@@ -114,17 +113,11 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
 
   return (
     <div className="space-y-5">
+      <AffichageCalculsInformatifs numStade={numStade} calculs={stade.calculs_informatifs} role={user?.role as 'MENTOR' | 'INVESTISSEUR' | 'ENTREPRENEUR'} />
+
       <p className="text-[12px] text-zinc-500">
         Évaluez ce stade soumis par l'entrepreneur.
       </p>
-
-      {/* Panneau de transparence marché (Stade 3+) */}
-      {numStade >= 3 && (() => {
-        const calculs = (stade.donnees as Record<string, unknown>)?._calculs_informatifs as CalculsInformatifs | undefined
-        return calculs ? (
-          <AffichageCalculsInformatifs calculs={calculs} mode="mentor" className="mb-4" />
-        ) : null
-      })()}
 
       {/* Note globale */}
       <div>

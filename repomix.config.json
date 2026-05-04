@@ -1,0 +1,35 @@
+{
+  "output": {
+    "filePath": "repomix-output.txt",
+    "style": "plain",
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "topFilesLength": 5,
+    "showLineNumbers": false,
+    "copyToClipboard": false,
+    "headerText": "Project source code - STRICT"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": [
+      "node_modules/**",
+      "dist/**",
+      ".git/**",
+      "package-lock.json",
+      "*.log",
+      "tsconfig*.json",
+      "vite.config.ts",
+      "eslint.config.js",
+      "components.json",
+      "README.md",
+      "index.html",
+      ".env*",
+      "public/**/*",
+      ".tanstack/**"
+    ]
+  }
+}

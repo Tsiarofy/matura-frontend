@@ -1,8 +1,11 @@
 // ─── STADE 4 — BMC ───────────────────────────────────────────────────────────
 import { useForm, useFieldArray } from 'react-hook-form'
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Plus, Trash2, Save, Loader2 } from 'lucide-react'
 import type { StadeData } from '@/hooks/useStades'
+import { useRoleLabels } from '@/hooks/useRoleLabels'
+import { LABELS_STADE4, LABELS_STADE5, LABELS_STADE6, LABELS_STADE7 } from '@/lib/labelsStades'
 
 interface Props { stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean }
 
@@ -17,8 +20,13 @@ const SaveBtn = ({ saving, label }: { saving: boolean; label: string }) => (
 )
 
 export function Stade4Form({ stade, onSave, saving }: Props) {
+  const { isEntrepreneur } = useRoleLabels()
   const d = stade.donnees as Record<string, unknown>
   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
+
+  const getLabel = (key: keyof typeof LABELS_STADE4) => {
+    return isEntrepreneur ? LABELS_STADE4[key].entrepreneur : LABELS_STADE4[key].professionnel
+  }
 
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
@@ -38,6 +46,9 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
   })
 
   const { fields: pvF, append: addPv, remove: remPv } = useFieldArray({ control, name: 'propositions_valeur' })
+  const { fields: segF, append: addSeg, remove: remSeg } = useFieldArray({ control, name: 'segments_clients' })
+  const { fields: resF, append: addRes, remove: remRes } = useFieldArray({ control, name: 'ressources_cles' })
+  const { fields: actF, append: addAct, remove: remAct } = useFieldArray({ control, name: 'activites_cles' })
   const { fields: partF, append: addPart, remove: remPart } = useFieldArray({ control, name: 'partenaires_cles' })
   const { fields: revF, append: addRev, remove: remRev } = useFieldArray({ control, name: 'sources_revenus' })
   const { fields: coutF, append: addCout, remove: remCout } = useFieldArray({ control, name: 'structure_couts' })
@@ -46,7 +57,7 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
       {/* Évolution */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">Évolution depuis le Lean Canvas</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('evolution_lean_canvas')}</p>
         <textarea {...register('evolution_lean_canvas.ce_qui_a_change')} rows={3}
           className={cn(inp, 'resize-none')} placeholder="Ce qui a changé depuis S2 (min 20 car.)..." />
       </div>
@@ -54,7 +65,7 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
       {/* Propositions de valeur */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Propositions de valeur</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('propositions_valeur')}</p>
           <button type="button" onClick={() => addPv({ proposition: '', pour_segment: '', validee_par_enquete: false })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -67,10 +78,62 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
         ))}
       </div>
 
+      {/* Segments clients */}
+      <div className="space-y-3 pb-5 border-b border-zinc-100">
+        <div className="flex items-center justify-between">
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('segments_clients')}</p>
+          <button type="button" onClick={() => addSeg({ nom: '', taille_estimee: 0, potentiel_revenu_ar: 0, priorite: 'PRINCIPAL' })}
+            className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
+        </div>
+        {segF.map((f, i) => (
+          <div key={f.id} className="flex gap-2 items-center">
+            <input {...register(`segments_clients.${i}.nom`)} className={cn(inp, 'flex-1')} placeholder="Segment" />
+            <input type="number" {...register(`segments_clients.${i}.taille_estimee`, { valueAsNumber: true })} className={cn(inp, 'w-24')} placeholder="Taille" />
+            {segF.length > 1 && <button type="button" onClick={() => remSeg(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+          </div>
+        ))}
+      </div>
+
+      {/* Ressources clés */}
+      <div className="space-y-3 pb-5 border-b border-zinc-100">
+        <div className="flex items-center justify-between">
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('ressources_cles')}</p>
+          <button type="button" onClick={() => addRes({ ressource: '', type: 'HUMAIN', deja_possedee: false })}
+            className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
+        </div>
+        {resF.map((f, i) => (
+          <div key={f.id} className="flex gap-2 items-center">
+            <input {...register(`ressources_cles.${i}.ressource`)} className={cn(inp, 'flex-1')} placeholder="Ressource" />
+            <select {...register(`ressources_cles.${i}.type`)} className={cn(sel, 'w-32')}>
+              {['HUMAIN','PHYSIQUE','INTELLECTUELLE','FINANCIERE'].map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+            {resF.length > 1 && <button type="button" onClick={() => remRes(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+          </div>
+        ))}
+      </div>
+
+      {/* Activités clés */}
+      <div className="space-y-3 pb-5 border-b border-zinc-100">
+        <div className="flex items-center justify-between">
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('activites_cles')}</p>
+          <button type="button" onClick={() => addAct({ activite: '', type: 'PRODUCTION', est_coeur_metier: true })}
+            className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
+        </div>
+        {actF.map((f, i) => (
+          <div key={f.id} className="flex gap-2 items-center">
+            <input {...register(`activites_cles.${i}.activite`)} className={cn(inp, 'flex-1')} placeholder="Activité" />
+            <select {...register(`activites_cles.${i}.type`)} className={cn(sel, 'w-32')}>
+              {['PRODUCTION','RESOLUTION_PROBLEME','PLATEFORME','RESEAU'].map(t => <option key={t} value={t}>{t.replace('_',' ')}</option>)}
+            </select>
+            {actF.length > 1 && <button type="button" onClick={() => remAct(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+          </div>
+        ))}
+      </div>
+
       {/* Partenaires clés */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Partenaires clés</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('partenaires_cles')}</p>
           <button type="button" onClick={() => addPart({ partenaire: '', type: 'FOURNISSEUR', pourquoi_essentiel: '', risque_si_absent: 'MOYEN', statut: 'IDENTIFIE' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -99,27 +162,34 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
       {/* Sources revenus */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Sources de revenus</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('sources_revenus')}</p>
           <button type="button" onClick={() => addRev({ nom: '', modele: 'ABONNEMENT', prix_ar: 0, volume_mensuel: 0, confiance: 'MOYENNE' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {revF.map((f, i) => (
-          <div key={f.id} className="flex gap-2 items-center">
-            <input {...register(`sources_revenus.${i}.nom`)} className={cn(inp, 'w-32')} placeholder="Nom" />
-            <select {...register(`sources_revenus.${i}.modele`)} className={cn(sel, 'w-36')}>
+          <div key={f.id} className="bg-zinc-50 rounded-lg p-3 grid grid-cols-2 gap-2">
+            <select {...register(`sources_revenus.${i}.modele`)} className={sel}>
               {['ABONNEMENT','ACHAT_UNIQUE','COMMISSION','FREEMIUM','B2B_CONTRACT','SUBVENTION','AUTRE'].map(m => <option key={m} value={m}>{m}</option>)}
             </select>
-            <input type="number" {...register(`sources_revenus.${i}.prix_ar`, { valueAsNumber: true })} className={cn(inp, 'w-28')} placeholder="Prix Ar" />
-            <input type="number" {...register(`sources_revenus.${i}.volume_mensuel`, { valueAsNumber: true })} className={cn(inp, 'w-20')} placeholder="Vol/mois" />
-            {revF.length > 1 && <button type="button" onClick={() => remRev(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            <input {...register(`sources_revenus.${i}.nom`)} className={inp} placeholder="Nom" />
+            <input type="number" {...register(`sources_revenus.${i}.prix_ar`, { valueAsNumber: true })} className={inp} placeholder="Prix (Ar)" />
+            <input type="number" {...register(`sources_revenus.${i}.volume_mensuel`, { valueAsNumber: true })} className={inp} placeholder="Volume/mois" />
+            <div className="flex gap-2 col-span-2">
+              <select {...register(`sources_revenus.${i}.confiance`)} className={cn(sel, 'flex-1')}>
+                <option value="FAIBLE">Faible</option>
+                <option value="MOYENNE">Moyenne</option>
+                <option value="ELEVEE">Élevée</option>
+              </select>
+              {revF.length > 1 && <button type="button" onClick={() => remRev(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Structure coûts */}
-      <div className="space-y-3">
+      {/* Structure de coûts */}
+      <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Structure de coûts</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('structure_couts')}</p>
           <button type="button" onClick={() => addCout({ categorie: 'PERSONNEL', libelle: '', montant_mensuel_ar: 0, est_fixe: true })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -129,7 +199,7 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
               {['PERSONNEL','TECH','MARKETING','LOGISTIQUE','LOYER','AUTRE'].map(c => <option key={c} value={c}>{c}</option>)}
             </select>
             <input {...register(`structure_couts.${i}.libelle`)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-            <input type="number" {...register(`structure_couts.${i}.montant_mensuel_ar`, { valueAsNumber: true })} className={cn(inp, 'w-28')} placeholder="Ar/mois" />
+            <input type="number" {...register(`structure_couts.${i}.montant_mensuel_ar`, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
             {coutF.length > 1 && <button type="button" onClick={() => remCout(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
           </div>
         ))}
@@ -140,10 +210,16 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
   )
 }
 
+
 // ─── STADE 5 — FAISABILITÉ ────────────────────────────────────────────────────
 export function Stade5Form({ stade, onSave, saving }: Props) {
+  const { isEntrepreneur } = useRoleLabels()
   const d = stade.donnees as Record<string, unknown>
   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
+
+  const getLabel = (key: keyof typeof LABELS_STADE5) => {
+    return isEntrepreneur ? LABELS_STADE5[key].entrepreneur : LABELS_STADE5[key].professionnel
+  }
 
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
@@ -179,7 +255,7 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
       {/* Membres */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Équipe</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('equipe')}</p>
           <button type="button" onClick={() => addMem({ prenom_nom: '', role_projet: '', disciplines: [], annees_experience: 0, engagement: 'TEMPS_PLEIN', est_fondateur: false })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -210,7 +286,7 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
 
       {/* Finances */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">Finances</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('finances')}</p>
         <div className="grid grid-cols-3 gap-2">
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Prix vente (Ar) *</label>
@@ -264,7 +340,7 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
       {/* Jalons */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Jalons (min. 3)</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('jalons')} (min. 3)</p>
           <button type="button" onClick={() => addJal({ titre: '', date_cible: '', responsable: '', metrique_succes: '', budget_ar: 0 })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -290,8 +366,13 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
 
 // ─── STADE 6 — PROTOTYPE ─────────────────────────────────────────────────────
 export function Stade6Form({ stade, onSave, saving }: Props) {
+  const { isEntrepreneur } = useRoleLabels()
   const d = stade.donnees as Record<string, unknown>
   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
+
+  const getLabel = (key: keyof typeof LABELS_STADE6) => {
+    return isEntrepreneur ? LABELS_STADE6[key].entrepreneur : LABELS_STADE6[key].professionnel
+  }
 
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
@@ -323,7 +404,7 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
       {/* MVP */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">MVP</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('mvp')}</p>
         <div className="grid grid-cols-2 gap-3">
           <select {...register('mvp.type')} className={cn(sel)}>
             {['APPLICATION_DIGITALE','PRODUIT_PHYSIQUE','SERVICE','PAGE_WEB','PROCESSUS_MANUEL'].map(t => <option key={t} value={t}>{t.replace('_',' ')}</option>)}
@@ -335,7 +416,7 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
 
       {/* Métriques d'usage */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">Métriques d'usage</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('metriques_usage')}</p>
         <div className="grid grid-cols-3 gap-2">
           {[
             ['total_utilisateurs_atteints', 'Utilisateurs atteints'],
@@ -356,7 +437,7 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
       {/* Retours clients */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Retours clients (min. 5) — {retF.length}</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('retours_clients')} (min. 5) — {retF.length}</p>
           <button type="button" onClick={() => addRet({ date: '', profil: '', type_interaction: 'ENTRETIEN', verbatim: '', sentiment: 'POSITIF', action_prise: '' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -379,7 +460,7 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
       {/* Itérations */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-[12px] font-medium text-zinc-700">Itérations (min. 1)</p>
+          <p className="text-[12px] font-medium text-zinc-700">{getLabel('iterations')} (min. 1)</p>
           <button type="button" onClick={() => addIter({ version: '', date: '', declencheur: '', changement: '', impact_metriques: '' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -404,8 +485,13 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
 
 // ─── STADE 7 — LANCEMENT ─────────────────────────────────────────────────────
 export function Stade7Form({ stade, onSave, saving }: Props) {
+  const { isEntrepreneur } = useRoleLabels()
   const d = stade.donnees as Record<string, unknown>
   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
+
+  const getLabel = (key: keyof typeof LABELS_STADE7) => {
+    return isEntrepreneur ? LABELS_STADE7[key].entrepreneur : LABELS_STADE7[key].professionnel
+  }
 
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
@@ -439,14 +525,14 @@ export function Stade7Form({ stade, onSave, saving }: Props) {
     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
       {/* Résumé exécutif */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">Résumé exécutif</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('resume_executif')}</p>
         <input {...register('resume_executif.phrase_accroche')} className={inp} maxLength={200} placeholder="Phrase d'accroche (max 200 car.) *" />
         <textarea {...register('resume_executif.description_courte')} rows={4} className={cn(inp, 'resize-none')} placeholder="Description courte (50-1000 car.) *" />
       </div>
 
       {/* Demande financement */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">Demande de financement</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('demande_financement')}</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Montant demandé (Ar) *</label>
@@ -488,7 +574,7 @@ export function Stade7Form({ stade, onSave, saving }: Props) {
 
       {/* Contexte investisseur */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
-        <p className="text-[12px] font-medium text-zinc-700">Contexte investisseur</p>
+        <p className="text-[12px] font-medium text-zinc-700">{getLabel('contexte_investisseur')}</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Type d'investisseur ciblé</label>
@@ -509,7 +595,7 @@ export function Stade7Form({ stade, onSave, saving }: Props) {
 
       {/* Pitch deck */}
       <div>
-        <label className="text-[11px] text-zinc-500 block mb-1">URL Pitch Deck (optionnel)</label>
+        <label className="text-[11px] text-zinc-500 block mb-1">{getLabel('pitch_deck')}</label>
         <input {...register('pitch_deck_url')} className={inp} placeholder="https://..." />
       </div>
 

@@ -2,12 +2,19 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { cn } from '@/lib/utils'
 import { Plus, Trash2, Save, Loader2 } from 'lucide-react'
 import type { StadeData } from '@/hooks/useStades'
+import { useRoleLabels } from '@/hooks/useRoleLabels'
+import { LABELS_STADE2 } from '@/lib/labelsStades'
 
 interface Props { stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean }
 
 export function Stade2Form({ stade, onSave, saving }: Props) {
+  const { isEntrepreneur } = useRoleLabels()
   const d = stade.donnees as Record<string, unknown>
   const get = <T,>(k: string, def: T): T => (d[k] as T) ?? def
+
+  const getLabel = (key: keyof typeof LABELS_STADE2) => {
+    return isEntrepreneur ? LABELS_STADE2[key].entrepreneur : LABELS_STADE2[key].professionnel
+  }
 
   const { register, control, handleSubmit } = useForm({
     defaultValues: {
@@ -58,23 +65,23 @@ export function Stade2Form({ stade, onSave, saving }: Props) {
 
       {/* Problème */}
       <div className={sec}>
-        {blocTitle('1', 'Problème')}
+        {blocTitle('1', getLabel('bloc_probleme'))}
         <div>
-          <label className="text-[11px] text-zinc-500 block mb-1">Problème hérité du Stade 1</label>
+          <label className="text-[11px] text-zinc-500 block mb-1">{getLabel('bloc_probleme')}</label>
           <input {...register('bloc_probleme.herite_stade1')} className={inp} placeholder="Décrivez le problème principal..." />
         </div>
       </div>
 
       {/* Segments */}
       <div className={sec}>
-        {blocTitle('2', 'Segments clients')}
+        {blocTitle('2', getLabel('segment_principal'))}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-[11px] text-zinc-500 block mb-1">Segment principal *</label>
+            <label className="text-[11px] text-zinc-500 block mb-1">{getLabel('segment_principal')} *</label>
             <input {...register('bloc_segments_clients.principal')} className={inp} />
           </div>
           <div>
-            <label className="text-[11px] text-zinc-500 block mb-1">Premiers adoptants *</label>
+            <label className="text-[11px] text-zinc-500 block mb-1">{getLabel('autres_segments')} *</label>
             <input {...register('bloc_segments_clients.premiers_adoptants')} className={inp} />
           </div>
         </div>
@@ -83,7 +90,7 @@ export function Stade2Form({ stade, onSave, saving }: Props) {
       {/* Solution */}
       <div className={sec}>
         <div className="flex items-center justify-between">
-          {blocTitle('3', 'Solution')}
+          {blocTitle('3', getLabel('solution'))}
           <button type="button" onClick={() => addFonct({ description: '', priorite: 'INDISPENSABLE', resout_probleme_principal: false })}
             className="flex items-center gap-1 text-[11px] text-green-600">
             <Plus className="w-3.5 h-3.5" /> Ajouter
@@ -105,9 +112,9 @@ export function Stade2Form({ stade, onSave, saving }: Props) {
 
       {/* Proposition de valeur */}
       <div className={sec}>
-        {blocTitle('4', 'Proposition de valeur')}
+        {blocTitle('4', getLabel('proposition_valeur'))}
         <div>
-          <label className="text-[11px] text-zinc-500 block mb-1">Phrase principale * (max 80 car.)</label>
+          <label className="text-[11px] text-zinc-500 block mb-1">{getLabel('proposition_valeur')} * (max 80 car.)</label>
           <input {...register('bloc_proposition_valeur.phrase_principale')} className={inp} maxLength={80} />
         </div>
         <div>
@@ -119,7 +126,7 @@ export function Stade2Form({ stade, onSave, saving }: Props) {
       {/* Canaux */}
       <div className={sec}>
         <div className="flex items-center justify-between">
-          {blocTitle('5', 'Canaux')}
+          {blocTitle('5', getLabel('canaux'))}
           <button type="button" onClick={() => addCanal({ canal: '', phase: 'ACQUISITION', cout: 'GRATUIT' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -145,7 +152,7 @@ export function Stade2Form({ stade, onSave, saving }: Props) {
       {/* Sources de revenus */}
       <div className={sec}>
         <div className="flex items-center justify-between">
-          {blocTitle('8', 'Sources de revenus')}
+          {blocTitle('8', getLabel('sources_revenus'))}
           <button type="button" onClick={() => addRev({ modele: 'ABONNEMENT', description: '', estimation_mensuelle_ar: 0, confiance: 'MOYENNE' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
@@ -171,7 +178,7 @@ export function Stade2Form({ stade, onSave, saving }: Props) {
       {/* Structure de coûts */}
       <div className={sec}>
         <div className="flex items-center justify-between">
-          {blocTitle('9', 'Structure de coûts')}
+          {blocTitle('9', getLabel('structure_couts'))}
           <button type="button" onClick={() => addCout({ categorie: 'PERSONNEL', libelle: '', montant_mensuel_ar: 0, est_fixe: true })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>

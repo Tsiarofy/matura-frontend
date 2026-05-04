@@ -17,6 +17,7 @@ export interface StadeData {
   score_auto: number | null
   completion_pct: number
   alertes: { code: string; niveau: string; message: string; resolue: boolean }[]
+  calculs_informatifs?: Record<string, unknown> | null
   // messages_coherence est optionnel : présent si le backend le renvoie, absent sinon
   messages_coherence?: { message: string; statut: string }[]
   commence_le: string | null
