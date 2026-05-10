@@ -12,12 +12,34 @@ import { Stade4Form } from '@/components/stades/Stade4Form'
 import { Stade5Form } from '@/components/stades/Stade5Form'
 import { Stade6Form } from '@/components/stades/Stade6Form'
 import { Stade7Form } from '@/components/stades/Stade7Form'
-import { AideStade1 } from '@/components/stades/AideStade1'
 import { MetriquesStade } from '@/components/stades/MetriquesStade'
 import { EvaluationStade } from '@/components/stades/EvaluationStade'
+import { AffichageCalculsInformatifs } from '@/components/stades/AffichageCalculsInformatifs'
 import { GatePanel } from '@/components/stades/GatePanel'
 import type { StadeData } from '@/hooks/useStades'
+import { AideStade1 } from '@/components/stades/AideStade1'
+import { AideStade2 } from '@/components/stades/AideStade2'
+import { AideStade3 } from '@/components/stades/AideStade3'
+import { AideStade4 } from '@/components/stades/AideStade4'
+import { AideStade5 } from '@/components/stades/AideStade5'
+import { AideStade6 } from '@/components/stades/AideStade6'
+import { AideStade7 } from '@/components/stades/AideStade7'
 
+// Map des composants d'aide
+const AIDES: Record<number, React.ReactNode> = {
+  1: <AideStade1 />,
+  2: <AideStade2 />,
+  3: <AideStade3 />,
+  4: <AideStade4 />,
+  5: <AideStade5 />,
+  6: <AideStade6 />,
+  7: <AideStade7 />,
+}
+
+// Dans le rendu StadeTemplate, remplacer :
+// aide: numStade === 1 ? <AideStade1 /> : undefined,
+// par :
+// aide: AIDES[numStade]
 // ─── FORMULAIRE PAR STADE ─────────────────────────────────────────────────────
 
 const FORMS: Record<number, React.ComponentType<{ stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean }>> = {
@@ -40,11 +62,15 @@ export default function StadeNumPage() {
   const user = authStore((state) => state.utilisateur)
 
   const { data: stade, isLoading, isError } = useStade(projetId, numStade)
+  const { data: stade1 } = useStade(projetId, 1)
   const { data: gate } = useStadeGate(projetId, numStade)
   const { data: projet } = useProjetDetail(projetId)
   const enregistrer = useEnregistrerStade(projetId, numStade)
   const soumettre = useSoumettre(projetId, numStade)
   const navigate = useNavigate()
+ 
+  // console.log("- - - - stade1- - - - - - ")
+  // console.log(stade1)
 
   if (isLoading) {
     return (
@@ -121,25 +147,46 @@ export default function StadeNumPage() {
         } as import('@matura/shared').StadeDetail}
         ongletsContent={{
           saisie: FormComponent ? (
-            <FormComponent
-              stade={stade}
-              onSave={(donnees) => {
-                console.log("# # # # # # ")
-                console.log(donnees.contexte_geographique);
-                console.log("# # # # # # ")
-                return(enregistrer.mutate(donnees))}}
-              saving={enregistrer.isPending}
-            />
+            numStade === 3 ? (
+              <Stade3Form
+                stade={stade}
+                saving={enregistrer.isPending}
+                typeProjet={(projet?.type_cible as 'B2C' | 'B2B' | 'B2B2C') ?? 'B2C'}
+                contexteGeographiqueStade1={
+                  (stade1?.donnees?.contexte_geographique as {
+                    niveau_principal: string
+                    zone_principale: { code: string; nom: string }
+                    sous_zones?: { tout_selectionner: boolean; items: Array<{ code: string; nom: string }> }
+                  }) ?? undefined
+                }
+                onSave={(donnees) => enregistrer.mutate(donnees)}
+              />
+            ) : (
+              <FormComponent
+                stade={stade}
+                onSave={(donnees) => enregistrer.mutate(donnees)}
+                saving={enregistrer.isPending}
+              />
+            )
           ) : (
             <p className="text-zinc-500 text-[13px]">Formulaire non disponible</p>
           ),
-          aide: numStade === 1 ? <AideStade1 /> : undefined,
+          aide: AIDES[numStade],
           preuves: (
             <div className="text-center py-8 text-[12px] text-zinc-400">
               Upload de preuves — à implémenter
             </div>
           ),
-          metriques: <MetriquesStade metriques={stade.metriques} numStade={numStade} />,
+          metriques: (
+            <div>
+              <AffichageCalculsInformatifs
+                numStade={numStade}
+                calculs={stade.calculs_informatifs}
+                role={user?.role as 'MENTOR' | 'INVESTISSEUR' | 'ENTREPRENEUR'}
+              />
+              <MetriquesStade metriques={stade.metriques} numStade={numStade} />
+            </div>
+          ),
           evaluation: <EvaluationStade stade={stade} projetId={projetId} numStade={numStade} />,
         }}
       />

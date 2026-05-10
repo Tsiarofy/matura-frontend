@@ -58,6 +58,7 @@ export function useEnfantsGeo(niveau: string, code: string) {
 // ── Calcul de population en temps réel ─────────────────────────────────────────
 // Retourne les statistiques de population pour une zone donnée
 // Utilisé dans GeoSelector pour afficher la population lors de la sélection
+
 export function usePopulationCalcul(
   niveau: string,
   code: string,

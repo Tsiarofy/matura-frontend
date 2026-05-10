@@ -156,7 +156,7 @@ function ProjetCourantSection({ projet }: { projet: ProjetResume }) {
               >
                 {num}. {label}
               </span>
-              {isActive && (
+              {isActive&&!isValide&& (
                 <span className="text-[9px] text-green-600 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full shrink-0">
                   en cours
                 </span>

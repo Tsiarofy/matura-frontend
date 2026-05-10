@@ -1,11 +1,16 @@
+// src/components/ui/StepperProgressif.tsx
+// Stepper progressif bloquant avec invalidation en cascade (spec Section 4.1)
+// L'invalidation se fait via onEtapeChange — le parent (Stade2Form etc.)
+// est responsable du reset des données enfants (via react-hook-form setValue)
+
 import { cn } from '@/lib/utils'
-import { Check, ChevronRight } from 'lucide-react'
+import { Check, ChevronRight, Lock } from 'lucide-react'
 
 export interface Etape {
   id: string
   titre: string
   description?: string
-  dependances: string[] // IDs des étapes précédentes requises
+  dependances: string[]
 }
 
 interface StepperProgressifProps {
@@ -13,6 +18,9 @@ interface StepperProgressifProps {
   etapeActive: string
   etapesCompletees: Set<string>
   onEtapeChange: (etapeId: string) => void
+  // Callback optionnel déclenché quand une étape parente est modifiée
+  // Permet au parent d'invalider les étapes enfants
+  onEtapeReinitialisee?: (etapesAInvalider: string[]) => void
 }
 
 export function StepperProgressif({
@@ -20,74 +28,122 @@ export function StepperProgressif({
   etapeActive,
   etapesCompletees,
   onEtapeChange,
+  onEtapeReinitialisee,
 }: StepperProgressifProps) {
-  const estAccessible = (etape: Etape, index: number) => {
-    // Première étape toujours accessible
+  const estAccessible = (etape: Etape, index: number): boolean => {
     if (index === 0) return true
-    
-    // Vérifier si toutes les dépendances sont complétées
-    const dependancesSatisfaites = etape.dependances.every(
-      (depId) => etapesCompletees.has(depId)
-    )
-    
-    return dependancesSatisfaites
+    return etape.dependances.every((depId) => etapesCompletees.has(depId))
   }
 
-  const estCompletee = (etapeId: string) => etapesCompletees.has(etapeId)
+  const estCompletee = (etapeId: string): boolean => etapesCompletees.has(etapeId)
+
+  const collecterEtapesDependantes = (racineId: string): string[] => {
+    const dependantsDirects = etapes
+      .filter((e) => e.dependances.includes(racineId))
+      .map((e) => e.id)
+
+    const visited = new Set<string>()
+    const result: string[] = []
+
+    const dfs = (id: string) => {
+      if (visited.has(id)) return
+      visited.add(id)
+      result.push(id)
+      etapes
+        .filter((e) => e.dependances.includes(id))
+        .forEach((e) => dfs(e.id))
+    }
+
+    dependantsDirects.forEach(dfs)
+    return result
+  }
+
+  // Quand l'utilisateur retourne sur une étape déjà complétée,
+  // on invalide en cascade toutes les étapes qui en dépendent
+  const handleEtapeClick = (etapeId: string, accessible: boolean) => {
+    if (!accessible) return
+
+    const etapesAInvalider = collecterEtapesDependantes(etapeId)
+
+    if (etapesAInvalider.length > 0 && onEtapeReinitialisee) {
+      onEtapeReinitialisee(etapesAInvalider)
+    }
+
+    onEtapeChange(etapeId)
+  }
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between">
+    <div className="w-full space-y-3">
+      {/* Stepper horizontal */}
+      <div className="flex items-start justify-between gap-1">
         {etapes.map((etape, index) => {
           const accessible = estAccessible(etape, index)
           const completee = estCompletee(etape.id)
           const active = etapeActive === etape.id
 
           return (
-            <div key={etape.id} className="flex items-center flex-1">
-              <button
-                onClick={() => accessible && onEtapeChange(etape.id)}
-                disabled={!accessible}
-                className={cn(
-                  'flex flex-col items-center flex-1 min-w-0',
-                  !accessible && 'opacity-50 cursor-not-allowed',
-                  accessible && !active && 'cursor-pointer hover:opacity-80 transition-opacity'
-                )}
-              >
-                <div
+            <div key={etape.id} className="flex items-center flex-1 min-w-0">
+              <div className="flex flex-col items-center flex-1 min-w-0">
+                {/* Bouton cercle — disabled si non accessible */}
+                <button
+                  type="button"
+                  onClick={() => handleEtapeClick(etape.id, accessible)}
+                  disabled={!accessible}
+                  title={
+                    !accessible
+                      ? 'Complétez les étapes précédentes pour débloquer'
+                      : etape.titre
+                  }
+                  aria-label={
+                    !accessible
+                      ? `${etape.titre} — à remplir progressivement`
+                      : etape.titre
+                  }
                   className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors',
+                    'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all shrink-0',
                     completee && 'bg-green-500 text-white',
-                    !completee && active && 'bg-blue-500 text-white',
-                    !completee && !active && accessible && 'bg-zinc-200 text-zinc-600',
-                    !completee && !active && !accessible && 'bg-zinc-100 text-zinc-400'
+                    !completee && active && 'bg-blue-500 text-white ring-2 ring-blue-300',
+                    !completee && !active && accessible && 'bg-zinc-200 text-zinc-600 hover:bg-zinc-300 cursor-pointer',
+                    !accessible && 'bg-zinc-100 text-zinc-300 cursor-not-allowed opacity-60',
                   )}
                 >
-                  {completee ? <Check className="w-4 h-4" /> : index + 1}
-                </div>
-                <div className="mt-2 text-center">
+                  {completee ? (
+                    <Check className="w-4 h-4" />
+                  ) : !accessible ? (
+                    <Lock className="w-3 h-3" />
+                  ) : (
+                    index + 1
+                  )}
+                </button>
+
+                {/* Label */}
+                <div className="mt-1.5 text-center px-1 w-full">
                   <p
                     className={cn(
-                      'text-xs font-medium truncate',
+                      'text-[10px] font-medium leading-tight truncate',
                       active && 'text-blue-600',
-                      !active && 'text-zinc-600'
+                      completee && 'text-green-600',
+                      !accessible && 'text-zinc-300',
+                      accessible && !active && !completee && 'text-zinc-500',
                     )}
                   >
                     {etape.titre}
                   </p>
-                  {etape.description && (
-                    <p className="text-[10px] text-zinc-500 truncate mt-0.5">
-                      {etape.description}
+                  {/* Mention obligatoire spec Section 4.1 */}
+                  {!accessible && (
+                    <p className="text-[9px] text-zinc-300 italic leading-tight">
+                      à remplir progressivement
                     </p>
                   )}
                 </div>
-              </button>
+              </div>
+
+              {/* Connecteur entre étapes */}
               {index < etapes.length - 1 && (
                 <ChevronRight
                   className={cn(
-                    'w-4 h-4 mx-2 flex-shrink-0',
-                    completee && 'text-green-500',
-                    !completee && 'text-zinc-300'
+                    'w-3 h-3 mx-0.5 flex-shrink-0 mb-4',
+                    completee ? 'text-green-400' : 'text-zinc-200',
                   )}
                 />
               )}
@@ -95,15 +151,20 @@ export function StepperProgressif({
           )
         })}
       </div>
-      
-      {/* Message pour étapes non accessibles */}
-      {!estAccessible(etapes.find((e) => e.id === etapeActive)!, etapes.findIndex((e) => e.id === etapeActive)) && (
-        <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-          <p className="text-xs text-amber-700">
-            ⚠️ Cette étape sera accessible une fois les étapes précédentes complétées.
-          </p>
-        </div>
-      )}
+
+      {/* Barre de progression */}
+      <div className="w-full bg-zinc-100 rounded-full h-1">
+        <div
+          className="bg-green-500 h-1 rounded-full transition-all duration-500"
+          style={{
+            width: `${
+              etapes.length > 0
+                ? (etapesCompletees.size / etapes.length) * 100
+                : 0
+            }%`,
+          }}
+        />
+      </div>
     </div>
   )
 }

@@ -13,8 +13,9 @@
 import { useController, type Control } from 'react-hook-form'
 import { cn } from '@/lib/utils'
 import { MapPin, ChevronRight, Loader2, Check, Users } from 'lucide-react'
-import { useRegions, useEnfantsGeo, usePopulationCalcul, type ZoneItem, type StatistiquesZone } from '@/hooks/useGeo'
+import { useRegions, useEnfantsGeo, usePopulationCalcul, type ZoneItem} from '@/hooks/useGeo'
 import { GeoHierarchicalNavigator } from './GeoHierarchicalNavigator'
+// import {type ContexteGeographique} from "@matura/shared"
 
 // ─── TYPES (exportés pour defaultValues dans Stade1Form) ──────────────────────
 
@@ -83,7 +84,7 @@ function CheckboxItem({ label, checked, onChange }: CheckboxItemProps) {
 
 interface GeoSelectorProps {
   control:   Control<any>
-  name:      string        // chemin RHF, ex: 'contexte_geographique'
+  name:      any|"contexte_geographique" // chemin RHF, ex: 'contexte_geographique'
   labelCls?: string
   inputCls?: string
 }
@@ -95,7 +96,7 @@ export function GeoSelector({ control, name, labelCls, inputCls }: GeoSelectorPr
   }
 
   // RHF — lit/écrit l'objet ContexteGeographique entier
-  const { field } = useController({ control, name })
+  const {field} = useController({ control, name})
   const value: ContexteGeographique = field.value ?? {
     niveau_principal: 'REGION',
     zone_principale:  { code: '', nom: '' },

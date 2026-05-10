@@ -8,7 +8,7 @@
 //     { niveau_principal, zone_principale, sous_zones }
 //   Sections A, B, C : identiques à l'ancienne version
 
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm, useFieldArray ,type Control} from 'react-hook-form'
 import { cn } from '@/lib/utils'
 import { Plus, Trash2, Save, Loader2 } from 'lucide-react'
 import type { StadeData } from '@/hooks/useStades'
@@ -249,7 +249,7 @@ export function Stade1Form({ stade, onSave, saving }: Props) {
           Il écrit dans RHF via useController sur 'contexte_geographique'.
         */}
         <GeoSelector
-          control={control}
+          control={control as Control<any>}
           name="contexte_geographique"
           labelCls={labelCls}
           inputCls={inputCls}

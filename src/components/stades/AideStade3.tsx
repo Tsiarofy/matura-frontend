@@ -1,4 +1,4 @@
-import { Users, TrendingUp, AlertTriangle, DollarSign, BarChart3, Target, Globe } from 'lucide-react'
+import { AlertCircle, Lightbulb, TrendingUp, DollarSign, Users } from 'lucide-react'
 
 export function AideStade3() {
   return (
@@ -6,11 +6,11 @@ export function AideStade3() {
       {/* Type de projet */}
       <div className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <Globe className="w-5 h-5 text-blue-600" />
-          <h3 className="font-semibold text-blue-900">Type de projet</h3>
+          <Users className="w-5 h-5 text-blue-600" />
+          <h3 className="font-semibold text-blue-900">Type de client</h3>
         </div>
         <p className="text-blue-800 mb-3 text-sm">
-          Le type de projet (B2B, B2C ou B2B2C) a été défini lors de la création de votre projet. Il détermine la manière dont vous analyserez votre marché.
+          Le type de client (B2B, B2C ou B2B2C) est défini lors de la création du projet. Il détermine la source de la base du marché : INSTAT (B2C) ou déclaratif (B2B).
         </p>
         <div className="bg-white border border-blue-200 p-3 rounded">
           <p className="text-sm text-blue-700 italic font-medium">Exemples :</p>
@@ -23,33 +23,33 @@ export function AideStade3() {
       </div>
 
       {/* Zone géographique */}
-      <div className="border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded-r-lg">
+      <div className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <Users className="w-5 h-5 text-indigo-600" />
-          <h3 className="font-semibold text-indigo-900">Zone géographique ciblée</h3>
+          <Lightbulb className="w-5 h-5 text-blue-600" />
+          <h3 className="font-semibold text-blue-900">Zone géographique ciblée</h3>
         </div>
-        <p className="text-indigo-800 mb-3 text-sm">
-          La zone sélectionnée au Stade 1 est affichée ici. Vous pouvez la redéfinir si vos études de marché ont révélé une zone plus pertinente.
+        <p className="text-blue-800 mb-3 text-sm">
+          La zone sélectionnée au Stade 1 est votre référence. La base totale (TAM B2C) est la population INSTAT 2018 de cette zone.
         </p>
-        <div className="bg-white border border-indigo-200 p-3 rounded">
-          <p className="text-sm text-indigo-700 italic">
-            💡 La population affichée est basée sur les données INSTAT 2018.
+        <div className="bg-white border border-blue-200 p-3 rounded">
+          <p className="text-sm text-blue-700 italic">
+            Exemple : « Base totale = population INSTAT 2018 de la zone ciblée ».
           </p>
         </div>
       </div>
 
       {/* Estimation utilisateurs */}
-      <div className="border-l-4 border-purple-500 bg-purple-50 p-4 rounded-r-lg">
+      <div className="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <Target className="w-5 h-5 text-purple-600" />
-          <h3 className="font-semibold text-purple-900">Pourcentage d'utilisateurs</h3>
+          <Users className="w-5 h-5 text-green-600" />
+          <h3 className="font-semibold text-green-900">Pourcentage d'utilisateurs</h3>
         </div>
-        <p className="text-purple-800 mb-3 text-sm">
+        <p className="text-green-800 mb-3 text-sm">
           Estimez le pourcentage de la population totale qui utilisera réellement votre produit. Soyez réaliste : 100% est rarement atteint.
         </p>
-        <div className="bg-white border border-purple-200 p-3 rounded">
-          <p className="text-sm text-purple-700 italic font-medium">Exemples :</p>
-          <ul className="text-sm text-purple-700 mt-2 space-y-1">
+        <div className="bg-white border border-green-200 p-3 rounded">
+          <p className="text-sm text-green-700 italic font-medium">Exemples :</p>
+          <ul className="text-sm text-green-700 mt-2 space-y-1">
             <li>• Produit de masse : 10-30%</li>
             <li>• Produit niche : 1-5%</li>
             <li>• Produit indispensable : 30-50%</li>
@@ -57,29 +57,10 @@ export function AideStade3() {
         </div>
       </div>
 
-      {/* Enquêtes terrain */}
-      <div className="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
-        <div className="flex items-center gap-2 mb-2">
-          <BarChart3 className="w-5 h-5 text-green-600" />
-          <h3 className="font-semibold text-green-900">Enquêtes terrain</h3>
-        </div>
-        <p className="text-green-800 mb-3 text-sm">
-          Les enquêtes terrain valident vos hypothèses. Un taux de réponse positif élevé indique un besoin réel.
-        </p>
-        <div className="bg-white border border-green-200 p-3 rounded">
-          <p className="text-sm text-green-700 italic font-medium">Bonnes pratiques :</p>
-          <ul className="text-sm text-green-700 mt-2 space-y-1">
-            <li>• Échantillon minimum : 50 personnes</li>
-            <li>• Méthode mixte (en face + téléphone) pour plus de fiabilité</li>
-            <li>• Taux de réponse positif {'<'} 20% = signal fort</li>
-          </ul>
-        </div>
-      </div>
-
       {/* Concurrents */}
       <div className="border-l-4 border-orange-500 bg-orange-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <AlertTriangle className="w-5 h-5 text-orange-600" />
+          <AlertCircle className="w-5 h-5 text-orange-600" />
           <h3 className="font-semibold text-orange-900">Analyse concurrentielle</h3>
         </div>
         <p className="text-orange-800 mb-3 text-sm">
@@ -96,61 +77,61 @@ export function AideStade3() {
       </div>
 
       {/* TAM / SAM / SOM */}
-      <div className="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
+      <div className="border-l-4 border-purple-500 bg-purple-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <TrendingUp className="w-5 h-5 text-red-600" />
-          <h3 className="font-semibold text-red-900">TAM / SAM / SOM</h3>
+          <TrendingUp className="w-5 h-5 text-purple-600" />
+          <h3 className="font-semibold text-purple-900">TAM / SAM / SOM</h3>
         </div>
-        <p className="text-red-800 mb-3 text-sm">
+        <p className="text-purple-800 mb-3 text-sm">
           Ces trois métriques structurent votre analyse de marché et sont essentielles pour les investisseurs.
         </p>
-        <div className="bg-white border border-red-200 p-3 rounded space-y-3">
+        <div className="bg-white border border-purple-200 p-3 rounded space-y-3">
           <div>
-            <p className="text-sm text-red-700 font-semibold">TAM (Total Addressable Market)</p>
-            <p className="text-sm text-red-600 italic">Marché total théorique si tout le monde utilisait votre produit. Ex: tous les consommateurs mondiaux.</p>
+            <p className="text-sm text-purple-700 font-semibold">TAM</p>
+            <p className="text-sm text-purple-600 italic">Taille totale du marché (B2C : base INSTAT de la zone ; B2B : déclaratif).</p>
           </div>
           <div>
-            <p className="text-sm text-red-700 font-semibold">SAM (Serviceable Available Market)</p>
-            <p className="text-sm text-red-600 italic">Marché que vous pouvez réellement servir avec votre modèle actuel. Ex: consommateurs dans votre zone géographique.</p>
+            <p className="text-sm text-purple-700 font-semibold">SAM</p>
+            <p className="text-sm text-purple-600 italic">Part du marché que vous pouvez réellement servir.</p>
           </div>
           <div>
-            <p className="text-sm text-red-700 font-semibold">SOM (Serviceable Obtainable Market)</p>
-            <p className="text-sm text-red-600 italic">Marché réaliste que vous pouvez conquérir la première année. Early-stage: généralement 2-5% du SAM.</p>
+            <p className="text-sm text-purple-700 font-semibold">SOM</p>
+            <p className="text-sm text-purple-600 italic">Objectif réaliste de conquête An 1.</p>
           </div>
         </div>
       </div>
 
       {/* Positionnement prix */}
-      <div className="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-r-lg">
+      <div className="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <DollarSign className="w-5 h-5 text-yellow-600" />
-          <h3 className="font-semibold text-yellow-900">Positionnement prix & IRP</h3>
+          <DollarSign className="w-5 h-5 text-green-600" />
+          <h3 className="font-semibold text-green-900">Positionnement prix & IRP</h3>
         </div>
-        <p className="text-yellow-800 mb-3 text-sm">
+        <p className="text-green-800 mb-3 text-sm">
           Le prix doit être aligné avec le pouvoir d'achat de votre zone cible. L'IRP (Indice de Réalisme Prix) valide cette cohérence.
         </p>
-        <div className="bg-white border border-yellow-200 p-3 rounded">
-          <p className="text-sm text-yellow-700 italic">
+        <div className="bg-white border border-green-200 p-3 rounded">
+          <p className="text-sm text-green-700 italic">
             💡 Si votre prix {'>'} 30% du revenu moyen mensuel, l'IRP sera faible et vous devrez justifier.
           </p>
         </div>
       </div>
 
       {/* Alertes automatiques */}
-      <div className="border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r-lg">
+      <div className="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
         <div className="flex items-center gap-2 mb-2">
-          <AlertTriangle className="w-5 h-5 text-rose-600" />
-          <h3 className="font-semibold text-rose-900">Alertes automatiques</h3>
+          <AlertCircle className="w-5 h-5 text-red-600" />
+          <h3 className="font-semibold text-red-900">Alertes automatiques</h3>
         </div>
-        <p className="text-rose-800 mb-3 text-sm">
-          Le système vous alerte si vos objectifs de marché semblent irréalistes par rapport aux benchmarks startup.
+        <p className="text-red-800 mb-3 text-sm">
+          Le système vous alerte si vos objectifs dépassent des seuils de réalisme (basés sur le marché libre).
         </p>
-        <div className="bg-white border border-rose-200 p-3 rounded">
-          <p className="text-sm text-rose-700 font-medium">Seuils d'alerte :</p>
-          <ul className="text-sm text-rose-700 mt-2 space-y-1">
-            <li>• <span className="text-green-600 font-semibold">Vert</span> : SOM ≤ 10% des utilisateurs calculés (réaliste)</li>
-            <li>• <span className="text-orange-600 font-semibold">Orange</span> : SOM 10-30% des utilisateurs calculés (ambitieux)</li>
-            <li>• <span className="text-red-600 font-semibold">Rouge</span> : SOM {'>'} 30% des utilisateurs calculés (irréaliste)</li>
+        <div className="bg-white border border-red-200 p-3 rounded">
+          <p className="text-sm text-red-700 font-medium">Seuils (spec 80/20/5) :</p>
+          <ul className="text-sm text-red-700 mt-2 space-y-1">
+            <li>• <strong>Rouge</strong> si SAM (libre) &gt; 80%</li>
+            <li>• <strong>Rouge</strong> si SOM (libre, An 1) &gt; 20%</li>
+            <li>• <strong>Orange</strong> si SOM (libre, An 1) &gt; 5%</li>
           </ul>
         </div>
       </div>

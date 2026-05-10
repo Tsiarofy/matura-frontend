@@ -73,10 +73,17 @@ export function useEnregistrerStade(projetId: string, numStade: number) {
     mutationFn: async (donnees) => {
       // console.log("AVANT LE RESUETE PUT");     
       // console.log(donnees);
+
+
+    if(numStade===1){
+      console.log("_ _ _ _ _ _ ___ _ _")
+      console.log(donnees.contexte_geographique);
+    }
     const { data } = await apiClient.put<EnregistrementResult>(
         `/projets/${projetId}/stades/${numStade}`,
         donnees,
       )
+
     return data
 
       // try {

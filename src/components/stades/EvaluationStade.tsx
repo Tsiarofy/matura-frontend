@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { Star, CheckCircle2, RotateCcw, Loader2 } from 'lucide-react'
 import type { StadeData } from '@/hooks/useStades'
 import { AffichageCalculsInformatifs } from './AffichageCalculsInformatifs'
+import * as Icon from 'lucide-react'
 
 const CRITERES_PAR_STADE: Record<number, string[]> = {
   1: ['clarte_probleme', 'validation_terrain', 'realisme_contexte'],
@@ -48,7 +49,7 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
     Object.fromEntries(criteres.map((c) => [c, 70])),
   )
 
-  // ── Vue entrepreneur ──────────────────────────────────────────────────────────
+  //── Vue entrepreneur ──────────────────────────────────────────────────────────
   if (!isMentor) {
     if (stade.statut === 'SOUMIS') {
       return (
@@ -93,6 +94,16 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
   }
 
   // ── Formulaire mentor ─────────────────────────────────────────────────────────
+  if(stade.statut==="VALIDE"){
+    return (
+      <div className="text-center py-8 text-[12px] text-slate-400 flex items-center justify-center shrink-10">
+      <span className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center shrink-0">
+       <Icon.Check size={9} strokeWidth={3} className="text-white" />
+        </span>
+        Vous avez déja validé cet stade 
+      </div>
+    )
+  }
   if (stade.statut !== 'SOUMIS') {
     return (
       <div className="text-center py-8 text-[12px] text-zinc-400">
@@ -100,7 +111,6 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
       </div>
     )
   }
-
   const handleSubmit = () => {
     evaluerMutation.mutate({
       note,
