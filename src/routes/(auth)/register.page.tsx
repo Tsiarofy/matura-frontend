@@ -95,8 +95,11 @@ export default function RegisterPage() {
       <div className="flex-1 flex flex-col justify-between p-6 md:p-10 lg:p-12 border-b md:border-b-0 md:border-r border-zinc-200">
         <div>
           <div className="flex items-center gap-2 mb-6">
-            <div className="h-8 w-8 rounded-md bg-green-600 flex items-center justify-center">
-              <span className="text-white text-xs font-medium">M</span>
+            <div
+              className="h-8 w-8 rounded-xl flex items-center justify-center"
+              style={{ background: '#41A677', boxShadow: '0 4px 16px rgba(65,166,119,0.35)' }}
+            >
+              <span className="text-white text-xs font-bold">M</span>
             </div>
             <span className="text-lg font-medium text-zinc-900">MaturaProj</span>
           </div>
@@ -114,8 +117,8 @@ export default function RegisterPage() {
             const Icon = role.icon;
             return (
               <div key={role.id} className="flex items-start gap-3">
-                <div className="p-2 bg-green-50 rounded-md border border-green-200">
-                  <Icon className="h-4 w-4 text-green-600" />
+                <div className="p-2 rounded-xl flex items-center justify-center" style={{ background: '#D7EFE2' }}>
+                  <Icon className="h-4 w-4" style={{ color: '#41A677' }} />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-zinc-800">{role.label}</p>
@@ -223,8 +226,8 @@ export default function RegisterPage() {
                             key={r.id}
                             className={`flex items-start gap-3 p-3 rounded-md border-0.5 cursor-pointer transition-colors ${
                               field.value === r.id
-                                ? "border-green-500 bg-green-50/50"
-                                : "border-zinc-200 hover:bg-zinc-50"
+                                ? 'border-[#41A677] bg-[#D7EFE2]/30'
+                                : 'border-zinc-200 hover:bg-zinc-50'
                             }`}
                           >
                             <RadioGroupItem value={r.id} id={r.id} className="mt-0.5" />
@@ -248,7 +251,8 @@ export default function RegisterPage() {
             <Button
               type="submit"
               form="register-form"
-              className="w-full bg-green-600 hover:bg-green-700 text-white h-9 text-sm font-medium"
+              className="w-full h-11 rounded-xl text-sm font-semibold"
+              style={{ background: '#41A677', color: '#fff' }}
             >
               Créer mon compte
             </Button>
@@ -256,7 +260,7 @@ export default function RegisterPage() {
               Vous avez déjà un compte ?{" "}
               <Link
                 to="/login"
-                className="text-green-600 font-medium hover:underline"
+                className="font-semibold hover:underline" style={{ color: '#41A677' }}
               >
                 Se connecter
               </Link>

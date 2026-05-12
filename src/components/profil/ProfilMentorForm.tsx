@@ -25,7 +25,7 @@ export function ProfilMentorForm() {
       ...(userData?.profil || {}),
       domaines_expertise: userData?.profil?.domaines_expertise || [],
       disponible: userData?.profil?.disponible ?? true,
-    },
+    } as ProfilMentor,
   });
 
   // Update form when data loads

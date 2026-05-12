@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { ChevronRight, Loader2, Check } from 'lucide-react'
 import { useRegions, useEnfantsGeo, type ZoneItem } from '@/hooks/useGeo'
 
+type Niveau='REGION' | 'DISTRICT' | 'COMMUNE' | 'FOKONTANY';
 interface GeoHierarchicalNavigatorProps {
   niveauCible: 'REGION' | 'DISTRICT' | 'COMMUNE' | 'FOKONTANY'
   onSelectionComplete: (resultat: {
@@ -57,7 +58,7 @@ export function GeoHierarchicalNavigator({
   )
 
   // Handler pour sélectionner une zone à une étape
-  const handleSelection = (niveau: string, zone: ZoneItem) => {
+  const handleSelection = (niveau: Niveau, zone: ZoneItem) => {
     const nouvellesSelections = { ...selections, [niveau]: zone }
     setSelections(nouvellesSelections)
 

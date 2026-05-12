@@ -1,71 +1,66 @@
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { SideBar } from "@/components/sideBar/sideBar";
+import { TopBar } from "@/components/shared/TopBar";
 import { authStore } from "@/stores/authStore";
 import { useProjetCourant } from "@/hooks/useStades";
-import { Button } from "@/components/ui/button";
-// import { useDeconnexion } from "@/hooks/useDeconnexion";
 import { apiClient } from "@/lib/apiClient";
-// import from "react"
-
-// Middleware de protection pour vérifier l'authentification
-// export const Route = createFileRoute('/(dashboard)/_layout')({
-
-//   component: DashboardLayout,
-// });
+import { ROLE_LABELS } from "@/lib/constants";
 
 export default function DashboardLayout() {
   const user = authStore((state) => state.utilisateur);
   const role = user?.role ?? "INVESTISSEUR";
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
- const onDeconnexion = async () => {
-    // const store=authStore();
-    // store.logout();
+  // ── Déconnexion (logique inchangée) ──────────────────────────────────────
+  const onDeconnexion = async () => {
     try {
-      await apiClient.delete("auth/deconnexion"); 
+      await apiClient.delete("auth/deconnexion");
       authStore.getState().logout();
-        navigate({to:"/login"});
-      } catch (error) {
-        console.error("Echec de la deconnexion :", error);
+      navigate({ to: "/login" });
+    } catch (error) {
+      console.error("Echec de la deconnexion :", error);
     }
-}
+  };
 
-  // Uniquement pour ENTREPRENEUR
+  // ── Projet courant (ENTREPRENEUR uniquement, logique inchangée) ───────────
   const { data: projetCourant } = useProjetCourant();
 
   const initiales = user
     ? `${user.prenom[0] ?? ""}${user.nom[0] ?? ""}`.toUpperCase()
     : "?";
   const nomComplet = user ? `${user.prenom} ${user.nom}` : "";
-
-  // const deconnexion=useDeconnexion(); 
+  const roleLabel  = user ? (ROLE_LABELS[user.role] ?? user.role) : "";
 
   return (
-    <div className="flex flex-col">
-      <div className="flex  h-15 w-full b-red rounded-tl-lg rounded-tr-lg bg-slate-400 items-center justify-between px-4">
-        <h1 className="text-2xl font-bold mb-4">
-          Bienvenue sur votre tableau de bord !
-        </h1>
-        <Button onClick={()=>{
-        onDeconnexion()
-      // console.log("blablabla")  
-      }
-        }> Deconnexion </Button>  
-      </div>
-      <div className="flex flex-row h-screen">
+    // Conteneur racine — plein écran, pas de scroll global
+    <div className="flex h-screen overflow-hidden bg-background">
 
-        <SideBar
-          role={role}
-          projetCourant={projetCourant ?? null}
+      {/* ── Sidebar ── */}
+      <SideBar
+        role={role}
+        projetCourant={projetCourant ?? null}
+        userName={nomComplet}
+        userInitials={initiales}
+      />
+
+      {/* ── Zone principale (TopBar + contenu) ── */}
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+
+        {/* TopBar sticky glassmorphism */}
+        <TopBar
           userName={nomComplet}
           userInitials={initiales}
+          userRole={roleLabel}
+          onDeconnexion={onDeconnexion}
         />
-        {/* <div className="bg-zinc-50 flex-1 overflow-y-auto p-6"> */}
-  
-      <div className="bg-zinc-50 flex-1 overflow-y-auto p-6">
-        <Outlet />
+
+        {/* Contenu scrollable */}
+        <main className="flex-1 overflow-y-auto p-6">
+          <Outlet />
+        </main>
+
       </div>
     </div>
-   </div>
   );
 }
+
