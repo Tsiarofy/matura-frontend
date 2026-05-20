@@ -250,7 +250,7 @@ export function Stade1Form({ stade, onSave, saving }: Props) {
         */}
         <GeoSelector
           control={control as Control<any>}
-          name="contexte_geographique"
+          name="contexte_geographique"  
           labelCls={labelCls}
           inputCls={inputCls}
         />

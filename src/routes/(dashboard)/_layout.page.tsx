@@ -23,18 +23,20 @@ export default function DashboardLayout() {
   };
 
   // ── Projet courant (ENTREPRENEUR uniquement, logique inchangée) ───────────
-  const { data: projetCourant } = useProjetCourant();
+
+  const { data: projetCourant } = useProjetCourant({
+    enabled: role === "ENTREPRENEUR",
+  });
 
   const initiales = user
     ? `${user.prenom[0] ?? ""}${user.nom[0] ?? ""}`.toUpperCase()
     : "?";
   const nomComplet = user ? `${user.prenom} ${user.nom}` : "";
-  const roleLabel  = user ? (ROLE_LABELS[user.role] ?? user.role) : "";
+  const roleLabel = user ? (ROLE_LABELS[user.role] ?? user.role) : "";
 
   return (
     // Conteneur racine — plein écran, pas de scroll global
     <div className="flex h-screen overflow-hidden bg-background">
-
       {/* ── Sidebar ── */}
       <SideBar
         role={role}
@@ -45,7 +47,6 @@ export default function DashboardLayout() {
 
       {/* ── Zone principale (TopBar + contenu) ── */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-
         {/* TopBar sticky glassmorphism */}
         <TopBar
           userName={nomComplet}
@@ -58,9 +59,7 @@ export default function DashboardLayout() {
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
-
       </div>
     </div>
   );
 }
-

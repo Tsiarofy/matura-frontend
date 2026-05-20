@@ -20,12 +20,14 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: 'FolderKanban', lien: '/projets', label: 'Mes Projets' },
     { icon: 'BadgeDollarSign', lien: '/financements', label: 'Financements' },
     { icon: 'Users', lien: '/mentors', label: 'Mentors' },
+    { icon: 'GraduationCap', lien: '/formations', label: 'Formations' },
     { icon: 'User', lien: '/profil', label: 'Profil' },
   ],
   MENTOR: [
     { icon: 'LayoutDashboard', lien: '/dashboard', label: 'Dashboard' },
     { icon: 'FolderOpen', lien: '/projets-suivis', label: 'Projets suivis' },
     { icon: 'Bell', lien: '/demandes', label: 'Demandes' },
+    { icon: 'GraduationCap', lien: '/mes-formations', label: 'Mes Formations' },
     { icon: 'User', lien: '/profil', label: 'Profil' },
   ],
   INVESTISSEUR: [

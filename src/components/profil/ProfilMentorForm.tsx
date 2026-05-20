@@ -1,61 +1,82 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ProfilMentorSchema, type ProfilMentor } from '@matura/shared';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { apiClient } from '@/lib/apiClient';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Upload, User, Plus, X } from 'lucide-react';
-import { useState } from 'react';
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ProfilMentorSchema, type ProfilMentor } from "@matura/shared";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/apiClient";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Loader2, Upload, User, Plus, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function ProfilMentorForm() {
   const { data: userData, isLoading } = useQuery({
-    queryKey: ['profil', 'moi'],
-    queryFn: () => apiClient.get('/utilisateurs/moi').then((res) => res.data),
+    queryKey: ["profil", "moi"],
+    queryFn: () => apiClient.get("/utilisateurs/moi").then((res) => res.data),
   });
-
-  const [domaineInput, setDomaineInput] = useState('');
+  // const userData=[];
+  // const isLoading=false;
+  const [domaineInput, setDomaineInput] = useState("");
 
   const form = useForm<ProfilMentor>({
     resolver: zodResolver(ProfilMentorSchema),
     defaultValues: {
-      ...(userData?.profil || {}),
-      domaines_expertise: userData?.profil?.domaines_expertise || [],
-      disponible: userData?.profil?.disponible ?? true,
+      domaines_expertise: [],
+      disponible: true,
     } as ProfilMentor,
   });
 
-  // Update form when data loads
-  if (userData?.profil && !form.formState.isDirty) {
-    form.reset(userData.profil);
-  }
+  // Reset form when user data is loaded (avoid resetting on every render)
+  useEffect(() => {
+    if (!userData?.profil) return;
+    if (form.formState.isDirty) return;
+    form.reset({
+      ...userData.profil,
+      domaines_expertise: userData.profil.domaines_expertise || [],
+      disponible: userData.profil.disponible ?? true,
+    } as ProfilMentor);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData?.profil]);
+
+  // Subscribe to specific fields to avoid unnecessary re-renders
+  // const bio = useWatch({ control: form.control, name: "bio" });
+  // const domaines = useWatch({
+  //   control: form.control,
+  //   name: "domaines_expertise",
+  //   defaultValue: [],
+  // });
 
   const mutation = useMutation({
     mutationFn: (data: ProfilMentor) =>
-      apiClient.patch('/utilisateurs/moi', data),
+      apiClient.patch("/utilisateurs/moi", data),
     onSuccess: () => {
-      alert('Profil mis à jour avec succès');
+      alert("Profil mis à jour avec succès");
     },
     onError: (error) => {
-      console.error('Erreur lors de la mise à jour:', error);
-      alert('Erreur lors de la mise à jour du profil');
+      console.error("Erreur lors de la mise à jour:", error);
+      alert("Erreur lors de la mise à jour du profil");
     },
   });
 
   const avatarMutation = useMutation({
     mutationFn: (file: File) => {
       const formData = new FormData();
-      formData.append('avatar', file);
-      return apiClient.post('/upload/avatar', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      formData.append("avatar", file);
+      return apiClient.post("/upload/avatar", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
     },
     onSuccess: (response) => {
       const urlAvatar = response.data.url;
-      apiClient.patch('/utilisateurs/moi/avatar', { url_avatar: urlAvatar });
+      apiClient.patch("/utilisateurs/moi/avatar", { url_avatar: urlAvatar });
     },
   });
 
@@ -68,17 +89,20 @@ export function ProfilMentorForm() {
 
   const addDomaine = () => {
     if (domaineInput.trim()) {
-      const current = form.watch('domaines_expertise') || [];
+      const current = form.getValues("domaines_expertise") || [];
       if (!current.includes(domaineInput.trim())) {
-        form.setValue('domaines_expertise', [...current, domaineInput.trim()]);
-        setDomaineInput('');
+        form.setValue("domaines_expertise", [...current, domaineInput.trim()]);
+        setDomaineInput("");
       }
     }
   };
 
   const removeDomaine = (index: number) => {
-    const current = form.watch('domaines_expertise') || [];
-    form.setValue('domaines_expertise', current.filter((_, i) => i !== index));
+    const current = form.getValues("domaines_expertise") || [];
+    form.setValue(
+      "domaines_expertise",
+      current.filter((_, i) => i !== index),
+    );
   };
 
   if (isLoading) {
@@ -143,23 +167,19 @@ export function ProfilMentorForm() {
         </CardContent>
       </Card>
 
-      {/* Profile Form */}
       <Card>
         <CardHeader>
           <CardTitle>Informations de mentor</CardTitle>
-          <CardDescription>
-            Complétez votre profil de mentor
-          </CardDescription>
+          <CardDescription>Complétez votre profil de mentor</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Téléphone */}
             <div className="space-y-2">
               <Label htmlFor="telephone">Téléphone</Label>
               <Input
                 id="telephone"
                 placeholder="+261 34 00 000 00"
-                {...form.register('telephone')}
+                {...form.register("telephone")}
               />
               {form.formState.errors.telephone && (
                 <p className="text-sm text-red-500">
@@ -168,13 +188,12 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* Ville */}
             <div className="space-y-2">
               <Label htmlFor="ville">Ville</Label>
               <Input
                 id="ville"
                 placeholder="Antananarivo"
-                {...form.register('ville')}
+                {...form.register("ville")}
               />
               {form.formState.errors.ville && (
                 <p className="text-sm text-red-500">
@@ -183,13 +202,12 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* Région */}
             <div className="space-y-2">
               <Label htmlFor="region">Région</Label>
               <Input
                 id="region"
                 placeholder="Analamanga"
-                {...form.register('region')}
+                {...form.register("region")}
               />
               {form.formState.errors.region && (
                 <p className="text-sm text-red-500">
@@ -198,17 +216,16 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* Bio */}
             <div className="space-y-2">
               <Label htmlFor="bio">Bio</Label>
               <Textarea
                 id="bio"
                 placeholder="Décrivez votre expertise et votre expérience..."
                 maxLength={500}
-                {...form.register('bio')}
+                {...form.register("bio")}
               />
               <p className="text-xs text-zinc-500">
-                {form.watch('bio')?.length || 0}/500 caractères
+                {form.watch("bio")?.length || 0}/500 caractères
               </p>
               {form.formState.errors.bio && (
                 <p className="text-sm text-red-500">
@@ -217,7 +234,6 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* Domaines d'expertise */}
             <div className="space-y-2">
               <Label>Domaines d'expertise</Label>
               <div className="flex gap-2">
@@ -226,7 +242,7 @@ export function ProfilMentorForm() {
                   value={domaineInput}
                   onChange={(e) => setDomaineInput(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       addDomaine();
                     }
@@ -237,21 +253,23 @@ export function ProfilMentorForm() {
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
-                {(form.watch('domaines_expertise') || []).map((domaine, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-1 bg-zinc-100 px-3 py-1 rounded-full text-sm"
-                  >
-                    {domaine}
-                    <button
-                      type="button"
-                      onClick={() => removeDomaine(index)}
-                      className="text-zinc-500 hover:text-red-500"
+                {(form.watch("domaines_expertise") || []).map(
+                  (domaine, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-1 bg-zinc-100 px-3 py-1 rounded-full text-sm"
                     >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
+                      {domaine}
+                      <button
+                        type="button"
+                        onClick={() => removeDomaine(index)}
+                        className="text-zinc-500 hover:text-red-500"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ),
+                )}
               </div>
               {form.formState.errors.domaines_expertise && (
                 <p className="text-sm text-red-500">
@@ -260,7 +278,6 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* Années d'expérience */}
             <div className="space-y-2">
               <Label htmlFor="annees_experience">Années d'expérience</Label>
               <Input
@@ -268,7 +285,7 @@ export function ProfilMentorForm() {
                 type="number"
                 placeholder="5"
                 min="0"
-                {...form.register('annees_experience', { valueAsNumber: true })}
+                {...form.register("annees_experience", { valueAsNumber: true })}
               />
               {form.formState.errors.annees_experience && (
                 <p className="text-sm text-red-500">
@@ -277,13 +294,12 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* LinkedIn URL */}
             <div className="space-y-2">
               <Label htmlFor="linkedin_url">LinkedIn URL</Label>
               <Input
                 id="linkedin_url"
                 placeholder="https://linkedin.com/in/votre-profil"
-                {...form.register('linkedin_url')}
+                {...form.register("linkedin_url")}
               />
               {form.formState.errors.linkedin_url && (
                 <p className="text-sm text-red-500">
@@ -292,12 +308,11 @@ export function ProfilMentorForm() {
               )}
             </div>
 
-            {/* Disponible */}
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 id="disponible"
-                {...form.register('disponible')}
+                {...form.register("disponible")}
                 className="w-4 h-4"
               />
               <Label htmlFor="disponible" className="cursor-pointer">
@@ -316,7 +331,7 @@ export function ProfilMentorForm() {
                   Enregistrement...
                 </>
               ) : (
-                'Enregistrer le profil'
+                "Enregistrer le profil"
               )}
             </Button>
           </form>

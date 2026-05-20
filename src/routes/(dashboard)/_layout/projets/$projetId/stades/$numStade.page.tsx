@@ -3,7 +3,7 @@ import { useStade, useEnregistrerStade, useSoumettre, useStadeGate, useProjetDet
 import { toast } from 'sonner'
 import { StadeTemplate } from '@/components/projet/StadeTemplate'
 import { authStore } from '@/stores/authStore'
-import { Loader2, AlertCircle, ChevronLeft } from 'lucide-react'
+import { Loader2, AlertCircle, ChevronLeft, GraduationCap } from 'lucide-react'
 import { STADE_LABELS_COMPLETS } from '@/lib/constants'
 import { Stade1Form } from '@/components/stades/Stade1Form'
 import { Stade2Form } from '@/components/stades/Stade2Form'
@@ -108,6 +108,23 @@ export default function StadeNumPage() {
         <span className="text-zinc-300 text-[12px]">/</span>
         <span className="text-[12px] text-zinc-600">{titre}</span>
       </div>
+
+      {/* Bouton formations filtrées — affiché si le projet a un type_cible */}
+      {projet && !isMentor && (
+        <div className="flex justify-end">
+          <Link
+            to="/formations"
+            search={{
+              stade_cible: numStade,
+              ...(projet.type_cible && { type_cible: projet.type_cible as 'B2C' | 'B2B' | 'B2B2C' }),
+            }}
+            className="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-[12px] font-medium hover:bg-indigo-100 transition-colors"
+          >
+            <GraduationCap className="w-3.5 h-3.5" />
+            Formations pour ce stade
+          </Link>
+        </div>
+      )}
 
       {/* En-tête stade */}
       <div className="flex items-center justify-between">
