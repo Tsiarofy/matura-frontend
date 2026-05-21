@@ -1,4 +1,4 @@
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProfilMentorSchema, type ProfilMentor } from "@matura/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -15,16 +15,28 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Upload, User, Plus, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export function ProfilMentorForm() {
   const { data: userData, isLoading } = useQuery({
     queryKey: ["profil", "moi"],
     queryFn: () => apiClient.get("/utilisateurs/moi").then((res) => res.data),
+    // ✅ Évite les refetch intempestifs
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
   });
-  // const userData=[];
-  // const isLoading=false;
+
   const [domaineInput, setDomaineInput] = useState("");
+
+  // ✅ Dérivé directement de userData — pas de useState séparé qui cause un re-render
+  const urlAvatar = userData?.url_avatar
+    ? `${import.meta.env.VITE_BASE_URL}${userData.url_avatar}`
+    : undefined
+
+  // ✅ URL locale temporaire pendant l'upload (remplacée par urlAvatar après invalidation)
+  const [previewAvatar, setPreviewAvatar] = useState<string | undefined>(undefined)
+
+  const avatarToShow = previewAvatar ?? urlAvatar
 
   const form = useForm<ProfilMentor>({
     resolver: zodResolver(ProfilMentorSchema),
@@ -34,75 +46,75 @@ export function ProfilMentorForm() {
     } as ProfilMentor,
   });
 
-  // Reset form when user data is loaded (avoid resetting on every render)
+  // ✅ Ref pour s'assurer qu'on ne reset qu'une seule fois
+  const hasReset = useRef(false)
+
   useEffect(() => {
-    if (!userData?.profil) return;
-    if (form.formState.isDirty) return;
+    if (!userData?.profil) return
+    if (hasReset.current) return
+    hasReset.current = true
     form.reset({
       ...userData.profil,
       domaines_expertise: userData.profil.domaines_expertise || [],
       disponible: userData.profil.disponible ?? true,
-    } as ProfilMentor);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData?.profil]);
-
-  // Subscribe to specific fields to avoid unnecessary re-renders
-  // const bio = useWatch({ control: form.control, name: "bio" });
-  // const domaines = useWatch({
-  //   control: form.control,
-  //   name: "domaines_expertise",
-  //   defaultValue: [],
-  // });
+    } as ProfilMentor)
+  }, [userData?.profil, form])
 
   const mutation = useMutation({
     mutationFn: (data: ProfilMentor) =>
       apiClient.patch("/utilisateurs/moi", data),
     onSuccess: () => {
-      alert("Profil mis à jour avec succès");
+      alert("Profil mis à jour avec succès")
     },
     onError: (error) => {
-      console.error("Erreur lors de la mise à jour:", error);
-      alert("Erreur lors de la mise à jour du profil");
+      console.error("Erreur lors de la mise à jour:", error)
+      alert("Erreur lors de la mise à jour du profil")
     },
   });
 
   const avatarMutation = useMutation({
     mutationFn: (file: File) => {
-      const formData = new FormData();
-      formData.append("avatar", file);
+      const formData = new FormData()
+      formData.append("avatar", file)
       return apiClient.post("/upload/avatar", formData, {
         headers: { "Content-Type": "multipart/form-data" },
-      });
+      })
     },
     onSuccess: (response) => {
-      const urlAvatar = response.data.url;
-      apiClient.patch("/utilisateurs/moi/avatar", { url_avatar: urlAvatar });
+      const url = response.data.url
+      apiClient.patch("/utilisateurs/moi/avatar", { url_avatar: url })
+      // ✅ Nettoie la preview — urlAvatar prendra le relais après le prochain fetch
+      setPreviewAvatar(undefined)
     },
   });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      avatarMutation.mutate(file);
-    }
+    const file = e.target.files?.[0]
+    if (!file) return
+    // ✅ Preview immédiate locale sans attendre le serveur
+    setPreviewAvatar(URL.createObjectURL(file))
+    avatarMutation.mutate(file)
   };
 
   const addDomaine = () => {
-    if (domaineInput.trim()) {
-      const current = form.getValues("domaines_expertise") || [];
-      if (!current.includes(domaineInput.trim())) {
-        form.setValue("domaines_expertise", [...current, domaineInput.trim()]);
-        setDomaineInput("");
-      }
+    if (!domaineInput.trim()) return
+    const current = form.getValues("domaines_expertise") || []
+    if (!current.includes(domaineInput.trim())) {
+      form.setValue("domaines_expertise", [...current, domaineInput.trim()])
+      setDomaineInput("")
     }
   };
 
   const removeDomaine = (index: number) => {
-    const current = form.getValues("domaines_expertise") || [];
+    const current = form.getValues("domaines_expertise") || []
     form.setValue(
       "domaines_expertise",
       current.filter((_, i) => i !== index),
-    );
+    )
+  };
+
+  const onSubmit = (data: ProfilMentor) => {
+    mutation.mutate(data)
   };
 
   if (isLoading) {
@@ -110,12 +122,8 @@ export function ProfilMentorForm() {
       <div className="flex items-center justify-center p-8">
         <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
       </div>
-    );
+    )
   }
-
-  const onSubmit = (data: ProfilMentor) => {
-    mutation.mutate(data);
-  };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -133,9 +141,9 @@ export function ProfilMentorForm() {
         <CardContent>
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 rounded-full bg-zinc-200 flex items-center justify-center overflow-hidden">
-              {userData?.url_avatar ? (
+              {avatarToShow ? (
                 <img
-                  src={userData.url_avatar}
+                  src={avatarToShow}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
@@ -155,7 +163,7 @@ export function ProfilMentorForm() {
                 <Button type="button" variant="outline" size="sm" asChild>
                   <span className="flex items-center gap-2 cursor-pointer">
                     <Upload className="w-4 h-4" />
-                    Changer la photo
+                    {avatarMutation.isPending ? "Upload..." : "Changer la photo"}
                   </span>
                 </Button>
               </label>
@@ -243,8 +251,8 @@ export function ProfilMentorForm() {
                   onChange={(e) => setDomaineInput(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      e.preventDefault();
-                      addDomaine();
+                      e.preventDefault()
+                      addDomaine()
                     }
                   }}
                 />
@@ -253,23 +261,21 @@ export function ProfilMentorForm() {
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
-                {(form.watch("domaines_expertise") || []).map(
-                  (domaine, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-1 bg-zinc-100 px-3 py-1 rounded-full text-sm"
+                {(form.watch("domaines_expertise") || []).map((domaine, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-1 bg-zinc-100 px-3 py-1 rounded-full text-sm"
+                  >
+                    {domaine}
+                    <button
+                      type="button"
+                      onClick={() => removeDomaine(index)}
+                      className="text-zinc-500 hover:text-red-500"
                     >
-                      {domaine}
-                      <button
-                        type="button"
-                        onClick={() => removeDomaine(index)}
-                        className="text-zinc-500 hover:text-red-500"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </div>
-                  ),
-                )}
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                ))}
               </div>
               {form.formState.errors.domaines_expertise && (
                 <p className="text-sm text-red-500">
@@ -338,5 +344,5 @@ export function ProfilMentorForm() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

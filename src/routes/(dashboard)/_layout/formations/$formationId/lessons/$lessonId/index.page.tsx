@@ -1,6 +1,6 @@
 import { useParams } from '@tanstack/react-router'
 import { useFormationDetail } from '@/hooks/useFormations'
-import ReactPlayer from 'react-player'
+// import ReactPlayer from 'react-player'
 import ReactMarkdown from 'react-markdown'
 import { Link } from '@tanstack/react-router'
 import { PlayCircle, ChevronLeft } from 'lucide-react'
@@ -21,7 +21,7 @@ export default function LessonViewerPage() {
   const lessonSuivante = formation?.lessons[lessonIndex + 1]
   console.log("-- - - - - - - - - - leçons- - - - - - - -- - -  -");
   console.log(lesson);  
-
+const videoUrl = lesson?.url_video ? (lesson.url_video.startsWith('https') ? lesson.url_video : `${import.meta.env.VITE_BASE_URL}${lesson.url_video}`) : null;
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -58,12 +58,16 @@ export default function LessonViewerPage() {
 
         {/* Lecteur vidéo */}
         <div className="rounded-xl overflow-hidden bg-black aspect-video">
-          <ReactPlayer
-            url={lesson.url_video}
-            width="100%"
-            height="100%"
-            controls
-          />
+          {videoUrl && (
+            <video
+              src={videoUrl}
+              width="100%"
+              height="100%"
+              controls
+              autoPlay={true}
+              style={{ display: 'block', width: '100%', height: '100%' }}
+            />
+          )}
         </div>
 
         {/* Contenu texte (Markdown) */}

@@ -81,7 +81,11 @@ export default function CreerLessonPage() {
           headers: { 'Content-Type': 'multipart/form-data' }
         })
         finalVideoUrl = res.data.url
-      } catch {
+      } catch(e) {
+        console.log("on a rencontré une erreur lors de l'uploads")
+        // if(res)
+        
+        console.log(e);
         toast.error('Erreur lors de l\'upload de la vidéo')
         setIsUploading(false)
         return

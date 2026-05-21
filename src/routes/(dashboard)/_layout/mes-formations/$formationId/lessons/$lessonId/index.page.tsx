@@ -1,10 +1,8 @@
 import { useParams } from '@tanstack/react-router'
 import { useFormationDetail } from '@/hooks/useFormations'
-import ReactPlayer from 'react-player'
 import ReactMarkdown from 'react-markdown'
 import { Link } from '@tanstack/react-router'
-import { PlayCircle, ChevronLeft } from 'lucide-react'
-import { Loader2 } from 'lucide-react'
+import { PlayCircle, ChevronLeft, Loader2 } from 'lucide-react'
 
 export default function MentorLessonViewerPage() {
   const { formationId, lessonId } = useParams({
@@ -16,8 +14,14 @@ export default function MentorLessonViewerPage() {
   const lessonPrecedente = formation?.lessons[lessonIndex - 1]
   const lessonSuivante = formation?.lessons[lessonIndex + 1]
 
-  // console.log("-- - - - - - - - - - leçons- - - - - - - -- - -  -");
-  // console.log(lesson);  
+  // ✅ Construit et valide l'URL — jamais de "undefinedundefined" ou "localhost:3000undefined"
+const validVideoUrl = (() => {
+  if (!lesson?.url_video) return null
+  const url = lesson.url_video.startsWith('http')
+    ? lesson.url_video
+    : `${import.meta.env.VITE_BASE_URL}${lesson.url_video}`
+  return url.includes('undefined') ? null : url
+})()
 
   if (isLoading) {
     return (
@@ -60,15 +64,23 @@ export default function MentorLessonViewerPage() {
         <h1 className="text-[18px] text-zinc-900 font-medium">{lesson.titre}</h1>
 
         {/* Lecteur vidéo */}
-        <div className="rounded-xl overflow-hidden bg-black aspect-video">
-
-          <ReactPlayer
-            url={lesson.url_video}
-            width="100%"
-            height="100%"
-            controls
-          />
-        </div>
+{/* Lecteur vidéo */}
+<div className="rounded-xl overflow-hidden bg-black aspect-video">
+  {validVideoUrl ? (
+    <video
+      key={validVideoUrl}
+      src={validVideoUrl}
+      width="100%"
+      height="100%"
+      controls
+      style={{ display: 'block', width: '100%', height: '100%' }}
+    />
+  ) : (
+    <div className="flex items-center justify-center h-full text-zinc-400 text-sm">
+      Chargement...
+    </div>
+  )}
+</div>
 
         {/* Contenu texte (Markdown) */}
         <div className="prose prose-sm prose-zinc max-w-none
