@@ -1,0 +1,2570 @@
+diff --git a/maturproj-frontend/diff.txt b/maturproj-frontend/diff.txt
+index e69de29..b80fe62 100644
+--- a/maturproj-frontend/diff.txt
++++ b/maturproj-frontend/diff.txt
+@@ -0,0 +1,2565 @@
++diff --git a/maturproj-backend b/maturproj-backend
++index 852ca85..74598ba 160000
++--- a/maturproj-backend
+++++ b/maturproj-backend
++@@ -1 +1 @@
++-Subproject commit 852ca857f4a1ff3304d643ec3fd4dd137b778e4c
+++Subproject commit 74598ba4f54d5c2ed57c5b84625388d938a55d95-dirty
++diff --git a/maturproj-frontend/src/components/financement/FinancementCard.tsx b/maturproj-frontend/src/components/financement/FinancementCard.tsx
++index 3437185..faaedf9 100644
++--- a/maturproj-frontend/src/components/financement/FinancementCard.tsx
+++++ b/maturproj-frontend/src/components/financement/FinancementCard.tsx
++@@ -1,68 +1,83 @@
++-import { type OffreFinancement, TypeFinancement, StatutOffre } from '@matura/shared'
++-import { BadgeDollarSign, ChevronRight } from 'lucide-react'
++-import { cn } from '@/lib/utils'
+++import {
+++  type OffreFinancement,
+++  TypeFinancement,
+++  StatutOffre,
+++} from "@matura/shared";
+++import { BadgeDollarSign, ChevronRight } from "lucide-react";
+++import { cn } from "@/lib/utils";
++ 
++ const TYPE_LABELS: Record<TypeFinancement, string> = {
++-  [TypeFinancement.SUBVENTION]:  'Subvention',
++-  [TypeFinancement.PRET]:        'Prêt',
++-  [TypeFinancement.EQUITY]:      'Equity',
++-  [TypeFinancement.OBLIGATION]:  'Obligation',
++-  [TypeFinancement.DON]:         'Don',
++-}
+++  [TypeFinancement.SUBVENTION]: "Subvention",
+++  [TypeFinancement.PRET]: "Prêt",
+++  [TypeFinancement.EQUITY]: "Equity",
+++  [TypeFinancement.OBLIGATION]: "Obligation",
+++  [TypeFinancement.DON]: "Don",
+++};
++ 
++ const TYPE_COLORS: Record<TypeFinancement, string> = {
++-  [TypeFinancement.SUBVENTION]:  'bg-green-50 text-green-700 border-green-200',
++-  [TypeFinancement.PRET]:        'bg-blue-50 text-blue-700 border-blue-200',
++-  [TypeFinancement.EQUITY]:      'bg-purple-50 text-purple-700 border-purple-200',
++-  [TypeFinancement.OBLIGATION]:  'bg-orange-50 text-orange-700 border-orange-200',
++-  [TypeFinancement.DON]:         'bg-teal-50 text-teal-700 border-teal-200',
++-}
+++  [TypeFinancement.SUBVENTION]: "bg-green-50 text-green-700 border-green-200",
+++  [TypeFinancement.PRET]: "bg-blue-50 text-blue-700 border-blue-200",
+++  [TypeFinancement.EQUITY]: "bg-purple-50 text-purple-700 border-purple-200",
+++  [TypeFinancement.OBLIGATION]:
+++    "bg-orange-50 text-orange-700 border-orange-200",
+++  [TypeFinancement.DON]: "bg-teal-50 text-teal-700 border-teal-200",
+++};
++ 
++ const STATUT_LABELS: Record<StatutOffre, string> = {
++-  [StatutOffre.OUVERTE]:  'Ouverte',
++-  [StatutOffre.EN_COURS]: 'En cours',
++-  [StatutOffre.FERMEE]:   'Fermée',
++-  [StatutOffre.CLOTUREE]: 'Clôturée',
++-}
+++  [StatutOffre.OUVERTE]: "Ouverte",
+++  [StatutOffre.EN_COURS]: "En cours",
+++  [StatutOffre.FERMEE]: "Fermée",
+++  [StatutOffre.CLOTUREE]: "Clôturée",
+++};
++ 
++ interface Props {
++   offre: OffreFinancement & {
++-    investisseur?: { prenom: string; nom: string }
++-    _count?: { candidatures: number }
++-  }
++-  onClick: () => void
+++    investisseur?: { prenom: string; nom: string };
+++    _count?: { candidatures: number };
+++  };
+++  onClick: () => void;
++ }
++ 
++ export function FinancementCard({ offre, onClick }: Props) {
++-  const isActive = offre.statut === StatutOffre.OUVERTE || offre.statut === StatutOffre.EN_COURS
+++  const isActive =
+++    offre.statut === StatutOffre.OUVERTE ||
+++    offre.statut === StatutOffre.EN_COURS;
++ 
++   return (
++     <div
++       role="button"
++       tabIndex={0}
++       onClick={onClick}
++-      onKeyDown={(e) => e.key === 'Enter' && onClick()}
+++      onKeyDown={(e) => e.key === "Enter" && onClick()}
++       className={cn(
++-        'bg-white border rounded-xl p-4 space-y-3 cursor-pointer',
++-        'hover:border-green-300 hover:shadow-sm transition-all',
++-        isActive ? 'border-zinc-200' : 'border-zinc-100 opacity-70',
+++        "bg-white border rounded-xl p-4 space-y-3 cursor-pointer",
+++        "hover:border-green-300 hover:shadow-sm transition-all",
+++        isActive ? "border-zinc-200" : "border-zinc-100 opacity-70",
++       )}
++     >
++       {/* Header */}
++       <div className="flex items-start justify-between gap-3">
++         <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
++           <BadgeDollarSign className="w-4 h-4 text-zinc-400 shrink-0" />
++-          <p className="text-[13px] font-medium text-zinc-800 truncate">{offre.titre}</p>
++-          <span className={cn(
++-            'text-[10px] px-1.5 py-0.5 rounded border shrink-0',
++-            TYPE_COLORS[offre.typeFinancement],
++-          )}>
+++          <p className="text-[13px] font-medium text-zinc-800 truncate">
+++            {offre.titre}
+++          </p>
+++          <span
+++            className={cn(
+++              "text-[10px] px-1.5 py-0.5 rounded border shrink-0",
+++              TYPE_COLORS[offre.typeFinancement],
+++            )}
+++          >
++             {TYPE_LABELS[offre.typeFinancement] ?? offre.typeFinancement}
++           </span>
++-          <span className={cn(
++-            'text-[10px] px-1.5 py-0.5 rounded border shrink-0',
++-            isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-zinc-100 text-zinc-500 border-zinc-200',
++-          )}>
+++          <span
+++            className={cn(
+++              "text-[10px] px-1.5 py-0.5 rounded border shrink-0",
+++              isActive
+++                ? "bg-green-50 text-green-700 border-green-200"
+++                : "bg-zinc-100 text-zinc-500 border-zinc-200",
+++            )}
+++          >
++             {STATUT_LABELS[offre.statut]}
++           </span>
++         </div>
++@@ -73,40 +88,47 @@ export function FinancementCard({ offre, onClick }: Props) {
++       {offre.investisseur && (
++         <p className="text-[11px] text-zinc-400">
++           par {offre.investisseur.prenom} {offre.investisseur.nom}
++-          {' · '}BRL ≥ {offre.stadeCible}
+++          {" · "}BRL ≥ {offre.stadeCible}
++         </p>
++       )}
++ 
++       {/* Description */}
++-      <p className="text-[12px] text-zinc-500 line-clamp-2">{offre.description}</p>
+++      <p className="text-[12px] text-zinc-500 line-clamp-2">
+++        {offre.description}
+++      </p>
++ 
++       {/* Infos */}
++       <div className="flex flex-wrap gap-3 text-[11px] text-zinc-400">
++         {(offre.montantMin || offre.montantMax) && (
++           <span>
++-            💰{' '}
+++            {/* 💰{' '} */}
++             {offre.montantMin && offre.montantMax
++-              ? `${offre.montantMin.toLocaleString('fr')} – ${offre.montantMax.toLocaleString('fr')} ${offre.devise}`
+++              ? `${offre.montantMin.toLocaleString("fr")} – ${offre.montantMax.toLocaleString("fr")} ${offre.devise}`
++               : offre.montantMin
++-              ? `À partir de ${offre.montantMin.toLocaleString('fr')} ${offre.devise}`
++-              : `Jusqu'à ${offre.montantMax!.toLocaleString('fr')} ${offre.devise}`}
+++                ? `À partir de ${offre.montantMin.toLocaleString("fr")} ${offre.devise}`
+++                : `Jusqu'à ${offre.montantMax!.toLocaleString("fr")} ${offre.devise}`}
++           </span>
++         )}
++         {offre.dateCloture && (
++           <span>
++-            📅 Clôture le{' '}
++-            {new Date(offre.dateCloture).toLocaleDateString('fr-FR', {
++-              day: 'numeric', month: 'short', year: 'numeric',
+++            Clôture le{" "}
+++            {new Date(offre.dateCloture).toLocaleDateString("fr-FR", {
+++              day: "numeric",
+++              month: "short",
+++              year: "numeric",
++             })}
++           </span>
++         )}
++         {offre.secteurs?.length > 0 && (
++-          <span>🏭 {offre.secteurs.slice(0, 2).join(', ')}</span>
+++          <span> {offre.secteurs.slice(0, 2).join(", ")}</span>
++         )}
++         {offre._count !== undefined && (
++-          <span>👥 {offre._count.candidatures} candidature{offre._count.candidatures !== 1 ? 's' : ''}</span>
+++          <span>
+++            {offre._count.candidatures} candidature
+++            {offre._count.candidatures !== 1 ? "s" : ""}
+++          </span>
++         )}
++       </div>
++     </div>
++-  )
+++  );
++ }
++diff --git a/maturproj-frontend/src/components/financement/OffreFinancementForm.tsx b/maturproj-frontend/src/components/financement/OffreFinancementForm.tsx
++index be96ca1..0217e88 100644
++--- a/maturproj-frontend/src/components/financement/OffreFinancementForm.tsx
+++++ b/maturproj-frontend/src/components/financement/OffreFinancementForm.tsx
++@@ -62,7 +62,7 @@ export function OffreFinancementForm({ onClose }: { onClose: () => void }) {
++       <div className="space-y-1">
++         <label className="text-[11px] text-zinc-500">Description</label>
++         <textarea rows={3} value={form.description}
++-          onChange={(e) => set('description', e.target.value)}
+++          onChange={(e) => set('description', e.target.value)}  
++           className={`${cls} resize-none`} />
++       </div>
++ 
++diff --git a/maturproj-frontend/src/components/financement/PostulerModal.tsx b/maturproj-frontend/src/components/financement/PostulerModal.tsx
++index a3e2119..b5e301a 100644
++--- a/maturproj-frontend/src/components/financement/PostulerModal.tsx
+++++ b/maturproj-frontend/src/components/financement/PostulerModal.tsx
++@@ -226,8 +226,8 @@ function ProjetEligibleRow({
++           <p className="text-[11px] text-zinc-400 mt-0.5 line-clamp-1">{projet.description}</p>
++         )}
++         <div className="flex flex-wrap gap-2 mt-1 text-[10px] text-zinc-400">
++-          {projet.secteur && <span>🏭 {projet.secteur}</span>}
++-          {projet.region && <span>📍 {projet.region}</span>}
+++          {projet.secteur && <span>{projet.secteur}</span>}
+++          {projet.region && <span> {projet.region}</span>}
++           {projet.membreEquipe !== undefined && (
++             <span>👤 {projet.membreEquipe} membre{projet.membreEquipe > 1 ? 's' : ''}</span>
++           )}
++diff --git a/maturproj-frontend/src/components/financement/ProjetCandidatCard.tsx b/maturproj-frontend/src/components/financement/ProjetCandidatCard.tsx
++index 920dff2..3477a14 100644
++--- a/maturproj-frontend/src/components/financement/ProjetCandidatCard.tsx
+++++ b/maturproj-frontend/src/components/financement/ProjetCandidatCard.tsx
++@@ -64,8 +64,8 @@ export function ProjetCandidatCard({
++               {projet.proprietaire && (
++                 <span>👤 {projet.proprietaire.prenom} {projet.proprietaire.nom}</span>
++               )}
++-              {projet.secteur && <span>🏭 {projet.secteur}</span>}
++-              {projet.region && <span>📍 {projet.region}</span>}
+++              {projet.secteur && <span> {projet.secteur}</span>}
+++              {projet.region && <span> {projet.region}</span>}
++               {projet.equipe && (
++                 <span>👥 {projet.equipe.length} membre{projet.equipe.length > 1 ? 's' : ''}</span>
++               )}
++@@ -94,8 +94,8 @@ export function ProjetCandidatCard({
++ 
++       {/* Infos universelles minimales */}
++       <div className="flex flex-wrap gap-2 text-[10px] text-zinc-400">
++-        {projet.statut && <span>📌 {projet.statut}</span>}
++-        <span>🔬 BRL {brl} — {BRL_LABELS[brl] ?? `Stade ${brl}`}</span>
+++        {projet.statut && <span>{projet.statut}</span>}
+++        <span> BRL {brl} — {BRL_LABELS[brl] ?? `Stade ${brl}`}</span>
++       </div>
++ 
++       {/* Accordéon détail par stade */}
++diff --git a/maturproj-frontend/src/components/stades/AideStade6.tsx b/maturproj-frontend/src/components/stades/AideStade6.tsx
++index 0928726..b6bc123 100644
++--- a/maturproj-frontend/src/components/stades/AideStade6.tsx
+++++ b/maturproj-frontend/src/components/stades/AideStade6.tsx
++@@ -1,4 +1,4 @@
++-import { Cpu, BarChart3, MessageSquare, Smile, RefreshCw, CheckCircle } from 'lucide-react'
+++import { Cpu, BarChart3, MessageSquare, Smile, RefreshCw, CheckCircle,Users } from 'lucide-react'
++ 
++ export function AideStade6() {
++   return (
++diff --git a/maturproj-frontend/src/components/stades/EvaluationStade.tsx b/maturproj-frontend/src/components/stades/EvaluationStade.tsx
++index c748785..9c2c4b4 100644
++--- a/maturproj-frontend/src/components/stades/EvaluationStade.tsx
+++++ b/maturproj-frontend/src/components/stades/EvaluationStade.tsx
++@@ -4,6 +4,7 @@ import { authStore } from '@/stores/authStore'
++ import { cn } from '@/lib/utils'
++ import { Star, CheckCircle2, RotateCcw, Loader2 } from 'lucide-react'
++ import type { StadeData } from '@/hooks/useStades'
+++import { useEvaluationsProjet } from '@/hooks/useStades'
++ import { AffichageCalculsInformatifs } from './AffichageCalculsInformatifs'
++ import * as Icon from 'lucide-react'
++ 
++@@ -37,6 +38,9 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
++   const user = authStore((state) => state.utilisateur)
++   const isMentor = user?.role === 'MENTOR'
++   const evaluerMutation = useEvaluerStade(projetId, numStade)
+++  const { data: evaluations } = useEvaluationsProjet(projetId)
+++  
+++  const derniereEvaluation = evaluations?.find(e => e.stade_id === stade.id)
++ 
++   const criteres = CRITERES_PAR_STADE[numStade] ?? []
++ 
++@@ -49,7 +53,69 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
++     Object.fromEntries(criteres.map((c) => [c, 70])),
++   )
++ 
++-  //── Vue entrepreneur ──────────────────────────────────────────────────────────
+++  //── Affichage de l'évaluation (pour Entrepreneur ET Mentor) ───────────────────
+++  if (stade.statut === 'VALIDE' || stade.statut === 'EN_REVISION') {
+++    const estValide = stade.statut === 'VALIDE'
+++    return (
+++      <div className="flex flex-col py-6 gap-5 max-w-2xl mx-auto">
+++        <div className="flex flex-col items-center gap-3 mb-2">
+++          <div className={cn(
+++            "w-12 h-12 rounded-full flex items-center justify-center",
+++            estValide ? "bg-green-100" : "bg-red-100"
+++          )}>
+++            {estValide ? <CheckCircle2 className="w-6 h-6 text-green-600" /> : <RotateCcw className="w-6 h-6 text-red-500" />}
+++          </div>
+++          <p className="text-[15px] text-zinc-800 font-medium">
+++            {estValide ? "Stade validé" : "Renvoyé en révision"}
+++          </p>
+++          {stade.score_auto !== null && (
+++            <p className="text-[13px] text-zinc-500">
+++              Note globale : <span className={cn("font-semibold", estValide ? "text-green-700" : "text-red-600")}>{stade.score_auto}/100</span>
+++            </p>
+++          )}
+++        </div>
+++
+++        {derniereEvaluation && (
+++          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-5 space-y-4">
+++            <div>
+++              <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1.5">Commentaire du mentor</p>
+++              <p className="text-[13px] text-zinc-700 whitespace-pre-wrap">{derniereEvaluation.commentaire}</p>
+++            </div>
+++
+++            {!estValide && derniereEvaluation.motif_renvoi && (
+++              <div>
+++                <p className="text-[11px] uppercase tracking-wider text-red-400 font-medium mb-1.5">Motif du renvoi</p>
+++                <p className="text-[13px] text-red-700 bg-red-50 p-3 rounded-lg border border-red-100 whitespace-pre-wrap">
+++                  {derniereEvaluation.motif_renvoi}
+++                </p>
+++              </div>
+++            )}
+++
+++            {Object.keys(derniereEvaluation.criteres).length > 0 && (
+++              <div className="pt-2">
+++                <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">Détail par critère</p>
+++                <div className="space-y-2">
+++                  {Object.entries(derniereEvaluation.criteres).map(([c, score]) => (
+++                    <div key={c} className="flex justify-between items-center bg-white border border-zinc-100 p-2.5 rounded-lg">
+++                      <span className="text-[12px] text-zinc-600 font-medium">{CRITERE_LABELS[c] ?? c}</span>
+++                      <div className="flex items-center gap-2">
+++                        <div className="w-24 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+++                          <div className="h-full bg-blue-500" style={{ width: `${score}%` }} />
+++                        </div>
+++                        <span className="text-[12px] text-zinc-500 w-8 text-right">{score}/100</span>
+++                      </div>
+++                    </div>
+++                  ))}
+++                </div>
+++              </div>
+++            )}
+++          </div>
+++        )}
+++      </div>
+++    )
+++  }
+++
+++  //── Vue entrepreneur (En attente) ──────────────────────────────────────────────
++   if (!isMentor) {
++     if (stade.statut === 'SOUMIS') {
++       return (
++@@ -64,46 +130,10 @@ export function EvaluationStade({ stade, projetId, numStade }: EvaluationStadePr
++         </div>
++       )
++     }
++-    if (stade.statut === 'VALIDE') {
++-      return (
++-        <div className="flex flex-col items-center py-8 gap-3">
++-          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
++-            <CheckCircle2 className="w-6 h-6 text-green-600" />
++-          </div>
++-          <p className="text-[13px] text-zinc-700 font-medium">Stade validé</p>
++-          {stade.score_auto !== null && (
++-            <p className="text-[12px] text-zinc-500">Note obtenue : <span className="font-medium text-green-700">{stade.score_auto}/100</span></p>
++-          )}
++-        </div>
++-      )
++-    }
++-    if (stade.statut === 'EN_REVISION') {
++-      return (
++-        <div className="flex flex-col items-center py-8 gap-3">
++-          <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
++-            <RotateCcw className="w-6 h-6 text-red-500" />
++-          </div>
++-          <p className="text-[13px] text-zinc-700 font-medium">Renvoyé en révision</p>
++-          <p className="text-[12px] text-zinc-400 text-center max-w-xs">
++-            Votre mentor a demandé des corrections. Consultez son commentaire et resoumettez.
++-          </p>
++-        </div>
++-      )
++-    }
++     return null
++   }
++ 
++   // ── Formulaire mentor ─────────────────────────────────────────────────────────
++-  if(stade.statut==="VALIDE"){
++-    return (
++-      <div className="text-center py-8 text-[12px] text-slate-400 flex items-center justify-center shrink-10">
++-      <span className="w-4 h-4 rounded-full bg-green-500 flex items-center justify-center shrink-0">
++-       <Icon.Check size={9} strokeWidth={3} className="text-white" />
++-        </span>
++-        Vous avez déja validé cet stade 
++-      </div>
++-    )
++-  }
++   if (stade.statut !== 'SOUMIS') {
++     return (
++       <div className="text-center py-8 text-[12px] text-zinc-400">
++diff --git a/maturproj-frontend/src/components/stades/EvidencePanel.tsx b/maturproj-frontend/src/components/stades/EvidencePanel.tsx
++new file mode 100644
++index 0000000..4b39830
++--- /dev/null
+++++ b/maturproj-frontend/src/components/stades/EvidencePanel.tsx
++@@ -0,0 +1,145 @@
+++import { useState, useRef } from 'react';
+++import { useDocuments, type DocumentEv } from '@/hooks/useDocuments';
+++import { File, Image as ImageIcon, Video, Link as LinkIcon, Trash2, UploadCloud, X, Loader2, FileText, Download } from 'lucide-react';
+++// import { cn } from '@/lib/utils';
+++import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+++
+++interface Props {
+++  stadeId: string;
+++  readOnly?: boolean;
+++}
+++
+++export function EvidencePanel({ stadeId, readOnly = false }: Props) {
+++  const { documents, isLoading, uploadDoc, deleteDoc } = useDocuments(stadeId);
+++  const fileInputRef = useRef<HTMLInputElement>(null);
+++  const [selectedDoc, setSelectedDoc] = useState<DocumentEv | null>(null);
+++
+++  const BACKEND_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+++  const getFullUrl = (url: string) => url.startsWith('http') ? url : `${BACKEND_URL}${url}`;
+++
+++  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+++    const file = e.target.files?.[0];
+++    if (!file) return;
+++    // On peut demander une description ou un type, mais pour simplifier on envoie directement
+++    uploadDoc.mutate({ file });
+++    if (fileInputRef.current) fileInputRef.current.value = '';
+++  };
+++
+++  const getIcon = (type: string) => {
+++    switch (type) {
+++      case 'IMAGE': return <ImageIcon className="w-6 h-6 text-blue-500" />;
+++      case 'PDF': return <FileText className="w-6 h-6 text-red-500" />;
+++      case 'VIDEO': return <Video className="w-6 h-6 text-purple-500" />;
+++      case 'LIEN': return <LinkIcon className="w-6 h-6 text-green-500" />;
+++      default: return <File className="w-6 h-6 text-zinc-500" />;
+++    }
+++  };
+++
+++  return (
+++    <div className="bg-white rounded-xl border border-zinc-200 p-5 shadow-sm space-y-4">
+++      <div className="flex items-center justify-between">
+++        <div>
+++          <h3 className="text-sm font-semibold text-zinc-900">Preuves & Documents</h3>
+++          <p className="text-xs text-zinc-500">Justifiez les informations de ce stade (photos, PDF, vidéos...)</p>
+++        </div>
+++        {!readOnly && (
+++          <div>
+++            <input
+++              type="file"
+++              ref={fileInputRef}
+++              className="hidden"
+++              onChange={handleFileSelect}
+++            />
+++            <button
+++              type="button"
+++              onClick={() => fileInputRef.current?.click()}
+++              disabled={uploadDoc.isPending}
+++              className="flex items-center gap-2 bg-zinc-900 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+++            >
+++              {uploadDoc.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
+++              Uploader
+++            </button>
+++          </div>
+++        )}
+++      </div>
+++
+++      {isLoading ? (
+++        <div className="py-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-zinc-400" /></div>
+++      ) : documents.length === 0 ? (
+++        <div className="py-8 text-center border-2 border-dashed border-zinc-100 rounded-xl bg-zinc-50">
+++          <File className="w-8 h-8 text-zinc-300 mx-auto mb-2" />
+++          <p className="text-xs text-zinc-500">Aucun document pour l'instant</p>
+++        </div>
+++      ) : (
+++        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+++          {documents.map((doc) => (
+++            <div
+++              key={doc.id}
+++              className="group relative flex flex-col items-center justify-center p-4 border border-zinc-200 rounded-xl cursor-pointer hover:border-blue-400 hover:shadow-md transition-all bg-zinc-50/50"
+++              onClick={() => setSelectedDoc(doc)}
+++            >
+++              {getIcon(doc.type_fichier)}
+++              <span className="mt-2 text-[11px] font-medium text-zinc-700 text-center line-clamp-2 w-full break-words">
+++                {doc.nom}
+++              </span>
+++              
+++              {!readOnly && (
+++                <button
+++                  type="button"
+++                  onClick={(e) => { e.stopPropagation(); deleteDoc.mutate(doc.id); }}
+++                  disabled={deleteDoc.isPending}
+++                  className="absolute -top-2 -right-2 bg-white border border-zinc-200 text-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:bg-red-50"
+++                >
+++                  <Trash2 className="w-3.5 h-3.5" />
+++                </button>
+++              )}
+++            </div>
+++          ))}
+++        </div>
+++      )}
+++
+++      {/* Modal d'Aperçu (Agrandissement) */}
+++      <Dialog open={!!selectedDoc} onOpenChange={(open) => !open && setSelectedDoc(null)}>
+++        <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden bg-zinc-950 border-zinc-800">
+++          <DialogTitle className="sr-only">Aperçu du document</DialogTitle>
+++          <DialogDescription className="sr-only">Affichage en grand du document {selectedDoc?.nom}</DialogDescription>
+++          
+++          <div className="flex items-center justify-between p-4 border-b border-zinc-800/50 bg-zinc-950 text-zinc-200 absolute top-0 w-full z-10 bg-opacity-80 backdrop-blur-sm">
+++            <div className="flex items-center gap-3 truncate pr-4">
+++              {selectedDoc && getIcon(selectedDoc.type_fichier)}
+++              <span className="text-sm font-medium truncate">{selectedDoc?.nom}</span>
+++            </div>
+++            <div className="flex items-center gap-2">
+++              {selectedDoc?.url && (
+++                <a href={getFullUrl(selectedDoc.url)} download className="p-2 hover:bg-zinc-800 rounded-full text-zinc-400 hover:text-white transition-colors">
+++                  <Download className="w-4 h-4" />
+++                </a>
+++              )}
+++              <button onClick={() => setSelectedDoc(null)} className="p-2 hover:bg-zinc-800 rounded-full text-zinc-400 hover:text-white transition-colors">
+++                <X className="w-4 h-4" />
+++              </button>
+++            </div>
+++          </div>
+++
+++          <div className="w-full h-[60vh] flex items-center justify-center bg-zinc-950 mt-16 p-4">
+++            {selectedDoc?.type_fichier === 'IMAGE' ? (
+++              <img src={getFullUrl(selectedDoc.url)} alt={selectedDoc.nom} className="max-w-full max-h-full object-contain rounded-md" />
+++            ) : selectedDoc?.type_fichier === 'VIDEO' ? (
+++              <video src={getFullUrl(selectedDoc.url)} controls className="max-w-full max-h-full rounded-md" />
+++            ) : selectedDoc?.type_fichier === 'PDF' ? (
+++              <iframe src={getFullUrl(selectedDoc.url)} className="w-full h-full rounded-md bg-white" />
+++            ) : (
+++              <div className="flex flex-col items-center text-zinc-400">
+++                <FileText className="w-16 h-16 mb-4 opacity-50" />
+++                <p className="text-sm text-center mb-2">Les navigateurs ne peuvent pas afficher ce type de fichier (.docx, etc.) directement dans cette fenêtre.</p>
+++                <a href={getFullUrl(selectedDoc?.url || '')} download className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+++                  Télécharger le document
+++                </a>
+++              </div>
+++            )}
+++          </div>
+++        </DialogContent>
+++      </Dialog>
+++    </div>
+++  );
+++}
++diff --git a/maturproj-frontend/src/components/stades/Stade3Form.tsx b/maturproj-frontend/src/components/stades/Stade3Form.tsx
++index 497646b..0d84aa2 100644
++--- a/maturproj-frontend/src/components/stades/Stade3Form.tsx
+++++ b/maturproj-frontend/src/components/stades/Stade3Form.tsx
++@@ -24,6 +24,7 @@ interface Props {
++   stade: StadeData
++   onSave: (d: Record<string, unknown>) => void
++   saving: boolean
+++  readOnly?: boolean
++   typeProjet?: 'B2C' | 'B2B' | 'B2B2C'
++   contexteGeographiqueStade1?: {
++     niveau_principal: string
++@@ -93,6 +94,7 @@ export function Stade3Form({
++   stade,
++   onSave,
++   saving,
+++  readOnly = false,
++   typeProjet = 'B2C',
++   contexteGeographiqueStade1,
++   onUpdateZone: _onUpdateZone,
++@@ -404,6 +406,7 @@ export function Stade3Form({
++ 
++   return (
++     <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-5">
+++      <fieldset disabled={readOnly} className="space-y-5 border-none p-0 m-0">
++ 
++       {/* ── Sélecteur B2B2C ──────────────────────────────────────────────── */}
++       {typeProjet === 'B2B2C' && (
++@@ -1027,7 +1030,9 @@ export function Stade3Form({
++             </div>
++           ))}
++         </div>
++-
+++      </div>
+++    </fieldset>
+++      {!readOnly && (
++         <button
++           type="submit"
++           disabled={saving}
++@@ -1040,7 +1045,7 @@ export function Stade3Form({
++           )}
++           Enregistrer le Stade 3
++         </button>
++-      </div>
+++      )}
++     </form>
++   )
++ }
++\ No newline at end of file
++diff --git a/maturproj-frontend/src/components/stades/Stades4567Forms.tsx b/maturproj-frontend/src/components/stades/Stades4567Forms.tsx
++index ac05d2d..c3ecd9e 100644
++--- a/maturproj-frontend/src/components/stades/Stades4567Forms.tsx
+++++ b/maturproj-frontend/src/components/stades/Stades4567Forms.tsx
++@@ -1,13 +1,14 @@
++ // ─── STADE 4 — BMC ───────────────────────────────────────────────────────────
++ import { useForm, useFieldArray } from 'react-hook-form'
++-import { useState } from 'react'
+++import { useState, useEffect } from 'react'
+++import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
++ import { cn } from '@/lib/utils'
++ import { Plus, Trash2, Save, Loader2 } from 'lucide-react'
++ import type { StadeData } from '@/hooks/useStades'
++ import { useRoleLabels } from '@/hooks/useRoleLabels'
++ import { LABELS_STADE4, LABELS_STADE5, LABELS_STADE6, LABELS_STADE7 } from '@/lib/labelsStades'
++ 
++-interface Props { stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean }
+++interface Props { stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean; readOnly?: boolean }
++ 
++ const inp = 'w-full border border-zinc-200 rounded-lg px-3 py-2 text-[13px] text-zinc-800 focus:outline-none focus:border-green-400 bg-white'
++ const sel = cn(inp, 'appearance-none')
++@@ -19,7 +20,7 @@ const SaveBtn = ({ saving, label }: { saving: boolean; label: string }) => (
++   </button>
++ )
++ 
++-export function Stade4Form({ stade, onSave, saving }: Props) {
+++export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
++   const { isEntrepreneur } = useRoleLabels()
++   const d = stade.donnees as Record<string, unknown>
++   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
++@@ -55,6 +56,7 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
++ 
++   return (
++     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
+++      <fieldset disabled={readOnly} className="space-y-5 border-none p-0 m-0">
++       {/* Évolution */}
++       <div className="space-y-3 pb-5 border-b border-zinc-100">
++         <p className="text-[12px] font-medium text-zinc-700">{getLabel('evolution_lean_canvas')}</p>
++@@ -205,14 +207,15 @@ export function Stade4Form({ stade, onSave, saving }: Props) {
++         ))}
++       </div>
++ 
++-      <SaveBtn saving={saving} label="Enregistrer le Stade 4" />
+++      </fieldset>
+++      {!readOnly && <SaveBtn saving={saving} label="Enregistrer le Stade 4" />}
++     </form>
++   )
++ }
++ 
++ 
++ // ─── STADE 5 — FAISABILITÉ ────────────────────────────────────────────────────
++-export function Stade5Form({ stade, onSave, saving }: Props) {
+++export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
++   const { isEntrepreneur } = useRoleLabels()
++   const d = stade.donnees as Record<string, unknown>
++   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
++@@ -221,7 +224,7 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
++     return isEntrepreneur ? LABELS_STADE5[key].entrepreneur : LABELS_STADE5[key].professionnel
++   }
++ 
++-  const { register, control, handleSubmit } = useForm({
+++  const { register, control, handleSubmit, watch } = useForm({
++     defaultValues: {
++       disciplines_requises_projet: g<string[]>('disciplines_requises_projet', []),
++       membres_equipe: g<{ prenom_nom: string; role_projet: string; disciplines: string[]; annees_experience: number; engagement: string; est_fondateur: boolean }[]>('membres_equipe', [
++@@ -250,8 +253,50 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
++ 
++   const DISCIPLINES = ['TECH','DESIGN','VENTE','FINANCE','JURIDIQUE','MARKETING','OPERATIONS','EXPERT_DOMAINE','COMMUNICATION']
++ 
+++  const reqDisc = watch('disciplines_requises_projet') || []
+++  const [showModal, setShowModal] = useState(false)
+++
+++  useEffect(() => {
+++    if (!readOnly && reqDisc.length === 0) {
+++      setShowModal(true)
+++    }
+++  }, [readOnly, reqDisc.length])
+++
++   return (
+++    <>
+++      <Dialog open={showModal} onOpenChange={setShowModal}>
+++        <DialogContent className="sm:max-w-[425px]">
+++          <DialogHeader>
+++            <DialogTitle>Disciplines nécessaires</DialogTitle>
+++            <DialogDescription>
+++              Quelles sont les disciplines idéales nécessaires pour accomplir votre projet ?
+++            </DialogDescription>
+++          </DialogHeader>
+++          <div className="grid grid-cols-2 gap-3 py-4">
+++            {DISCIPLINES.map((disc) => (
+++              <label key={disc} className="flex items-center gap-2 text-sm cursor-pointer border p-2 rounded-lg hover:bg-zinc-50">
+++                <input type="checkbox" value={disc} {...register('disciplines_requises_projet')} className="w-4 h-4 accent-green-600" />
+++                {disc}
+++              </label>
+++            ))}
+++          </div>
+++          <DialogFooter>
+++            <button 
+++              type="button" 
+++              onClick={() => {
+++                if (reqDisc.length > 0) setShowModal(false)
+++              }}
+++              className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+++              disabled={!(reqDisc.length > 0)}
+++            >
+++              Valider
+++            </button>
+++          </DialogFooter>
+++        </DialogContent>
+++      </Dialog>
+++
++     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
+++      <fieldset disabled={readOnly} className="space-y-5 border-none p-0 m-0">
++       {/* Membres */}
++       <div className="space-y-3 pb-5 border-b border-zinc-100">
++         <div className="flex items-center justify-between">
++@@ -359,13 +404,15 @@ export function Stade5Form({ stade, onSave, saving }: Props) {
++         ))}
++       </div>
++ 
++-      <SaveBtn saving={saving} label="Enregistrer le Stade 5" />
+++      </fieldset>
+++      {!readOnly && <SaveBtn saving={saving} label="Enregistrer le Stade 5" />}
++     </form>
+++    </>
++   )
++ }
++ 
++ // ─── STADE 6 — PROTOTYPE ─────────────────────────────────────────────────────
++-export function Stade6Form({ stade, onSave, saving }: Props) {
+++export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
++   const { isEntrepreneur } = useRoleLabels()
++   const d = stade.donnees as Record<string, unknown>
++   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
++@@ -402,6 +449,7 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
++ 
++   return (
++     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
+++      <fieldset disabled={readOnly} className="space-y-5 border-none p-0 m-0">
++       {/* MVP */}
++       <div className="space-y-3 pb-5 border-b border-zinc-100">
++         <p className="text-[12px] font-medium text-zinc-700">{getLabel('mvp')}</p>
++@@ -478,13 +526,14 @@ export function Stade6Form({ stade, onSave, saving }: Props) {
++         ))}
++       </div>
++ 
++-      <SaveBtn saving={saving} label="Enregistrer le Stade 6" />
+++      </fieldset>
+++      {!readOnly && <SaveBtn saving={saving} label="Enregistrer le Stade 6" />}
++     </form>
++   )
++ }
++ 
++ // ─── STADE 7 — LANCEMENT ─────────────────────────────────────────────────────
++-export function Stade7Form({ stade, onSave, saving }: Props) {
+++export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
++   const { isEntrepreneur } = useRoleLabels()
++   const d = stade.donnees as Record<string, unknown>
++   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def
++@@ -523,6 +572,7 @@ export function Stade7Form({ stade, onSave, saving }: Props) {
++ 
++   return (
++     <form onSubmit={handleSubmit((data) => onSave(data as Record<string, unknown>))} className="space-y-5">
+++      <fieldset disabled={readOnly} className="space-y-5 border-none p-0 m-0">
++       {/* Résumé exécutif */}
++       <div className="space-y-3 pb-5 border-b border-zinc-100">
++         <p className="text-[12px] font-medium text-zinc-700">{getLabel('resume_executif')}</p>
++@@ -599,7 +649,8 @@ export function Stade7Form({ stade, onSave, saving }: Props) {
++         <input {...register('pitch_deck_url')} className={inp} placeholder="https://..." />
++       </div>
++ 
++-      <SaveBtn saving={saving} label="Enregistrer le Stade 7" />
+++      </fieldset>
+++      {!readOnly && <SaveBtn saving={saving} label="Enregistrer le Stade 7" />}
++     </form>
++   )
++ }
++diff --git a/maturproj-frontend/src/hooks/useDocuments.ts b/maturproj-frontend/src/hooks/useDocuments.ts
++new file mode 100644
++index 0000000..edb929d
++--- /dev/null
+++++ b/maturproj-frontend/src/hooks/useDocuments.ts
++@@ -0,0 +1,61 @@
+++import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+++import { apiClient } from '@/lib/apiClient';
+++
+++export interface DocumentEv {
+++  id: string;
+++  stade_id: string;
+++  nom: string;
+++  url: string;
+++  type_fichier: string;
+++  description?: string | null;
+++  type_preuve?: string | null;
+++  taille_octets?: number | null;
+++  uploade_le: string;
+++}
+++
+++export function useDocuments(stadeId: string) {
+++  const qc = useQueryClient();
+++
+++  const query = useQuery({
+++    queryKey: ['documents', stadeId],
+++    queryFn: async () => {
+++      const { data } = await apiClient.get<DocumentEv[]>(`/documents/stade/${stadeId}`);
+++      return data;
+++    },
+++    enabled: !!stadeId,
+++  });
+++
+++  const uploadDoc = useMutation({
+++    mutationFn: async (vars: { file: File; description?: string; type_preuve?: string }) => {
+++      const formData = new FormData();
+++      formData.append('file', vars.file);
+++      if (vars.description) formData.append('description', vars.description);
+++      if (vars.type_preuve) formData.append('type_preuve', vars.type_preuve);
+++
+++      const { data } = await apiClient.post<DocumentEv>(`/documents/stade/${stadeId}/upload`, formData, {
+++        headers: { 'Content-Type': 'multipart/form-data' },
+++      });
+++      return data;
+++    },
+++    onSuccess: () => {
+++      qc.invalidateQueries({ queryKey: ['documents', stadeId] });
+++    },
+++  });
+++
+++  const deleteDoc = useMutation({
+++    mutationFn: async (docId: string) => {
+++      await apiClient.delete(`/documents/${docId}`);
+++    },
+++    onSuccess: () => {
+++      qc.invalidateQueries({ queryKey: ['documents', stadeId] });
+++    },
+++  });
+++
+++  return {
+++    documents: query.data || [],
+++    isLoading: query.isLoading,
+++    isError: query.isError,
+++    uploadDoc,
+++    deleteDoc,
+++  };
+++}
++diff --git a/maturproj-frontend/src/hooks/useInvestisseur.ts b/maturproj-frontend/src/hooks/useInvestisseur.ts
++index cbe7a70..ce14375 100644
++--- a/maturproj-frontend/src/hooks/useInvestisseur.ts
+++++ b/maturproj-frontend/src/hooks/useInvestisseur.ts
++@@ -6,6 +6,7 @@ import type {
++   Candidature,
++   StatutCandidature,
++   CreerOffreDto,
+++  ProjetResume,
++ } from '@matura/shared'
++ 
++ // ─── Types étendus ────────────────────────────────────────────────────────────
++diff --git a/maturproj-frontend/src/hooks/useStades.ts b/maturproj-frontend/src/hooks/useStades.ts
++index b35870d..18374a3 100644
++--- a/maturproj-frontend/src/hooks/useStades.ts
+++++ b/maturproj-frontend/src/hooks/useStades.ts
++@@ -217,6 +217,8 @@ export function useProjetDetail(projetId: string) {
++       const { data } = await apiClient.get<ProjetDetail>(
++         `/projets/${projetId}`,
++       );
+++      console.log("DANS LE HOOK useProjetDetail, data reçu du backend :");
+++      console.log(data.stades[0]);
++       return data;
++     },
++     enabled: !!projetId,
++@@ -275,3 +277,32 @@ export function useEvaluerStade(projetId: string, numStade: number) {
++     },
++   });
++ }
+++
+++// ─── USE ÉVALUATIONS PROJET (historique) ──────────────────────────────────────
+++
+++export interface EvaluationDetail {
+++  id: string;
+++  stade_id: string;
+++  note: number;
+++  commentaire: string;
+++  criteres: Record<string, number>;
+++  decision: "VALIDE" | "RENVOYE";
+++  motif_renvoi: string | null;
+++  cree_le: string;
+++  mentor: { id: string; prenom: string; nom: string };
+++}
+++
+++export function useEvaluationsProjet(projetId: string) {
+++  return useQuery<EvaluationDetail[]>({
+++    queryKey: ["evaluations", projetId],
+++    queryFn: async () => {
+++      const { data } = await apiClient.get<EvaluationDetail[]>(
+++        `/projets/${projetId}/evaluations`,
+++      );
+++      return data;
+++    },
+++    enabled: !!projetId,
+++    staleTime: 5 * 60 * 1000,
+++  });
+++}
+++
++diff --git a/maturproj-frontend/src/routeTree.gen.ts b/maturproj-frontend/src/routeTree.gen.ts
++index 3117f27..e47b73d 100644
++--- a/maturproj-frontend/src/routeTree.gen.ts
+++++ b/maturproj-frontend/src/routeTree.gen.ts
++@@ -81,10 +81,6 @@ const dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRouteImport =
++   createFileRoute(
++     '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/',
++   )()
++-const dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRouteImport =
++-  createFileRoute(
++-    '/(dashboard)/_layout/financements/mes-financements/misplaced/bak/mes-financements/candidatures',
++-  )()
++ 
++ const authRegisterLazyRoute = authRegisterLazyRouteImport
++   .update({
++@@ -379,18 +375,6 @@ const dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute =
++         (d) => d.Route,
++       ),
++     )
++-const dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute =
++-  dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRouteImport
++-    .update({
++-      id: '/financements/mes-financements/misplaced/bak/mes-financements/candidatures',
++-      path: '/financements/mes-financements/misplaced/bak/mes-financements/candidatures',
++-      getParentRoute: () => dashboardLayoutRoute,
++-    } as any)
++-    .lazy(() =>
++-      import('./routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.candidatures.lazy').then(
++-        (d) => d.Route,
++-      ),
++-    )
++ 
++ export interface FileRoutesByFullPath {
++   '/login': typeof authLoginLazyRoute
++@@ -419,7 +403,6 @@ export interface FileRoutesByFullPath {
++   '/financements/index/lazy/old': typeof dashboardLayoutFinancementsIndexLazyOldRoute
++   '/formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
++   '/mes-formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
++-  '/financements/mes-financements/misplaced/bak/mes-financements/candidatures': typeof dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute
++ }
++ export interface FileRoutesByTo {
++   '/login': typeof authLoginLazyRoute
++@@ -448,7 +431,6 @@ export interface FileRoutesByTo {
++   '/financements/index/lazy/old': typeof dashboardLayoutFinancementsIndexLazyOldRoute
++   '/formations/$formationId/lessons/$lessonId': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
++   '/mes-formations/$formationId/lessons/$lessonId': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
++-  '/financements/mes-financements/misplaced/bak/mes-financements/candidatures': typeof dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute
++ }
++ export interface FileRoutesById {
++   __root__: typeof rootRouteImport
++@@ -479,7 +461,6 @@ export interface FileRoutesById {
++   '/(dashboard)/_layout/financements/index/lazy/old': typeof dashboardLayoutFinancementsIndexLazyOldRoute
++   '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
++   '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
++-  '/(dashboard)/_layout/financements/mes-financements/misplaced/bak/mes-financements/candidatures': typeof dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute
++ }
++ export interface FileRouteTypes {
++   fileRoutesByFullPath: FileRoutesByFullPath
++@@ -510,7 +491,6 @@ export interface FileRouteTypes {
++     | '/financements/index/lazy/old'
++     | '/formations/$formationId/lessons/$lessonId/'
++     | '/mes-formations/$formationId/lessons/$lessonId/'
++-    | '/financements/mes-financements/misplaced/bak/mes-financements/candidatures'
++   fileRoutesByTo: FileRoutesByTo
++   to:
++     | '/login'
++@@ -539,7 +519,6 @@ export interface FileRouteTypes {
++     | '/financements/index/lazy/old'
++     | '/formations/$formationId/lessons/$lessonId'
++     | '/mes-formations/$formationId/lessons/$lessonId'
++-    | '/financements/mes-financements/misplaced/bak/mes-financements/candidatures'
++   id:
++     | '__root__'
++     | '/(dashboard)/_layout'
++@@ -569,7 +548,6 @@ export interface FileRouteTypes {
++     | '/(dashboard)/_layout/financements/index/lazy/old'
++     | '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/'
++     | '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/'
++-    | '/(dashboard)/_layout/financements/mes-financements/misplaced/bak/mes-financements/candidatures'
++   fileRoutesById: FileRoutesById
++ }
++ export interface RootRouteChildren {
++@@ -769,13 +747,6 @@ declare module '@tanstack/react-router' {
++       preLoaderRoute: typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRouteImport
++       parentRoute: typeof dashboardLayoutRoute
++     }
++-    '/(dashboard)/_layout/financements/mes-financements/misplaced/bak/mes-financements/candidatures': {
++-      id: '/(dashboard)/_layout/financements/mes-financements/misplaced/bak/mes-financements/candidatures'
++-      path: '/financements/mes-financements/misplaced/bak/mes-financements/candidatures'
++-      fullPath: '/financements/mes-financements/misplaced/bak/mes-financements/candidatures'
++-      preLoaderRoute: typeof dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRouteImport
++-      parentRoute: typeof dashboardLayoutRoute
++-    }
++   }
++ }
++ 
++@@ -804,7 +775,6 @@ interface dashboardLayoutRouteChildren {
++   dashboardLayoutFinancementsIndexLazyOldRoute: typeof dashboardLayoutFinancementsIndexLazyOldRoute
++   dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute: typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
++   dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute: typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
++-  dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute: typeof dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute
++ }
++ 
++ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
++@@ -850,8 +820,6 @@ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
++     dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute,
++   dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute:
++     dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute,
++-  dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute:
++-    dashboardLayoutFinancementsMesFinancementsMisplacedBakMesFinancementsCandidaturesLazyRoute,
++ }
++ 
++ const dashboardLayoutRouteWithChildren = dashboardLayoutRoute._addFileChildren(
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/dashboard.page.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/dashboard.page.tsx
++index f398ef6..e9a1683 100644
++--- a/maturproj-frontend/src/routes/(dashboard)/_layout/dashboard.page.tsx
+++++ b/maturproj-frontend/src/routes/(dashboard)/_layout/dashboard.page.tsx
++@@ -1,13 +1,27 @@
++-import { authStore } from "@/stores/authStore";
++-
++-export default function DashboardPage() {
++-  const user=authStore((state) => state.utilisateur);
++-  // console.log(user?.name)
++-  return (
++-    <div className="h-180 w-200 bg-white">
++-      <h1 className="text-2xl font-bold mb-4">Bienvenue sur votre tableau de bord !</h1>
++-      <p className="text-gray-600 mb-2">Bonjour, {user?.prenom || 'Utilisateur'} {user?.email || ''} ({user?.role || 'Rôle non spécifié'})</p>
++-      <p className="text-gray-600">Ici, vous pouvez accéder à vos informations personnelles, gérer vos paramètres et bien plus encore.</p>
++-    </div>
++-  )
++-}
++\ No newline at end of file
+++import { authStore } from "@/stores/authStore"
+++import { EntrepreneurDashboard } from "@/components/dashboard/EntrepreneurDashboard"
+++import { MentorDashboard } from "@/components/dashboard/MentorDashboard"
+++import { InvestisseurDashboard } from "@/components/dashboard/InvestisseurDashboard"
+++
+++export default function DashboardPage() {
+++  const user = authStore((state) => state.utilisateur)
+++
+++  if (!user) {
+++    return (
+++      <div className="flex items-center justify-center h-[200px] text-zinc-500 text-[12px]">
+++        Chargement de l'utilisateur...
+++      </div>
+++    )
+++  }
+++
+++  // Rendu conditionnel selon le rôle
+++  switch (user.role) {
+++    case 'MENTOR':
+++      return <MentorDashboard user={user} />
+++    case 'INVESTISSEUR':
+++      return <InvestisseurDashboard user={user} />
+++    case 'ENTREPRENEUR':
+++    default:
+++      return <EntrepreneurDashboard user={user} />
+++  }
+++}
++\ No newline at end of file
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/$financementId.page.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/$financementId.page.tsx
++index cf6f6d9..7061ebd 100644
++--- a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/$financementId.page.tsx
+++++ b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/$financementId.page.tsx
++@@ -1,87 +1,110 @@
++-import { useState } from 'react'
++-import { useParams, useNavigate } from '@tanstack/react-router'
++-import { useFinancementDetail } from '@/hooks/useFinancements'
++-import { PostulerModal } from '@/components/financement/PostulerModal'
++-import { StatutOffre, TypeFinancement } from '@matura/shared'
++-import { Loader2, ArrowLeft } from 'lucide-react'
+++import { useState } from "react";
+++import { useParams, useNavigate } from "@tanstack/react-router";
+++import { useFinancementDetail } from "@/hooks/useFinancements";
+++import { PostulerModal } from "@/components/financement/PostulerModal";
+++import { StatutOffre, TypeFinancement } from "@matura/shared";
+++import {
+++  Loader2,
+++  ArrowLeft,
+++  DollarSign,
+++  TrendingUp,
+++  Clock,
+++  Users,
+++} from "lucide-react";
++ 
++ const TYPE_LABELS: Record<TypeFinancement, string> = {
++-  [TypeFinancement.SUBVENTION]:  'Subvention',
++-  [TypeFinancement.PRET]:        'Prêt',
++-  [TypeFinancement.EQUITY]:      'Equity',
++-  [TypeFinancement.OBLIGATION]:  'Obligation',
++-  [TypeFinancement.DON]:         'Don',
++-}
+++  [TypeFinancement.SUBVENTION]: "Subvention",
+++  [TypeFinancement.PRET]: "Prêt",
+++  [TypeFinancement.EQUITY]: "Equity",
+++  [TypeFinancement.OBLIGATION]: "Obligation",
+++  [TypeFinancement.DON]: "Don",
+++};
++ 
++ const TYPE_COLORS: Record<TypeFinancement, string> = {
++-  [TypeFinancement.SUBVENTION]:  'bg-green-50 text-green-700 border-green-200',
++-  [TypeFinancement.PRET]:        'bg-blue-50 text-blue-700 border-blue-200',
++-  [TypeFinancement.EQUITY]:      'bg-purple-50 text-purple-700 border-purple-200',
++-  [TypeFinancement.OBLIGATION]:  'bg-orange-50 text-orange-700 border-orange-200',
++-  [TypeFinancement.DON]:         'bg-teal-50 text-teal-700 border-teal-200',
++-}
+++  [TypeFinancement.SUBVENTION]: "bg-green-50 text-green-700 border-green-200",
+++  [TypeFinancement.PRET]: "bg-blue-50 text-blue-700 border-blue-200",
+++  [TypeFinancement.EQUITY]: "bg-purple-50 text-purple-700 border-purple-200",
+++  [TypeFinancement.OBLIGATION]:
+++    "bg-orange-50 text-orange-700 border-orange-200",
+++  [TypeFinancement.DON]: "bg-teal-50 text-teal-700 border-teal-200",
+++};
++ 
++-function formatMontant(min?: number | null, max?: number | null, devise = 'MGA') {
++-  if (!min && !max) return 'Non précisé'
+++function formatMontant(
+++  min?: number | null,
+++  max?: number | null,
+++  devise = "MGA",
+++) {
+++  if (!min && !max) return "Non précisé";
++   if (min && max)
++-    return `${min.toLocaleString('fr')} – ${max.toLocaleString('fr')} ${devise}`
++-  if (min) return `À partir de ${min.toLocaleString('fr')} ${devise}`
++-  return `Jusqu'à ${max!.toLocaleString('fr')} ${devise}`
+++    return `${min.toLocaleString("fr")} – ${max.toLocaleString("fr")} ${devise}`;
+++  if (min) return `À partir de ${min.toLocaleString("fr")} ${devise}`;
+++  return `Jusqu'à ${max!.toLocaleString("fr")} ${devise}`;
++ }
++ 
++ function formatDate(dateStr?: string | null) {
++-  if (!dateStr) return 'Non précisée'
++-  return new Date(dateStr).toLocaleDateString('fr-FR', {
++-    day: 'numeric', month: 'long', year: 'numeric',
++-  })
+++  if (!dateStr) return "Non précisée";
+++  return new Date(dateStr).toLocaleDateString("fr-FR", {
+++    day: "numeric",
+++    month: "long",
+++    year: "numeric",
+++  });
++ }
++ 
++ export default function FinancementDetailPage() {
++-  const { financementId } = useParams({ from: '/(dashboard)/_layout/financements/$financementId' })
++-  const navigate = useNavigate()
++-  const [postuleOpen, setPostuleOpen] = useState(false)
+++  const { financementId } = useParams({
+++    from: "/(dashboard)/_layout/financements/$financementId",
+++  });
+++  const navigate = useNavigate();
+++  const [postuleOpen, setPostuleOpen] = useState(false);
++ 
++-  const { data: offre, isLoading, isError } = useFinancementDetail(financementId)
+++  const {
+++    data: offre,
+++    isLoading,
+++    isError,
+++  } = useFinancementDetail(financementId);
++ 
++   if (isLoading) {
++     return (
++       <div className="flex justify-center py-20">
++         <Loader2 className="w-6 h-6 animate-spin text-green-600" />
++       </div>
++-    )
+++    );
++   }
++ 
++   if (isError || !offre) {
++     return (
++       <div className="flex flex-col items-center py-20 gap-3">
++-        <p className="text-[13px] text-zinc-500">⚠️ Impossible de charger cette offre.</p>
+++        <p className="text-[13px] text-zinc-500">
+++          ⚠️ Impossible de charger cette offre.
+++        </p>
++         <button
++-          onClick={() => navigate({ to: '/financements' })}
+++          onClick={() => navigate({ to: "/financements" })}
++           className="text-[12px] text-green-600 hover:text-green-700"
++         >
++           ← Retour aux financements
++         </button>
++       </div>
++-    )
+++    );
++   }
++ 
++   const canPostuler =
++-    offre.statut === StatutOffre.OUVERTE || offre.statut === StatutOffre.EN_COURS
+++    offre.statut === StatutOffre.OUVERTE ||
+++    offre.statut === StatutOffre.EN_COURS;
++ 
++   // url_avatar peut être dans profil (JSON) ou directement sur l'utilisateur
++   const investisseurNom = offre.investisseur
++     ? `${offre.investisseur.prenom} ${offre.investisseur.nom}`
++-    : null
+++    : null;
++   const investisseurAvatar =
++     (offre.investisseur?.profil as any)?.url_avatar ??
++     (offre.investisseur as any)?.url_avatar ??
++-    null
+++    null;
++ 
++   return (
++     <div className="max-w-2xl mx-auto space-y-6">
++       {/* Navigation */}
++       <button
++-        onClick={() => navigate({ to: '/financements' })}
+++        onClick={() => navigate({ to: "/financements" })}
++         className="flex items-center gap-1.5 text-[12px] text-zinc-500 hover:text-zinc-700 transition-colors"
++       >
++         <ArrowLeft className="w-3.5 h-3.5" />
++@@ -94,32 +117,39 @@ export default function FinancementDetailPage() {
++           <div className="flex items-start gap-3 flex-1 min-w-0">
++             {investisseurAvatar && (
++               <img
++-                src={investisseurAvatar}
++-                alt={investisseurNom ?? ''}
+++                src={`${import.meta.env.VITE_BASE_URL}${investisseurAvatar}`}
+++                alt={investisseurNom ?? ""}
++                 className="w-10 h-10 rounded-lg object-cover shrink-0"
++               />
++             )}
++             <div className="flex-1 min-w-0">
++               <div className="flex flex-wrap gap-1.5 mb-2">
++-                <span className={[
++-                  'text-[10px] px-1.5 py-0.5 rounded border',
++-                  TYPE_COLORS[offre.typeFinancement],
++-                ].join(' ')}>
+++                <span
+++                  className={[
+++                    "text-[10px] px-1.5 py-0.5 rounded border",
+++                    TYPE_COLORS[offre.typeFinancement],
+++                  ].join(" ")}
+++                >
++                   {TYPE_LABELS[offre.typeFinancement] ?? offre.typeFinancement}
++                 </span>
++-                <span className={[
++-                  'text-[10px] px-1.5 py-0.5 rounded border',
++-                  canPostuler
++-                    ? 'bg-green-50 text-green-700 border-green-200'
++-                    : 'bg-zinc-100 text-zinc-500 border-zinc-200',
++-                ].join(' ')}>
+++                <span
+++                  className={[
+++                    "text-[10px] px-1.5 py-0.5 rounded border",
+++                    canPostuler
+++                      ? "bg-green-50 text-green-700 border-green-200"
+++                      : "bg-zinc-100 text-zinc-500 border-zinc-200",
+++                  ].join(" ")}
+++                >
++                   {offre.statut}
++                 </span>
++               </div>
++-              <h1 className="text-[17px] font-medium text-zinc-900">{offre.titre}</h1>
+++              <h1 className="text-[17px] font-medium text-zinc-900">
+++                {offre.titre}
+++              </h1>
++               {investisseurNom && (
++                 <p className="text-[12px] text-zinc-400 mt-0.5">
++-                  Proposé par <span className="text-zinc-600">{investisseurNom}</span>
+++                  Proposé par{" "}
+++                  <span className="text-zinc-600">{investisseurNom}</span>
++                 </p>
++               )}
++             </div>
++@@ -142,30 +172,38 @@ export default function FinancementDetailPage() {
++         </div>
++ 
++         {/* Description */}
++-        <p className="text-[13px] text-zinc-600 leading-relaxed">{offre.description}</p>
+++        <p className="text-[13px] text-zinc-600 leading-relaxed">
+++          {offre.description}
+++        </p>
++       </div>
++ 
++       {/* Informations clés */}
++       <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-3">
++-        <h2 className="text-[13px] font-medium text-zinc-800">Informations clés</h2>
+++        <h2 className="text-[13px] font-medium text-zinc-800">
+++          Informations clés
+++        </h2>
++         <div className="grid grid-cols-2 gap-3">
++           <InfoItem
++-            icon="💰"
+++            icon={DollarSign}
++             label="Montant"
++-            value={formatMontant(offre.montantMin, offre.montantMax, offre.devise)}
+++            value={formatMontant(
+++              offre.montantMin,
+++              offre.montantMax,
+++              offre.devise,
+++            )}
++           />
++           <InfoItem
++-            icon="📊"
+++            icon={TrendingUp}
++             label="Stade BRL requis"
++             value={`BRL ${offre.stadeCible} minimum`}
++           />
++           <InfoItem
++-            icon="⏳"
+++            icon={Clock}
++             label="Clôture"
++             value={formatDate(offre.dateCloture)}
++           />
++           <InfoItem
++-            icon="👥"
+++            icon={Users}
++             label="Candidatures"
++             value={`${offre._count?.candidatures ?? 0}`}
++           />
++@@ -175,10 +213,15 @@ export default function FinancementDetailPage() {
++       {/* Secteurs */}
++       {offre.secteurs?.length > 0 && (
++         <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-3">
++-          <h2 className="text-[13px] font-medium text-zinc-800">Secteurs ciblés</h2>
+++          <h2 className="text-[13px] font-medium text-zinc-800">
+++            Secteurs ciblés
+++          </h2>
++           <div className="flex flex-wrap gap-1.5">
++             {offre.secteurs.map((s) => (
++-              <span key={s} className="text-[11px] px-2.5 py-1 bg-zinc-100 text-zinc-600 rounded-full">
+++              <span
+++                key={s}
+++                className="text-[11px] px-2.5 py-1 bg-zinc-100 text-zinc-600 rounded-full"
+++              >
++                 {s}
++               </span>
++             ))}
++@@ -189,11 +232,16 @@ export default function FinancementDetailPage() {
++       {/* Régions */}
++       {offre.regions?.length > 0 && (
++         <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-3">
++-          <h2 className="text-[13px] font-medium text-zinc-800">Régions couvertes</h2>
+++          <h2 className="text-[13px] font-medium text-zinc-800">
+++            Régions couvertes
+++          </h2>
++           <div className="flex flex-wrap gap-1.5">
++             {offre.regions.map((r) => (
++-              <span key={r} className="text-[11px] px-2.5 py-1 bg-zinc-100 text-zinc-600 rounded-full">
++-                📍 {r}
+++              <span
+++                key={r}
+++                className="text-[11px] px-2.5 py-1 bg-zinc-100 text-zinc-600 rounded-full"
+++              >
+++                {r}
++               </span>
++             ))}
++           </div>
++@@ -206,9 +254,10 @@ export default function FinancementDetailPage() {
++           📋 Critères d'éligibilité
++         </h2>
++         <p className="text-[12px] text-blue-700">
++-          Votre projet doit avoir un <strong>BRL d'au moins {offre.stadeCible}</strong> et
++-          être actif. Le système sélectionnera automatiquement vos projets éligibles lors
++-          de la postulation.
+++          Votre projet doit avoir un{" "}
+++          <strong>BRL d'au moins {offre.stadeCible}</strong> et être actif. Le
+++          système sélectionnera automatiquement vos projets éligibles lors de la
+++          postulation.
++         </p>
++       </div>
++ 
++@@ -221,17 +270,25 @@ export default function FinancementDetailPage() {
++         />
++       )}
++     </div>
++-  )
+++  );
++ }
++ 
++-function InfoItem({ icon, label, value }: { icon: string; label: string; value: string }) {
+++function InfoItem({
+++  icon: Icon,
+++  label,
+++  value,
+++}: {
+++  icon: React.ComponentType<{ className?: string }>;
+++  label: string;
+++  value: string;
+++}) {
++   return (
++     <div className="flex items-start gap-2">
++-      <span className="text-[13px] mt-0.5">{icon}</span>
+++      <Icon className="w-4 h-4 mt-0.5 text-zinc-600" />
++       <div>
++         <p className="text-[10px] text-zinc-400">{label}</p>
++         <p className="text-[12px] text-zinc-700">{value}</p>
++       </div>
++     </div>
++-  )
+++  );
++ }
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/ProjetCandidatCard.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/ProjetCandidatCard.tsx
++similarity index 100%
++rename from maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/ProjetCandidatCard.tsx
++rename to maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/ProjetCandidatCard.tsx
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.candidatures.lazy.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/mes-financements.candidatures.lazy.tsx
++similarity index 100%
++rename from maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.candidatures.lazy.tsx
++rename to maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/mes-financements.candidatures.lazy.tsx
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.candidatures.page.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/mes-financements.candidatures.page.tsx
++similarity index 100%
++rename from maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.candidatures.page.tsx
++rename to maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/mes-financements.candidatures.page.tsx
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.index.page.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/mes-financements.index.page.tsx
++similarity index 100%
++rename from maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/mes-financements.index.page.tsx
++rename to maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/mes-financements.index.page.tsx
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/useInvestisseur.ts b/maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/useInvestisseur.ts
++similarity index 100%
++rename from maturproj-frontend/src/routes/(dashboard)/_layout/financements/mes-financements.misplaced.bak/useInvestisseur.ts
++rename to maturproj-frontend/src/routes/(dashboard)/_layout/financements/-mes-financements.misplaced.bak/useInvestisseur.ts
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/index.page.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/index.page.tsx
++index e36f411..7d6d2c9 100644
++--- a/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/index.page.tsx
+++++ b/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/index.page.tsx
++@@ -1,69 +1,101 @@
++-import { useParams, Link, useNavigate } from '@tanstack/react-router'
++-import { useProjetDetail } from '@/hooks/useStades'
++-import { BRLBadge } from '@/components/shared/BRLBadge'
++-import { StatutBadge } from '@/components/shared/StatutBadge'
++-import { StadeStepperH } from '@/components/shared/StadeStepperH'
++-import { cn } from '@/lib/utils'
++-import { STADE_LABELS } from '@/lib/constants'
+++import { useParams, Link, useNavigate } from "@tanstack/react-router";
+++import { useProjetDetail } from "@/hooks/useStades";
+++import { BRLBadge } from "@/components/shared/BRLBadge";
+++import { StatutBadge } from "@/components/shared/StatutBadge";
+++import { StadeStepperH } from "@/components/shared/StadeStepperH";
+++import { cn } from "@/lib/utils";
+++import { STADE_LABELS } from "@/lib/constants";
+++import { authStore } from "@/stores/authStore";
++ import {
++-  CheckCircle2, Lock, ChevronRight, //MapPin,
++-  User, ArrowRight, Loader2, AlertCircle, Star, Briefcase,
++-} from 'lucide-react'
++-import type { StatutStade, TypeStade } from '@matura/shared'
+++  CheckCircle2,
+++  Lock,
+++  ChevronRight, //MapPin,
+++  ArrowRight,
+++  Loader2,
+++  AlertCircle,
+++  Star,
+++  Briefcase,
+++} from "lucide-react";
+++import type { StatutStade, TypeStade } from "@matura/shared";
+++import { useState, useEffect } from "react";
++ 
++ // ─── CARD STADE ───────────────────────────────────────────────────────────────
++ 
++ interface StadeCardProps {
++-  id: string
++-  type: TypeStade
++-  numero: number
++-  statut: StatutStade
++-  score_auto: number | null
++-  completion_pct: number
++-  valide_le: string | null
++-  soumis_le: string | null
++-  projetId: string
+++  id: string;
+++  type: TypeStade;
+++  numero: number;
+++  statut: StatutStade;
+++  score_auto: number | null;
+++  completion_pct: number;
+++  valide_le: string | null;
+++  soumis_le: string | null;
+++  projetId: string;
++ }
++ 
++-// console.log(pr)
++-
++-function StadeCard({ numero, statut, score_auto, completion_pct, projetId, soumis_le }: StadeCardProps) {
++-  const label = STADE_LABELS[numero] ?? `Stade ${numero}`
++-  const isVerrouille = statut === 'VERROUILLE'
+++function StadeCard({
+++  numero,
+++  statut,
+++  score_auto,
+++  completion_pct,
+++  projetId,
+++  soumis_le,
+++}: StadeCardProps) {
+++  const label = STADE_LABELS[numero] ?? `Stade ${numero}`;
+++  const isVerrouille = statut === "VERROUILLE";
++   const bgMap: Record<string, string> = {
++-    VALIDE: 'border-green-200 bg-green-50/40',
++-    SOUMIS: 'border-amber-200 bg-amber-50/40',
++-    EN_REVISION: 'border-red-200 bg-red-50/30',
++-    BROUILLON: 'border-blue-200 bg-blue-50/30',
++-    DEBLOQUE: 'border-zinc-200 bg-white',
++-    VERROUILLE: 'border-zinc-100 bg-zinc-50 opacity-50',
++-  }
+++    VALIDE: "border-green-200 bg-green-50/40",
+++    SOUMIS: "border-amber-200 bg-amber-50/40",
+++    EN_REVISION: "border-red-200 bg-red-50/30",
+++    BROUILLON: "border-blue-200 bg-blue-50/30",
+++    DEBLOQUE: "border-zinc-200 bg-white",
+++    VERROUILLE: "border-zinc-100 bg-zinc-50 opacity-50",
+++  };
++   const numBg: Record<string, string> = {
++-    VALIDE: 'bg-green-100 text-green-700',
++-    SOUMIS: 'bg-amber-100 text-amber-700',
++-    EN_REVISION: 'bg-red-100 text-red-700',
++-    BROUILLON: 'bg-blue-100 text-blue-700',
++-    DEBLOQUE: 'bg-zinc-100 text-zinc-500',
++-    VERROUILLE: 'bg-zinc-100 text-zinc-400',
++-  }
+++    VALIDE: "bg-green-100 text-green-700",
+++    SOUMIS: "bg-amber-100 text-amber-700",
+++    EN_REVISION: "bg-red-100 text-red-700",
+++    BROUILLON: "bg-blue-100 text-blue-700",
+++    DEBLOQUE: "bg-zinc-100 text-zinc-500",
+++    VERROUILLE: "bg-zinc-100 text-zinc-400",
+++  };
++ 
++   const inner = (
++-    <div className={cn('border rounded-xl p-4 transition-all', bgMap[statut] ?? 'border-zinc-200 bg-white', !isVerrouille && 'hover:shadow-sm')}>
+++    <div
+++      className={cn(
+++        "border rounded-xl p-4 transition-all",
+++        bgMap[statut] ?? "border-zinc-200 bg-white",
+++        !isVerrouille && "hover:shadow-sm",
+++      )}
+++    >
++       <div className="flex items-center gap-3">
++         {/* Numéro */}
++-        <div className={cn('w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-medium shrink-0', numBg[statut])}>
++-          {statut === 'VALIDE' ? <CheckCircle2 className="w-4 h-4" /> : isVerrouille ? <Lock className="w-3.5 h-3.5" /> : numero}
+++        <div
+++          className={cn(
+++            "w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-medium shrink-0",
+++            numBg[statut],
+++          )}
+++        >
+++          {statut === "VALIDE" ? (
+++            <CheckCircle2 className="w-4 h-4" />
+++          ) : isVerrouille ? (
+++            <Lock className="w-3.5 h-3.5" />
+++          ) : (
+++            numero
+++          )}
++         </div>
++ 
++         {/* Infos */}
++         <div className="flex-1 min-w-0">
++           <div className="flex items-center gap-2 flex-wrap">
++-            <span className="text-[13px] text-zinc-800">{numero}. {label}</span>
+++            <span className="text-[13px] text-zinc-800">
+++              {numero}. {label}
+++            </span>
++             <StatutBadge statut={statut} />
++           </div>
++ 
++           {/* Barre completion si actif */}
++-          {!isVerrouille && statut !== 'VALIDE' && (
+++          {!isVerrouille && statut !== "VALIDE" && (
++             <div className="flex items-center gap-2 mt-1.5">
++               <div className="flex-1 h-1 bg-zinc-100 rounded-full overflow-hidden">
++                 <div
++@@ -71,7 +103,9 @@ function StadeCard({ numero, statut, score_auto, completion_pct, projetId, soumi
++                   style={{ width: `${completion_pct}%` }}
++                 />
++               </div>
++-              <span className="text-[10px] text-zinc-400 shrink-0">{completion_pct}%</span>
+++              <span className="text-[10px] text-zinc-400 shrink-0">
+++                {completion_pct}%
+++              </span>
++             </div>
++           )}
++ 
++@@ -79,24 +113,28 @@ function StadeCard({ numero, statut, score_auto, completion_pct, projetId, soumi
++           {score_auto !== null && (
++             <div className="flex items-center gap-1 mt-1">
++               <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
++-              <span className="text-[11px] text-zinc-500">Note mentor : {score_auto}/100</span>
+++              <span className="text-[11px] text-zinc-500">
+++                Note mentor : {score_auto}/100
+++              </span>
++             </div>
++           )}
++ 
++           {/* Soumis le */}
++-          {soumis_le && statut === 'SOUMIS' && (
+++          {soumis_le && statut === "SOUMIS" && (
++             <p className="text-[10px] text-zinc-400 mt-0.5">
++-              Soumis le {new Date(soumis_le).toLocaleDateString('fr-FR')}
+++              Soumis le {new Date(soumis_le).toLocaleDateString("fr-FR")}
++             </p>
++           )}
++         </div>
++ 
++-        {!isVerrouille && <ChevronRight className="w-4 h-4 text-zinc-300 shrink-0" />}
+++        {!isVerrouille && (
+++          <ChevronRight className="w-4 h-4 text-zinc-300 shrink-0" />
+++        )}
++       </div>
++     </div>
++-  )
+++  );
++ 
++-  if (isVerrouille) return <div key={numero}>{inner}</div>
+++  if (isVerrouille) return <div key={numero}>{inner}</div>;
++ 
++   return (
++     <Link
++@@ -105,15 +143,31 @@ function StadeCard({ numero, statut, score_auto, completion_pct, projetId, soumi
++     >
++       {inner}
++     </Link>
++-  )
+++  );
++ }
++ 
++ // ─── PAGE PRINCIPALE ─────────────────────────────────────────────────────────
++ 
++ export default function ProjetDetailPage() {
++-  const { projetId } = useParams({ from: '/(dashboard)/_layout/projets/$projetId/' })
++-  const navigate = useNavigate()
++-  const { data: projet, isLoading, isError } = useProjetDetail(projetId)
+++  const { projetId } = useParams({
+++    from: "/(dashboard)/_layout/projets/$projetId/",
+++  });
+++  const navigate = useNavigate();
+++  const { data: projet, isLoading, isError } = useProjetDetail(projetId);
+++  const user = authStore((state) => state.utilisateur);
+++  const isMentor = user?.role === "MENTOR";
+++  const [usrAvatarURL, setusrAvatarUrl] = useState<string>("");
+++
+++  // Mettre à jour l'avatar du mentor
+++  useEffect(() => {
+++    if (projet && projet.mentor?.url_avatar) {
+++      setusrAvatarUrl(
+++        `${import.meta.env.VITE_BASE_URL}${projet.mentor.url_avatar}`,
+++      );
+++    } else {
+++      setusrAvatarUrl("");
+++    }
+++  }, [projet?.mentor?.url_avatar]);
++ 
++   // ── Loading ──
++   if (isLoading) {
++@@ -121,7 +175,7 @@ export default function ProjetDetailPage() {
++       <div className="flex items-center justify-center h-64">
++         <Loader2 className="w-7 h-7 animate-spin text-green-600" />
++       </div>
++-    )
+++    );
++   }
++ 
++   // ── Erreur ──
++@@ -129,21 +183,26 @@ export default function ProjetDetailPage() {
++     return (
++       <div className="flex flex-col items-center justify-center h-64 gap-3">
++         <AlertCircle className="w-8 h-8 text-red-400" />
++-        <p className="text-[13px] text-zinc-500">Projet introuvable ou accès refusé.</p>
+++        <p className="text-[13px] text-zinc-500">
+++          Projet introuvable ou accès refusé.
+++        </p>
++       </div>
++-    )
+++    );
++   }
++ 
++   // Stade actif = premier non VERROUILLE et non VALIDE
++-  const stadeActif = projet.stades.find(
++-    (s) => s.statut !== 'VERROUILLE' && s.statut !== 'VALIDE',
++-  ) ?? projet.stades.find((s) => s.statut === 'VALIDE' && s.numero === projet.brl_actuel)
+++  const stadeActif =
+++    projet.stades.find(
+++      (s) => s.statut !== "VERROUILLE" && s.statut !== "VALIDE",
+++    ) ??
+++    projet.stades.find(
+++      (s) => s.statut === "VALIDE" && s.numero === projet.brl_actuel,
+++    );
++ 
++-  const scoreGlobal = projet.score?.score_global ?? null
+++  const scoreGlobal = projet.score?.score_global ?? null;
++ 
++   return (
++     <div className="max-w-2xl mx-auto space-y-5">
++-
++       {/* ── En-tête ── */}
++       <div className="flex items-start justify-between gap-4">
++         <div className="flex-1 min-w-0">
++@@ -152,13 +211,19 @@ export default function ProjetDetailPage() {
++             <BRLBadge brl={projet.brl_actuel} />
++             <StatutBadge statut={projet.statut} />
++           </div>
++-          <h1 className="text-[20px] text-zinc-900 leading-tight">{projet.titre}</h1>
++-          <p className="text-[12px] text-zinc-500 mt-1 line-clamp-2">{projet.description}</p>
+++          <h1 className="text-[20px] text-zinc-900 leading-tight">
+++            {projet.titre}
+++          </h1>
+++          <p className="text-[12px] text-zinc-500 mt-1 line-clamp-2">
+++            {projet.description}
+++          </p>
++         </div>
++ 
++         {scoreGlobal !== null && scoreGlobal > 0 && (
++           <div className="shrink-0 text-center bg-white border border-zinc-200 rounded-xl px-4 py-3">
++-            <p className="text-[22px] text-zinc-900 leading-none">{Math.round(scoreGlobal)}</p>
+++            <p className="text-[22px] text-zinc-900 leading-none">
+++              {Math.round(scoreGlobal)}
+++            </p>
++             <p className="text-[10px] text-zinc-400 mt-1">Score MCDA</p>
++           </div>
++         )}
++@@ -167,33 +232,66 @@ export default function ProjetDetailPage() {
++       {/* ── Méta-infos ── */}
++       <div className="grid grid-cols-3 gap-2">
++         {[
++-          { label: 'Domaine', value: projet.domaine },
++-          { label: 'Région', value: projet.region },
++-          { label: 'Cible', value: projet.type_cible },
+++          { label: "Domaine", value: projet.domaine },
+++          { label: "Région", value: projet.region },
+++          { label: "Cible", value: projet.type_cible },
++         ].map((item) => (
++-          <div key={item.label} className="bg-white border border-zinc-200 rounded-xl p-3">
+++          <div
+++            key={item.label}
+++            className="bg-white border border-zinc-200 rounded-xl p-3"
+++          >
++             <p className="text-[10px] text-zinc-400">{item.label}</p>
++-            <p className="text-[12px] text-zinc-700 mt-0.5 font-medium">{item.value}</p>
+++            <p className="text-[12px] text-zinc-700 mt-0.5 font-medium">
+++              {item.value}
+++            </p>
++           </div>
++         ))}
++       </div>
++ 
++-      {/* ── Mentor ── */}
++-      {projet.mentor && (
+++      {/* ── Intervenants (Mentor / Entrepreneur) ── */}
+++      {isMentor && projet.proprietaire ? (
++         <div className="bg-white border border-zinc-200 rounded-xl p-4 flex items-center gap-3">
++-          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center shrink-0">
++-            <img
++-            src={`${import.meta.env.VITE_BASE_URL}${projet.mentor}`|| undefined}
++-            alt={`${projet.mentor.prenom} ${projet.mentor.nom}`}
++-            className="w-full h-full object-cover rounded-full" 
++-            />
+++          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+++            <span className="text-blue-700 text-[13px] font-bold">
+++              {projet.proprietaire.prenom.charAt(0).toUpperCase()}
+++              {projet.proprietaire.nom.charAt(0).toUpperCase()}
+++            </span>
++           </div>
++           <div>
++-            <p className="text-[10px] text-zinc-400">Mentor assigné</p>
++-            <p className="text-[13px] text-zinc-800">{projet.mentor.prenom} {projet.mentor.nom}</p>
+++            <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">
+++              Porteur du projet
+++            </p>
+++            <p className="text-[14px] text-zinc-800 font-medium">
+++              {projet.proprietaire.prenom} {projet.proprietaire.nom}
+++            </p>
++           </div>
++         </div>
++-      )}
+++      ) : projet.mentor ? (
+++        <div className="bg-white border border-zinc-200 rounded-xl p-4 flex items-center gap-3">
+++          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0 overflow-hidden border border-green-200">
+++            {projet.mentor.url_avatar ? (
+++              <img
+++                src={usrAvatarURL}
+++                alt={`${projet.mentor.prenom} ${projet.mentor.nom}`}
+++                className="w-full h-full object-cover"
+++              />
+++            ) : (
+++              <span className="text-green-700 text-[13px] font-bold">
+++                {projet.mentor.prenom.charAt(0).toUpperCase()}
+++                {projet.mentor.nom.charAt(0).toUpperCase()}
+++              </span>
+++            )}
+++          </div>
+++          <div>
+++            <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">
+++              Mentor assigné
+++            </p>
+++            <p className="text-[14px] text-zinc-800 font-medium">
+++              {projet.mentor.prenom} {projet.mentor.nom}
+++            </p>
+++          </div>
+++        </div>
+++      ) : null}
++ 
++       {/* ── Stepper horizontal ── */}
++       <div className="bg-white border border-zinc-200 rounded-xl px-5 py-2">
++@@ -205,16 +303,19 @@ export default function ProjetDetailPage() {
++           }))}
++           currentStade={stadeActif?.numero ?? 1}
++           onStadeClick={(num) => {
++-            const s = projet.stades.find((st) => st.numero === num)
++-            if (s && s.statut !== 'VERROUILLE') {
++-              navigate({ to: '/projets/$projetId/stades/$numStade', params: { projetId, numStade: String(num) } })
+++            const s = projet.stades.find((st) => st.numero === num);
+++            if (s && s.statut !== "VERROUILLE") {
+++              navigate({
+++                to: "/projets/$projetId/stades/$numStade",
+++                params: { projetId, numStade: String(num) },
+++              });
++             }
++           }}
++         />
++       </div>
++ 
++       {/* ── CTA stade actif ── */}
++-      {stadeActif && stadeActif.statut !== 'VERROUILLE' && (
+++      {stadeActif && stadeActif.statut !== "VERROUILLE" && (
++         <Link
++           to="/projets/$projetId/stades/$numStade"
++           params={{ projetId, numStade: String(stadeActif.numero) }}
++@@ -222,10 +323,15 @@ export default function ProjetDetailPage() {
++         >
++           <div>
++             <p className="text-[13px] font-medium">
++-              {stadeActif.statut === 'SOUMIS' ? 'En attente d\'évaluation' : `Continuer le Stade ${stadeActif.numero}`}
+++              {stadeActif.statut === "SOUMIS"
+++                ? "En attente d'évaluation"
+++                : `Continuer le Stade ${stadeActif.numero}`}
++             </p>
++             <p className="text-[11px] text-green-100 mt-0.5">
++-              {STADE_LABELS[stadeActif.numero]} · {stadeActif.statut === 'VALIDE' ? '100%' : `${stadeActif.completion_pct}%`}
+++              {STADE_LABELS[stadeActif.numero]} ·{" "}
+++              {stadeActif.statut === "VALIDE"
+++                ? "100%"
+++                : `${stadeActif.completion_pct}%`}
++             </p>
++           </div>
++           <ArrowRight className="w-5 h-5 shrink-0" />
++@@ -239,11 +345,7 @@ export default function ProjetDetailPage() {
++         </p>
++         <div className="space-y-2">
++           {projet.stades.map((s) => (
++-            <StadeCard
++-              key={s.id}
++-              {...s}
++-              projetId={projetId}
++-            />
+++            <StadeCard key={s.id} {...s} projetId={projetId} />
++           ))}
++         </div>
++       </div>
++@@ -251,22 +353,33 @@ export default function ProjetDetailPage() {
++       {/* ── Score détail ── */}
++       {projet.score && scoreGlobal !== null && scoreGlobal > 0 && (
++         <div className="bg-white border border-zinc-200 rounded-xl p-4">
++-          <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-3">Scores MCDA</p>
+++          <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-3">
+++            Scores MCDA
+++          </p>
++           <div className="grid grid-cols-2 gap-2">
++             {[
++-              { label: 'Innovation', value: projet.score.score_innovation },
++-              { label: 'Marché', value: projet.score.score_marche },
++-              { label: 'Équipe', value: projet.score.score_equipe },
++-              { label: 'Finance', value: projet.score.score_finance },
++-              { label: 'Exécution', value: projet.score.score_execution },
+++              { label: "Innovation", value: projet.score.score_innovation },
+++              { label: "Marché", value: projet.score.score_marche },
+++              { label: "Équipe", value: projet.score.score_equipe },
+++              { label: "Finance", value: projet.score.score_finance },
+++              { label: "Exécution", value: projet.score.score_execution },
++             ].map((dim) => (
++-              <div key={dim.label} className="flex items-center justify-between bg-zinc-50 rounded-lg px-3 py-2">
+++              <div
+++                key={dim.label}
+++                className="flex items-center justify-between bg-zinc-50 rounded-lg px-3 py-2"
+++              >
++                 <span className="text-[11px] text-zinc-600">{dim.label}</span>
++-                <span className={cn(
++-                  'text-[12px] font-medium',
++-                  dim.value >= 65 ? 'text-green-600' : dim.value >= 40 ? 'text-amber-600' : 'text-zinc-400',
++-                )}>
++-                  {dim.value > 0 ? Math.round(dim.value) : '—'}
+++                <span
+++                  className={cn(
+++                    "text-[12px] font-medium",
+++                    dim.value >= 65
+++                      ? "text-green-600"
+++                      : dim.value >= 40
+++                        ? "text-amber-600"
+++                        : "text-zinc-400",
+++                  )}
+++                >
+++                  {dim.value > 0 ? Math.round(dim.value) : "—"}
++                 </span>
++               </div>
++             ))}
++@@ -274,5 +387,5 @@ export default function ProjetDetailPage() {
++         </div>
++       )}
++     </div>
++-  )
+++  );
++ }
++diff --git a/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/stades/$numStade.page.tsx b/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/stades/$numStade.page.tsx
++index 82c890c..4f4f4c8 100644
++--- a/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/stades/$numStade.page.tsx
+++++ b/maturproj-frontend/src/routes/(dashboard)/_layout/projets/$projetId/stades/$numStade.page.tsx
++@@ -16,6 +16,7 @@ import { MetriquesStade } from '@/components/stades/MetriquesStade'
++ import { EvaluationStade } from '@/components/stades/EvaluationStade'
++ import { AffichageCalculsInformatifs } from '@/components/stades/AffichageCalculsInformatifs'
++ import { GatePanel } from '@/components/stades/GatePanel'
+++import { EvidencePanel } from '@/components/stades/EvidencePanel'
++ import type { StadeData } from '@/hooks/useStades'
++ import { AideStade1 } from '@/components/stades/AideStade1'
++ import { AideStade2 } from '@/components/stades/AideStade2'
++@@ -42,7 +43,7 @@ const AIDES: Record<number, React.ReactNode> = {
++ // aide: AIDES[numStade]
++ // ─── FORMULAIRE PAR STADE ─────────────────────────────────────────────────────
++ 
++-const FORMS: Record<number, React.ComponentType<{ stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean }>> = {
+++const FORMS: Record<number, React.ComponentType<{ stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean; readOnly?: boolean }>> = {
++   1: Stade1Form,
++   2: Stade2Form,
++   3: Stade3Form,
++@@ -177,23 +178,21 @@ export default function StadeNumPage() {
++                   }) ?? undefined
++                 }
++                 onSave={(donnees) => enregistrer.mutate(donnees)}
+++                readOnly={isMentor}
++               />
++             ) : (
++               <FormComponent
++                 stade={stade}
++                 onSave={(donnees) => enregistrer.mutate(donnees)}
++                 saving={enregistrer.isPending}
+++                readOnly={isMentor}
++               />
++             )
++           ) : (
++             <p className="text-zinc-500 text-[13px]">Formulaire non disponible</p>
++           ),
++           aide: AIDES[numStade],
++-          preuves: (
++-            <div className="text-center py-8 text-[12px] text-zinc-400">
++-              Upload de preuves — à implémenter
++-            </div>
++-          ),
+++          preuves: <EvidencePanel stadeId={stade.id} readOnly={isMentor} />,
++           metriques: (
++             <div>
++               <AffichageCalculsInformatifs
++diff --git a/maturproj-frontend/tsconfig.app.json b/maturproj-frontend/tsconfig.app.json
++index 3b3c248..3fc7378 100644
++--- a/maturproj-frontend/tsconfig.app.json
+++++ b/maturproj-frontend/tsconfig.app.json
++@@ -37,6 +37,8 @@
++     "src/**/*.old.ts",
++     "src/**/*.index.page.bak.tsx",
++     "src/**/mes-financements.misplaced.bak",
++-    "src/**/mes-financements.misplaced.bak/**"
+++    "src/**/mes-financements.misplaced.bak/**",
+++    "src/**/-mes-financements.misplaced.bak",
+++    "src/**/-mes-financements.misplaced.bak/**"
++   ]
++ }
++diff --git a/repomix-output.txt b/repomix-output.txt
++deleted file mode 100644
++index 5e2dc9d..0000000
++--- a/repomix-output.txt
+++++ /dev/null
++@@ -1,65 +0,0 @@
++-This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
++-The content has been processed where comments have been removed, empty lines have been removed, security check has been disabled.
++-
++-================================================================
++-File Summary
++-================================================================
++-
++-Purpose:
++---------
++-This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
++-It is designed to be easily consumable by AI systems for analysis, code review,
++-or other automated processes.
++-
++-File Format:
++-------------
++-The content is organized as follows:
++-1. This summary section
++-2. Repository information
++-3. Directory structure
++-4. Repository files (if enabled)
++-5. Multiple file entries, each consisting of:
++-  a. A separator line (================)
++-  b. The file path (File: path/to/file)
++-  c. Another separator line
++-  d. The full contents of the file
++-  e. A blank line
++-
++-Usage Guidelines:
++------------------
++-- This file should be treated as read-only. Any changes should be made to the
++-  original repository files, not this packed version.
++-- When processing this file, use the file path to distinguish
++-  between different files in the repository.
++-- Be aware that this file may contain sensitive information. Handle it with
++-  the same level of security as you would the original repository.
++-
++-Notes:
++-------
++-- Some files may have been excluded based on .gitignore rules and Repomix's configuration
++-- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
++-- Files matching these patterns are excluded: maturproj-backend/node_modules/**, maturproj-frontend/node_modules/**, shared/node_modules/**, **/node_modules/**, **/*.csv, **/*.apk, **/*.zip, dist/**, build/**
++-- Files matching patterns in .gitignore are excluded
++-- Files matching default ignore patterns are excluded
++-- Code comments have been removed from supported file types
++-- Empty lines have been removed from all files
++-- Security check has been disabled - content may contain sensitive information
++-- Files are sorted by Git change count (files with more changes are at the bottom)
++-
++-
++-================================================================
++-Directory Structure
++-================================================================
++-
++-
++-================================================================
++-Files
++-================================================================
++-
++-
++-
++-
++-
++-================================================================
++-End of Codebase
++-================================================================
++diff --git a/repomix.config.json b/repomix.config.json
++index dc4c7a5..e82de3f 100644
++--- a/repomix.config.json
+++++ b/repomix.config.json
++@@ -1,52 +1,47 @@
++ {
++-  "$schema": "https://repomix.com/schemas/latest/schema.json",
++   "output": {
++-    "filePath": "repomix-output.txt",
++-    "style": "plain",
++-    "removeComments": true,
++-    "removeEmptyLines": true,
+++    "filePath": "repomix-output-complete.txt",
+++    "style": "markdown",
+++    "removeComments": false,
+++    "removeEmptyLines": false,
++     "showLineNumbers": false,
++-    "topFilesLength": 5
++-  },
++-  "input": {
++-    "include": [
++-      "docs/IMPLEMENTATION_INVESTISSEUR_FINANCEMENT.md",
++-      "shared/src/schemas/financement.schema.ts",
++-      "shared/src/index.ts",
++-      "maturproj-backend/prisma/schema.prisma",
++-      "maturproj-backend/src/app.module.ts",
++-      "maturproj-backend/src/financement/financement.module.ts",
++-      "maturproj-backend/src/financement/financement.controller.ts",
++-      "maturproj-backend/src/financement/financement.service.ts",
++-      "maturproj-backend/src/financement/dto/creer-offre.dto.ts",
++-      "maturproj-frontend/src/hooks/useFinancements.ts",
++-      "maturproj-frontend/src/hooks/useInvestisseur.ts",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/financements/index.lazy.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/financements/index.page.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/mes-financements/index.lazy.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/mes-financements/index.page.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/projets-a-financer/index.lazy.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/projets-a-financer/index.page.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/projets-a-financer/$projetId.lazy.tsx",
++-      "maturproj-frontend/src/routes/(dashboard)/_layout/projets-a-financer/$projetId.page.tsx",
++-      "maturproj-frontend/src/components/financement/FinancementCard.tsx",
++-      "maturproj-frontend/src/components/financement/PostulerModal.tsx",
++-      "maturproj-frontend/src/components/financement/OffreFinancementForm.tsx"
++-    ]
+++    "copyToClipboard": false,
+++    "topFilesLength": 20,
+++    "showTokenCount": true
++   },
+++  "include": [
+++    "maturproj-backend/src/**/*.{ts,js}",
+++    "maturproj-backend/prisma/schema.prisma",
+++    "maturproj-frontend/src/**/*.{ts,tsx,js,jsx,css}",
+++    "maturproj-frontend/index.html",
+++    "shared/src/**/*.{ts,js}"
+++  ],
++   "ignore": {
++     "useGitignore": true,
++     "useDefaultPatterns": true,
++     "customPatterns": [
++-      "maturproj-backend/node_modules/**",
++-      "maturproj-frontend/node_modules/**",
++-      "shared/node_modules/**",
+++      "**/*.bak.*",
+++      "**/*.old.*",
++       "**/node_modules/**",
++-      "**/*.csv",
++-      "**/*.apk",
++-      "**/*.zip",
++-      "dist/**",
++-      "build/**"
+++      "**/dist/**",
+++      "**/build/**",
+++      "**/.git/**",
+++      "**/public/**",
+++      "**/*.test.*",
+++      "**/*.spec.*",
+++      "**/*.md",
+++      "**/*.txt",
+++      "**/*.svg",
+++      "**/*.png",
+++      "**/*.jpg",
+++      "**/*.jpeg",
+++      "**/*.gif",
+++      "**/*.ico",
+++      "**/*.webp",
+++      "**/assets/**"
++     ]
+++  },
+++  "security": {
+++    "enableSecurityCheck": true
++   }
++ }
++diff --git a/shared/src/schemas/financement.schema.ts b/shared/src/schemas/financement.schema.ts
++index a9fe85f..83cee78 100644
++--- a/shared/src/schemas/financement.schema.ts
+++++ b/shared/src/schemas/financement.schema.ts
++@@ -1,23 +1,120 @@
++ import { z } from 'zod'
++-import { TypeFinancementOffreEnum, StatutCandidatureEnum } from '../enums.js'
++-export const CreerOffreSchema = z.object({
++-  titre:            z.string().min(5).max(120),
++-  description:      z.string().min(20).max(1000),
++-  type_financement: TypeFinancementOffreEnum,
++-  montant_min_ar:   z.number().positive().optional(),
++-  montant_max_ar:   z.number().positive().optional(),
++-  brl_minimal:      z.number().int().min(1).max(7),
++-  secteurs_cibles:  z.array(z.string()).default([]),
++-  regions_cibles:   z.array(z.string()).default([]),
++-  date_limite:      z.string().datetime().nullable().optional(),
+++
+++// ─── Enums alignés sur schema.prisma MIGRÉ ───────────────────────────────────
+++
+++export enum TypeFinancement {
+++  SUBVENTION  = 'SUBVENTION',
+++  PRET        = 'PRET',
+++  EQUITY      = 'EQUITY',
+++  OBLIGATION  = 'OBLIGATION',
+++  DON         = 'DON',
+++}
+++
+++export enum StatutOffre {
+++  OUVERTE  = 'OUVERTE',
+++  EN_COURS = 'EN_COURS',
+++  FERMEE   = 'FERMEE',
+++  CLOTUREE = 'CLOTUREE',
+++}
+++
+++export enum StatutCandidature {
+++  EN_ATTENTE = 'EN_ATTENTE',
+++  EN_REVUE   = 'EN_REVUE',
+++  ACCEPTEE   = 'ACCEPTEE',
+++  REJETEE    = 'REJETEE',
+++  RETIREE    = 'RETIREE',
+++}
+++
+++export const BRL_MINIMUM_POSTULATION = 6
+++
+++// ─── Schémas Zod ─────────────────────────────────────────────────────────────
+++
+++export const OffreFinancementSchema = z.object({
+++  id:               z.string(),
+++  titre:            z.string().min(3).max(200),
+++  description:      z.string().min(10),
+++  typeFinancement:  z.nativeEnum(TypeFinancement),
+++  montantMin:       z.number().positive().optional().nullable(),
+++  montantMax:       z.number().positive().optional().nullable(),
+++  devise:           z.string().default('MGA'),
+++  stadeCible:       z.number().int().min(1).max(9),
+++  secteurs:         z.array(z.string()).default([]),
+++  regions:          z.array(z.string()).default([]),
+++  dateCloture:      z.string().datetime().optional().nullable(),
+++  statut:           z.nativeEnum(StatutOffre).default(StatutOffre.OUVERTE),
+++  investisseurId:   z.string(),
+++  createdAt:        z.string().datetime().optional(),
+++  updatedAt:        z.string().datetime().optional(),
++ })
+++
+++export type OffreFinancement = z.infer<typeof OffreFinancementSchema>
+++
+++export const CreerOffreSchema = OffreFinancementSchema.omit({
+++  id: true, investisseurId: true, statut: true, createdAt: true, updatedAt: true,
+++}).partial({
+++  dateCloture: true, montantMin: true, montantMax: true,
+++  secteurs: true, regions: true, devise: true,
+++})
+++
+++export type CreerOffreDto = z.infer<typeof CreerOffreSchema>
+++
+++export const CandidatureSchema = z.object({
+++  id:                z.string(),
+++  offreId:           z.string(),
+++  projetId:          z.string(),
+++  entrepreneurId:    z.string(),
+++  statut:            z.nativeEnum(StatutCandidature).default(StatutCandidature.EN_ATTENTE),
+++  messageMotivation: z.string().max(2000).optional().nullable(),
+++  brlAuMoment:       z.number().int(),
+++  createdAt:         z.string().datetime().optional(),
+++  updatedAt:         z.string().datetime().optional(),
+++})
+++
+++export type Candidature = z.infer<typeof CandidatureSchema>
+++
++ export const PostulerSchema = z.object({
++-  projet_id: z.string().min(1),
++-  message:   z.string().max(500).optional(),
+++  projetId:          z.string().min(1),
+++  messageMotivation: z.string().max(2000).optional(),
+++})
+++
+++export type PostulerDto = z.infer<typeof PostulerSchema>
+++
+++export const FiltresFinancementSchema = z.object({
+++  recherche:       z.string().optional(),
+++  typeFinancement: z.nativeEnum(TypeFinancement).optional(),
+++  secteur:         z.string().optional(),
+++  region:          z.string().optional(),
+++  montantMin:      z.number().positive().optional(),
+++  montantMax:      z.number().positive().optional(),
+++  statut:          z.nativeEnum(StatutOffre).optional(),
+++  stadeCible:      z.number().int().min(1).max(9).optional(),
+++  page:            z.number().int().min(1).default(1),
+++  limit:           z.number().int().min(1).max(100).default(20),
+++})
+++
+++export type FiltresFinancement = z.infer<typeof FiltresFinancementSchema>
+++
+++export const PaginatedOffresSchema = z.object({
+++  data:       z.array(OffreFinancementSchema),
+++  total:      z.number(),
+++  page:       z.number(),
+++  limit:      z.number(),
+++  totalPages: z.number(),
++ })
++-export const MajStatutCandidatureSchema = z.object({
++-  statut: StatutCandidatureEnum,
+++
+++export type PaginatedOffres = z.infer<typeof PaginatedOffresSchema>
+++
+++export const ProjetEligibleSchema = z.object({
+++  id:            z.string(),
+++  nom:           z.string(),
+++  description:   z.string().optional().nullable(),
+++  brl:           z.number().int().min(1).max(9),
+++  secteur:       z.string().optional().nullable(),
+++  region:        z.string().optional().nullable(),
+++  statut:        z.string().optional().nullable(),
+++  dateCreation:  z.string().datetime().optional().nullable(),
+++  membreEquipe:  z.number().int().optional(),
+++  dejaCandidaté: z.boolean().default(false),
++ })
++-export type CreerOffreDto           = z.infer<typeof CreerOffreSchema>
++-export type PostulerDto             = z.infer<typeof PostulerSchema>
++-export type MajStatutCandidatureDto = z.infer<typeof MajStatutCandidatureSchema>
+++
+++export type ProjetEligible = z.infer<typeof ProjetEligibleSchema>
++diff --git a/shared/src/schemas/metier.schema.ts b/shared/src/schemas/metier.schema.ts
++index 5ed3973..30fad91 100644
++--- a/shared/src/schemas/metier.schema.ts
+++++ b/shared/src/schemas/metier.schema.ts
++@@ -1,199 +1,116 @@
++-import { z } from "zod";
+++import { z } from 'zod'
++ import {
++   TypeDecisionEnum,
++   DomainProjetEnum,
++   StatutDemandeEnum,
++-} from "../enums.js";
++-import { StatutCandidature } from "./financement.schema";
+++} from '../enums.js'
+++import { StatutCandidature, TypeFinancement } from './financement.schema'
++ 
++-// ─── OFFRE DE FINANCEMENT ────────────────────────────────────────
+++// ─── OFFRE DE FINANCEMENT ─────────────────────────────────────────────────────
++ 
++ export const CreationOffreSchema = z.object({
++-  titre: z.string().min(5).max(100),
++-  description: z.string().min(20).max(2000),
++-  type_financement: TypeFinancementOffreEnum,
++-  montant_min_ar: z.number().positive().optional(),
++-  montant_max_ar: z.number().positive().optional(),
++-  brl_minimal: z.number().int().min(1).max(7, "BRL doit être entre 1 et 7"),
++-  secteurs_cibles: z.array(DomainProjetEnum),
++-  // [] = tous secteurs éligibles
++-  regions_cibles: z.array(z.string()),
++-  // [] = toutes régions
++-  date_limite: z.string().datetime().optional(),
++-});
+++  titre:            z.string().min(5).max(100),
+++  description:      z.string().min(20).max(2000),
+++  type_financement: z.nativeEnum(TypeFinancement),
+++  montant_min_ar:   z.number().positive().optional(),
+++  montant_max_ar:   z.number().positive().optional(),
+++  brl_minimal:      z.number().int().min(1).max(7, 'BRL doit être entre 1 et 7'),
+++  secteurs_cibles:  z.array(DomainProjetEnum),
+++  regions_cibles:   z.array(z.string()),
+++  date_limite:      z.string().datetime().optional(),
+++})
++ 
++ export const OffreResumeSchema = z.object({
++-  id: z.string(),
++-  titre: z.string(),
++-  description: z.string(),
++-  type_financement: TypeFinancementOffreEnum,
++-  montant_min_ar: z.number().nullable(),
++-  montant_max_ar: z.number().nullable(),
++-  brl_minimal: z.number().int(),
++-  secteurs_cibles: z.array(z.string()),
++-  regions_cibles: z.array(z.string()),
++-  date_limite: z.string().datetime().nullable(),
++-  est_actif: z.boolean(),
++-  cree_le: z.string().datetime(),
+++  id:               z.string(),
+++  titre:            z.string(),
+++  description:      z.string(),
+++  type_financement: z.nativeEnum(TypeFinancement),
+++  montant_min_ar:   z.number().nullable(),
+++  montant_max_ar:   z.number().nullable(),
+++  brl_minimal:      z.number().int(),
+++  secteurs_cibles:  z.array(z.string()),
+++  regions_cibles:   z.array(z.string()),
+++  date_limite:      z.string().datetime().nullable(),
+++  est_actif:        z.boolean(),
+++  cree_le:          z.string().datetime(),
++   investisseur: z.object({
++-    id: z.string(),
++-    prenom: z.string(),
++-    nom: z.string(),
++-    sous_type: z.string().nullable(),
+++    id:         z.string(),
+++    prenom:     z.string(),
+++    nom:        z.string(),
+++    sous_type:  z.string().nullable(),
++     url_avatar: z.string().nullable(),
++   }),
++-  // Calculé côté backend si projet_id fourni dans la query
++-  can_postuler: z.boolean().optional(),
+++  can_postuler:   z.boolean().optional(),
++   raison_blocage: z.string().optional(),
++-  // Ex : "Requis : Validation du Stage-Gate 4"
++-});
+++})
++ 
+++// BUG FIX : défini UNE SEULE fois ici.
+++// financement.schema.ts ne l'exporte pas → supprime l'erreur TS2308.
++ export const MajStatutCandidatureSchema = z.object({
++-  statut: z.string(), // Temporaire pour éviter erreur si StatutCandidatureEnum supprimé
++-});
+++  statut: z.nativeEnum(StatutCandidature),
+++})
++ 
++-// ─── ÉVALUATION MENTOR ───────────────────────────────────────────
+++// ─── ÉVALUATION MENTOR ────────────────────────────────────────────────────────
++ 
++ export const CreationEvaluationSchema = z
++   .object({
++-    note: z.number().min(0, "Note minimum 0").max(100, "Note maximum 100"),
++-    commentaire: z.string().min(50, "Commentaire minimum 50 caractères"),
++-    criteres: z.record(z.number().min(0).max(100)),
++-    // Clés spécifiques selon le stade — validées côté backend
++-    // Ex stade 1 : { clarte_probleme: 80, validation_terrain: 70, realisme_contexte: 65 }
++-    decision: TypeDecisionEnum,
+++    note:         z.number().min(0).max(100),
+++    commentaire:  z.string().min(50),
+++    criteres:     z.record(z.number().min(0).max(100)),
+++    decision:     TypeDecisionEnum,
++     motif_renvoi: z.string().min(20).optional(),
++   })
++   .refine(
++-    (data) => {
++-      // motif_renvoi obligatoire si decision = RENVOYE
++-      if (data.decision === "RENVOYE" && !data.motif_renvoi) return false;
++-      return true;
++-    },
++-    {
++-      message: "Le motif de renvoi est obligatoire",
++-      path: ["motif_renvoi"],
++-    },
++-  );
+++    (data) => !(data.decision === 'RENVOYE' && !data.motif_renvoi),
+++    { message: 'Le motif de renvoi est obligatoire', path: ['motif_renvoi'] },
+++  )
++ 
++ export const EvaluationSchema = z.object({
++-  id: z.string(),
++-  stade_id: z.string(),
++-  mentor_id: z.string(),
++-  note: z.number(),
++-  commentaire: z.string(),
++-  criteres: z.record(z.number()),
++-  decision: TypeDecisionEnum,
+++  id:           z.string(),
+++  stade_id:     z.string(),
+++  mentor_id:    z.string(),
+++  note:         z.number(),
+++  commentaire:  z.string(),
+++  criteres:     z.record(z.number()),
+++  decision:     TypeDecisionEnum,
++   motif_renvoi: z.string().nullable(),
++-  cree_le: z.string().datetime(),
++-  mentor: z.object({
++-    id: z.string(),
++-    prenom: z.string(),
++-    nom: z.string(),
++-  }),
++-});
+++  cree_le:      z.string().datetime(),
+++  mentor: z.object({ id: z.string(), prenom: z.string(), nom: z.string() }),
+++})
++ 
++-// ─── DEMANDE D'ACCOMPAGNEMENT ─────────────────────────────────────
+++// ─── DEMANDE D'ACCOMPAGNEMENT ─────────────────────────────────────────────────
++ 
++ export const CreationDemandeSchema = z.object({
++   projet_id: z.string().cuid(),
++   mentor_id: z.string().cuid(),
++-  message: z.string().min(10).max(500).optional(),
++-});
+++  message:   z.string().min(10).max(500).optional(),
+++})
++ 
++ export const DemandeAccompagnementSchema = z.object({
++-  id: z.string(),
+++  id:        z.string(),
++   projet_id: z.string(),
++   mentor_id: z.string(),
++-  message: z.string().nullable(),
++-  statut: StatutDemandeEnum,
++-  cree_le: z.string().datetime(),
++-  projet: z.object({
++-    id: z.string(),
++-    titre: z.string(),
++-    domaine: DomainProjetEnum,
++-    brl_actuel: z.number().int(),
++-    description: z.string(),
++-  }),
++-  mentor: z.object({
++-    id: z.string(),
++-    prenom: z.string(),
++-    nom: z.string(),
++-    url_avatar: z.string().nullable(),
++-  }),
++-});
++-
++-export const RepondreDemandeSchema = z.object({
++-  statut: z.enum(["ACCEPTE", "REFUSE"]),
++-});
++-
++-// ─── ALERTES ─────────────────────────────────────────────────────
++-
++-export const AlerteSchema = z.object({
++-  id: z.string(),
++-  code: z.string(),
++-  niveau: z.enum(["CRITIQUE", "ATTENTION", "INFO"]),
++-  message: z.string(),
++-  resolue: z.boolean(),
++-  cree_le: z.string().datetime(),
++-});
++-
++-// ─── SCORE MCDA ──────────────────────────────────────────────────
++-
++-export const ScoreMCDASchema = z.object({
++-  score_global: z.number().min(0).max(100),
++-  scores_par_stade: z.object({
++-    stade_1: z.number(),
++-    stade_2: z.number(),
++-    stade_3: z.number(),
++-    stade_4: z.number(),
++-    stade_5: z.number(),
++-    stade_6: z.number(),
++-    stade_7: z.number(),
++-  }),
++-  dimensions: z.object({
++-    innovation: z.number(), // (S1 + S2) / 2 × 0.20
++-    marche: z.number(), // S3 × 0.25
++-    equipe: z.number(), // S5 équipe × 0.20
++-    finance: z.number(), // (S4 + S5 finance) / 2 × 0.20
++-    execution: z.number(), // (S6 + S7) / 2 × 0.15
++-  }),
++-  visible_investisseur: z.boolean(),
++-  // true si score_global >= 65 ET brl_actuel >= 6
++-  calcule_le: z.string().datetime(),
++-});
++-
++-// ─── RÉPONSES API GÉNÉRIQUES ─────────────────────────────────────
++-
++-export const ApiSuccessSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
++-  z.object({
++-    data: dataSchema,
++-  });
++-
++-export const ApiErrorSchema = z.object({
++-  message: z.string(),
++-  code: z.string(),
++-  details: z.record(z.unknown()).optional(),
++-});
+++  message:   z.string().nullable(),
+++  statut:    StatutDemandeEnum,
+++  cree_le:   z.string().datetime(),
+++  mentor: z.object({ id: z.string(), prenom: z.string(), nom: z.string() }),
+++})
++ 
++ export const PaginationSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
++   z.object({
++-    items: z.array(itemSchema),
++-    total: z.number().int(),
++-    page: z.number().int(),
++-    pages: z.number().int(),
++-    limite: z.number().int(),
++-  });
+++    items:  z.array(itemSchema),
+++    total:  z.number(),
+++    page:   z.number(),
+++    pages:  z.number(),
+++    limite: z.number(),
+++  })
++ 
++-// ─── TYPES ──────────────────────────────────────────────────────
+++// ─── Types exportés ───────────────────────────────────────────────────────────
++ 
++-export type CreationOffreDto = z.infer<typeof CreationOffreSchema>;
++-export type OffreResume = z.infer<typeof OffreResumeSchema>;
++-export type CreationEvaluationDto = z.infer<typeof CreationEvaluationSchema>;
++-export type Evaluation = z.infer<typeof EvaluationSchema>;
++-export type CreationDemandeDto = z.infer<typeof CreationDemandeSchema>;
++-export type DemandeAccompagnement = z.infer<typeof DemandeAccompagnementSchema>;
++-export type RepondreDemandeDto = z.infer<typeof RepondreDemandeSchema>;
++-export type Alerte = z.infer<typeof AlerteSchema>;
++-export type ScoreMCDA = z.infer<typeof ScoreMCDASchema>;
++-export type ApiError = z.infer<typeof ApiErrorSchema>;
+++export type CreationOffreDto        = z.infer<typeof CreationOffreSchema>
+++export type OffreResume             = z.infer<typeof OffreResumeSchema>
+++export type MajStatutCandidatureDto = z.infer<typeof MajStatutCandidatureSchema>
+++export type CreationEvaluationDto   = z.infer<typeof CreationEvaluationSchema>
+++export type Evaluation              = z.infer<typeof EvaluationSchema>
+++export type CreationDemandeDto      = z.infer<typeof CreationDemandeSchema>
+++export type DemandeAccompagnement   = z.infer<typeof DemandeAccompagnementSchema>
++diff --git a/shared/src/schemas/projet.schema.ts b/shared/src/schemas/projet.schema.ts
++index 85e81ff..6d86742 100644
++--- a/shared/src/schemas/projet.schema.ts
+++++ b/shared/src/schemas/projet.schema.ts
++@@ -53,6 +53,7 @@ export const ProjetResumeSchema = z.object({
++       id: z.string(),
++       prenom: z.string(),
++       nom: z.string(),
+++      url_avatar: z.string().optional().nullable(),
++     })
++     .nullable(),
++   // Score global si disponible

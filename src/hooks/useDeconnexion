@@ -1,0 +1,24 @@
+import { authStore } from "../stores/authStore";
+import { useNavigate } from "@tanstack/react-router";
+import { apiClient } from "@/lib/apiClient";
+
+export const useDeconnexion = async () => {
+    const store=authStore();
+    const navigate=useNavigate();
+    const deconnexion=()=>{
+        store.logout();
+    }
+    try {
+        const response=await apiClient.delete("auth/deconnexion"); 
+        navigate({to:"/login"});
+        return {
+            message:"Deconnexion reussie",
+            response
+        }
+      } catch (error) {
+        return {
+            message:"Echec  du deconnexion",
+            error
+        }
+    }
+}
