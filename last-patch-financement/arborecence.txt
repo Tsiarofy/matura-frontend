@@ -1,0 +1,27 @@
+shared/src/schemas/
+  financement.schema.ts          ✏️  ← FINAL/financement.schema.ts
+  metier.schema.ts               ✏️  ← FINAL/metier.schema.ts
+
+maturproj-frontend/src/hooks/
+  useFinancements.ts             ✏️  ← FINAL/useFinancements.ts
+  useInvestisseur.ts             ✏️  ← FINAL/useInvestisseur.ts
+
+maturproj-frontend/src/components/financement/
+  FinancementCard.tsx            ✏️  ← FINAL/FinancementCard.tsx
+  FiltresFinancementPanel.tsx    ✏️  ← FINAL/FiltresFinancementPanel.tsx
+  OffreFinancementForm.tsx       ✏️  ← FINAL/OffreFinancementForm.tsx
+  PostulerModal.tsx              ✏️  ← FINAL/PostulerModal.tsx
+  ProjetCandidatCard.tsx         ✏️  ← FINAL/ProjetCandidatCard.tsx
+
+maturproj-frontend/src/routes/(dashboard)/_layout/
+  financements/
+    index.page.tsx               ✏️  ← FINAL/financements.index.page.tsx
+    index.lazy.tsx               ✏️  ← FINAL/financements.index.lazy.tsx
+    $financementId.page.tsx      ✏️  ← FINAL/financements.detail.page.tsx
+    $financementId.lazy.tsx      ✏️  ← FINAL/financements.detail.lazy.tsx
+  mes-financements/
+    index.page.tsx               ✏️  ← FINAL/mes-financements.index.page.tsx
+    index.lazy.tsx               ✏️  ← FINAL/mes-financements.index.lazy.tsx
+    $offreId/
+      candidatures.page.tsx      ✏️  ← FINAL/mes-financements.candidatures.page.tsx
+      candidatures.lazy.tsx      ✏️  ← FINAL/mes-financements.candidatures.lazy.tsx
