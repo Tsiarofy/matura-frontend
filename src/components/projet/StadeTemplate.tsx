@@ -59,8 +59,8 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
   }, [isMentor, stade.statut, (stade as any).missions_completees, ongletsContent.missions])
 
   return (
-    <div className={cn('w-full', className)}>
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+    <div className={cn('w-full min-h-[calc(100vh-140px)] flex flex-col', className)}>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full flex-1 flex flex-col">
         {/* Barre d'onglets */}
         <div className="flex w-full justify-center">
           <TabsList className="inline-flex gap-2 rounded-2xl border border-zinc-200/60 bg-white/60 backdrop-blur-md p-1.5 mb-8 shadow-sm">

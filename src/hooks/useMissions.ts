@@ -94,9 +94,25 @@ export function useSoumettreReponseMission(
   return useMutation<
     { statut: string },
     Error,
-    { fichiersMap: Map<string, File>; commentaire?: string }
+    { fichiersMap: Map<string, File>; fichiersSupplementaires?: File[]; commentaire: string }
   >({
-    mutationFn: async ({ fichiersMap, commentaire }) => {
+    mutationFn: async ({ fichiersMap, fichiersSupplementaires = [], commentaire }) => {
+      const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100 Mo
+      
+      // Vérification des fichiers requis
+      for (const file of Array.from(fichiersMap.values())) {
+        if (file.size > MAX_FILE_SIZE) {
+          throw new Error(`Le fichier "${file.name}" dépasse la taille maximale autorisée (100 Mo).`)
+        }
+      }
+      
+      // Vérification des fichiers supplémentaires
+      for (const file of fichiersSupplementaires) {
+        if (file.size > MAX_FILE_SIZE) {
+          throw new Error(`Le fichier "${file.name}" dépasse la taille maximale autorisée (100 Mo).`)
+        }
+      }
+
       const formData = new FormData()
 
       const ids: string[] = []
@@ -105,6 +121,11 @@ export function useSoumettreReponseMission(
         ids.push(id)
       })
       formData.append('fichiers_requis_ids', JSON.stringify(ids))
+
+      fichiersSupplementaires.forEach((file) => {
+        formData.append('fichiers_supplementaires', file)
+      })
+
       if (commentaire?.trim()) {
         formData.append('commentaire', commentaire.trim())
       }
