@@ -4,7 +4,7 @@ import { useMesOffres } from '@/hooks/useInvestisseur'
 import { useMesCandidatures } from '@/hooks/useFinancements'
 import {authStore} from '@/stores/authStore'
 import { StatutOffre, StatutCandidature, TypeFinancement } from '@matura/shared'
-import { Loader2, Plus, ChevronRight, Layers, ArrowRight } from 'lucide-react'
+import { Loader2, Plus, ChevronRight, Layers, ArrowRight, BarChart3, Clock, Factory, Folder } from 'lucide-react'
 import { OffreFinancementForm } from '@/components/financement/OffreFinancementForm'
 import { cn } from '@/lib/utils'
 
@@ -18,7 +18,7 @@ const TYPE_LABELS: Record<TypeFinancement, string> = {
 
 const STATUT_OFFRE_COLORS: Record<StatutOffre, string> = {
   [StatutOffre.OUVERTE]:  'bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-[var(--color-success-border)]',
-  [StatutOffre.EN_COURS]: 'bg-[var(--color-tsisy-indigo-bg)] text-[#5c61e8] border-[#DCE0FF]',
+  [StatutOffre.EN_COURS]: 'bg-green-50 text-green-700 border-green-200',
   [StatutOffre.FERMEE]:   'bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)]',
   [StatutOffre.CLOTUREE]: 'bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)]',
 }
@@ -40,7 +40,7 @@ const STATUT_CAND_LABELS: Record<StatutCandidature, string> = {
 
 const STATUT_CAND_COLORS: Record<StatutCandidature, string> = {
   [StatutCandidature.EN_ATTENTE]: 'bg-[var(--color-tsisy-amber-bg)] text-[#a16207] border-[#FDE68A]',
-  [StatutCandidature.EN_REVUE]:   'bg-[var(--color-tsisy-indigo-bg)] text-[#5c61e8] border-[#DCE0FF]',
+  [StatutCandidature.EN_REVUE]:   'bg-green-50 text-green-700 border-green-200',
   [StatutCandidature.ACCEPTEE]:   'bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-[var(--color-success-border)]',
   [StatutCandidature.REJETEE]:    'bg-[var(--color-error-bg)] text-[var(--color-error)] border-[var(--color-error-border)]',
   [StatutCandidature.RETIREE]:    'bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)]',
@@ -80,7 +80,7 @@ function VueInvestisseur() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#6f74f7] hover:bg-[#5c61e8] text-white rounded-[14px] text-[12px] font-semibold transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-[14px] text-[12px] font-semibold transition-colors"
         >
           <Plus className="w-3.5 h-3.5" /> Nouvelle offre
         </button>
@@ -92,11 +92,11 @@ function VueInvestisseur() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-5 h-5 animate-spin text-[#6f74f7]" />
+          <Loader2 className="w-5 h-5 animate-spin text-green-600" />
         </div>
       ) : isError ? (
         <div className="text-center py-12">
-          <p className="text-[12px] text-[var(--color-text-muted)]">⚠️ Impossible de charger vos offres.</p>
+          <p className="text-[12px] text-[var(--color-text-muted)]">Erreur : Impossible de charger vos offres.</p>
         </div>
       ) : !offres || offres.length === 0 ? (
         <div className="flex flex-col items-center py-16 gap-4 text-center">
@@ -111,7 +111,7 @@ function VueInvestisseur() {
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="mt-2 text-[12.5px] px-4 py-2.5 bg-[#6f74f7] hover:bg-[#5c61e8] text-white rounded-[14px] transition-colors font-semibold"
+            className="mt-2 text-[12.5px] px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-[14px] transition-colors font-semibold"
           >
             Créer une offre de financement
           </button>
@@ -168,26 +168,26 @@ function VueInvestisseur() {
 
               {/* Title & description */}
               <div>
-                <p className="text-[14px] font-semibold text-[var(--color-text-primary)] group-hover:text-[#5c61e8] transition-colors">
+                <p className="text-[14px] font-semibold text-[var(--color-text-primary)] group-hover:text-green-600 transition-colors">
                   {offre.titre}
                 </p>
                 <p className="text-[11px] text-[var(--color-text-muted)] mt-1 line-clamp-2">{offre.description}</p>
               </div>
 
               {/* Meta info */}
-              <div className="flex flex-wrap gap-3 text-[10px] text-[var(--color-text-disabled)]">
-                <span>📊 BRL ≥ {offre.stadeCible}</span>
-                {offre.dateCloture && <span>⏳ Clôture {formatDate(offre.dateCloture)}</span>}
-                {offre.secteurs?.length > 0 && <span>🏭 {offre.secteurs.slice(0, 2).join(', ')}</span>}
+              <div className="flex flex-wrap gap-4 text-[11px] text-[var(--color-text-muted)]">
+                <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> BRL ≥ {offre.stadeCible}</span>
+                {offre.dateCloture && <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Clôture {formatDate(offre.dateCloture)}</span>}
+                {offre.secteurs?.length > 0 && <span className="flex items-center gap-1.5"><Factory className="w-3.5 h-3.5" /> {offre.secteurs.slice(0, 2).join(', ')}</span>}
               </div>
 
               <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-3">
-                <p className="text-[11px] font-semibold text-[#6f74f7] group-hover:text-[#5c61e8] transition-colors">
+                <p className="text-[11px] font-semibold text-green-600 group-hover:text-green-700 transition-colors">
                   {offre._count.candidatures > 0
                     ? `Voir les ${offre._count.candidatures} candidat${offre._count.candidatures > 1 ? 's' : ''}`
                     : 'Voir les candidatures'}
                 </p>
-                <ChevronRight className="w-4 h-4 text-[var(--color-text-disabled)] group-hover:text-[#5c61e8] transition-colors" />
+                <ChevronRight className="w-4 h-4 text-[var(--color-text-disabled)] group-hover:text-green-600 transition-colors" />
               </div>
             </article>
           ))}
@@ -217,7 +217,7 @@ function VueEntrepreneur() {
         </div>
         <button
           onClick={() => navigate({ to: '/financements' })}
-          className="text-[12px] px-4 py-2.5 bg-[var(--color-success)] hover:brightness-95 text-white rounded-[14px] transition-colors font-semibold"
+          className="text-[12px] px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-[14px] transition-colors font-semibold"
         >
           Parcourir les offres
         </button>
@@ -225,11 +225,11 @@ function VueEntrepreneur() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-5 h-5 animate-spin text-[var(--color-success)]" />
+          <Loader2 className="w-5 h-5 animate-spin text-green-600" />
         </div>
       ) : isError ? (
         <div className="text-center py-12">
-          <p className="text-[12px] text-[var(--color-text-muted)]">⚠️ Impossible de charger vos candidatures.</p>
+          <p className="text-[12px] text-[var(--color-text-muted)]">Erreur : Impossible de charger vos candidatures.</p>
         </div>
       ) : !candidatures || candidatures.length === 0 ? (
         <div className="flex flex-col items-center py-16 gap-3 text-center">
@@ -271,7 +271,7 @@ function VueEntrepreneur() {
               </div>
 
               <div className="flex items-center gap-2 text-[11px] text-[var(--color-text-muted)]">
-                <span>📁</span>
+                <Folder className="w-3.5 h-3.5" />
                 <span>{c.projet?.titre}</span>
                 {c.projet?.brl_actuel !== undefined && (
                   <span className="text-[10px] px-2 py-0.5 bg-[var(--color-success-bg)] text-[var(--color-success-text)] border border-[var(--color-success-border)] rounded-full font-semibold">

@@ -1,14 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { MissionStade } from '@matura/shared'
+import type { FichierRequis, MissionStade } from '@matura/shared'
 import { toast } from 'sonner'
 import { apiClient } from '@/lib/apiClient'
+
+export type { FichierRequis }
+
+export interface FichierRequisItemDto {
+  type: 'PDF' | 'EXCEL' | 'IMAGE' | 'VIDEO'
+  description: string
+  ordre?: number
+}
 
 export interface MissionItemDto {
   id?: string
   titre: string
   objectif: string
-  type_preuve_attendue: 'PDF' | 'EXCEL' | 'IMAGE' | 'VIDEO' | 'AUCUN'
-  preuve_obligatoire: boolean
+  fichiers_requis: FichierRequisItemDto[]
   date_limite?: string
   ordre?: number
 }
@@ -63,7 +70,7 @@ export function useCreerMissions(projetId: string, numStade: number) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['missions', projetId, numStade] })
       qc.invalidateQueries({ queryKey: ['stade', projetId, numStade] })
-      toast.success('Missions enregistrees')
+      toast.success('Missions enregistrées')
     },
     onError: (err: Error & { response?: { data?: { message?: string } } }) => {
       toast.error('Erreur', {
@@ -73,6 +80,10 @@ export function useCreerMissions(projetId: string, numStade: number) {
   })
 }
 
+/**
+ * Soumission multi-fichiers pour une mission.
+ * fichiersMap : Map<fichierRequisId, File>
+ */
 export function useSoumettreReponseMission(
   projetId: string,
   numStade: number,
@@ -80,9 +91,25 @@ export function useSoumettreReponseMission(
 ) {
   const qc = useQueryClient()
 
-  return useMutation<{ id: string; statut: string }, Error, FormData>({
-    mutationFn: async (formData) => {
-      const { data } = await apiClient.post<{ id: string; statut: string }>(
+  return useMutation<
+    { statut: string },
+    Error,
+    { fichiersMap: Map<string, File>; commentaire?: string }
+  >({
+    mutationFn: async ({ fichiersMap, commentaire }) => {
+      const formData = new FormData()
+
+      const ids: string[] = []
+      fichiersMap.forEach((file, id) => {
+        formData.append('fichiers', file)
+        ids.push(id)
+      })
+      formData.append('fichiers_requis_ids', JSON.stringify(ids))
+      if (commentaire?.trim()) {
+        formData.append('commentaire', commentaire.trim())
+      }
+
+      const { data } = await apiClient.post<{ statut: string }>(
         `/projets/${projetId}/stades/${numStade}/missions/${missionId}/soumettre`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } },
@@ -96,9 +123,15 @@ export function useSoumettreReponseMission(
     },
     onError: (err: Error & { response?: { data?: { message?: string } } }) => {
       const msg = err.response?.data?.message ?? err.message
-      if (msg === 'PREUVE_REQUISE') {
-        toast.error('Fichier requis', {
-          description: 'Cette mission necessite un fichier preuve.',
+      if (msg === 'TOUS_LES_FICHIERS_REQUIS') {
+        toast.error('Fichiers manquants', {
+          description: 'Vous devez uploader tous les fichiers requis avant de soumettre.',
+        })
+        return
+      }
+      if (msg?.startsWith('TYPE_FICHIER_INVALIDE')) {
+        toast.error('Type de fichier incorrect', {
+          description: 'Un des fichiers soumis ne correspond pas au type attendu par le mentor.',
         })
         return
       }
@@ -130,17 +163,45 @@ export function useEvaluerMission(
       qc.invalidateQueries({ queryKey: ['missions', projetId, numStade] })
       qc.invalidateQueries({ queryKey: ['stade', projetId, numStade] })
       if (result.missions_completees) {
-        toast.success('Toutes les missions validees', {
-          description: "La saisie du stade est maintenant disponible.",
+        toast.success('Toutes les missions validées', {
+          description: 'La saisie du stade est maintenant disponible.',
         })
         return
       }
-      toast.success(result.statut === 'VALIDEE' ? 'Mission validee' : 'Mission rejetee')
+      toast.success(result.statut === 'VALIDEE' ? 'Mission validée' : 'Mission rejetée')
     },
     onError: (err: Error & { response?: { data?: { message?: string } } }) => {
       toast.error('Erreur', {
         description: err.response?.data?.message ?? err.message,
       })
+    },
+  })
+}
+
+export function useSupprimerMission(projetId: string, numStade: number) {
+  const qc = useQueryClient()
+
+  return useMutation<{ deleted: string }, Error, string>({
+    mutationFn: async (missionId) => {
+      const { data } = await apiClient.delete<{ deleted: string }>(
+        `/projets/${projetId}/stades/${numStade}/missions/${missionId}`,
+      )
+      return data
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['missions', projetId, numStade] })
+      qc.invalidateQueries({ queryKey: ['stade', projetId, numStade] })
+      toast.success('Mission supprimée')
+    },
+    onError: (err: Error & { response?: { data?: { message?: string } } }) => {
+      const msg = err.response?.data?.message ?? err.message
+      if (msg === 'MISSION_VALIDEE_NON_MODIFIABLE') {
+        toast.error('Suppression impossible', {
+          description: 'Cette mission a déjà été validée.',
+        })
+        return
+      }
+      toast.error('Erreur', { description: msg })
     },
   })
 }

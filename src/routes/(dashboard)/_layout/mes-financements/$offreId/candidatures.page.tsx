@@ -79,9 +79,9 @@ export default function CandidaturesOffrePage() {
             </div>
           )}
           {stats.enRevue > 0 && (
-            <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
-              <span className="text-[16px] font-medium text-blue-700">{stats.enRevue}</span>
-              <span className="text-[10px] text-blue-600">En revue</span>
+            <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+              <span className="text-[16px] font-medium text-emerald-700">{stats.enRevue}</span>
+              <span className="text-[10px] text-emerald-600">En revue</span>
             </div>
           )}
           {stats.acceptees > 0 && (
@@ -132,7 +132,7 @@ export default function CandidaturesOffrePage() {
         </div>
       ) : isError ? (
         <div className="text-center py-12">
-          <p className="text-[12px] text-zinc-500">⚠️ Impossible de charger les candidatures.</p>
+          <p className="text-[12px] text-zinc-500">Erreur : Impossible de charger les candidatures.</p>
         </div>
       ) : !candidatures || candidatures.length === 0 ? (
         <div className="flex flex-col items-center py-12 gap-2 text-center">

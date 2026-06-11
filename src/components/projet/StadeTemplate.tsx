@@ -63,7 +63,7 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Barre d'onglets */}
         <div className="flex w-full justify-center">
-          <TabsList className="inline-flex gap-1 rounded-[16px] border border-[var(--color-border)] bg-white p-1 mb-5 shadow-none">
+          <TabsList className="inline-flex gap-2 rounded-2xl border border-zinc-200/60 bg-white/60 backdrop-blur-md p-1.5 mb-8 shadow-sm">
             {TABS_CONFIG.map((tab) => {
               // Skip l'onglet évaluation si pas encore soumis
               if (tab.value === 'evaluation' && !showEvaluation) return null
@@ -88,15 +88,15 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
                       : undefined
                   }
                   className={cn(
-                    'px-2.5 py-1.5 rounded-[12px] text-[11px] transition-colors shadow-none',
-                    'data-[state=active]:bg-[var(--color-surface-soft)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:font-semibold',
-                    'data-[state=inactive]:text-[var(--color-text-muted)] data-[state=inactive]:hover:bg-[var(--color-surface-soft)] data-[state=inactive]:hover:text-[var(--color-text-primary)]',
+                    'px-4 py-2.5 rounded-xl text-[13px] transition-all duration-200 ease-in-out shadow-none',
+                    'data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-md data-[state=active]:shadow-green-600/20',
+                    'data-[state=inactive]:text-zinc-500 data-[state=inactive]:hover:bg-zinc-100/80 data-[state=inactive]:hover:text-zinc-800',
                     tab.value === 'saisie' && !isMentor && (stade as any).missions_completees === false
                       ? 'opacity-50 cursor-not-allowed'
                       : '',
                   )}
                 >
-                  <Icon className="w-3.5 h-3.5 mr-1" strokeWidth={1.9} />
+                  <Icon className="w-4 h-4 mr-2" strokeWidth={2} />
                   {tab.label}
                 </TabsTrigger>
               )
@@ -107,37 +107,37 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
         {/* Contenu des onglets */}
         {ongletsContent.missions && (
           <TabsContent value="missions" className="mt-0">
-            <Card className="mx-auto w-full max-w-3xl p-5">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
               {ongletsContent.missions}
             </Card>
           </TabsContent>
         )}
 
         <TabsContent value="saisie" className="mt-0">
-          <Card className="mx-auto w-full max-w-3xl p-5">
+          <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
             {ongletsContent.saisie}
           </Card>
         </TabsContent>
 
         {ongletsContent.aide && !isMentor && (
           <TabsContent value="aide" className="mt-0">
-            <Card className="mx-auto w-full max-w-3xl p-5">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
               {ongletsContent.aide}
             </Card>
           </TabsContent>
         )}
 
         <TabsContent value="metriques" className="mt-0">
-          <Card className="mx-auto w-full max-w-3xl p-5">
+          <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
             {ongletsContent.metriques}
           </Card>
         </TabsContent>
 
         {showEvaluation && (
           <TabsContent value="evaluation" className="mt-0">
-            <Card className="mx-auto w-full max-w-3xl p-5">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm flex flex-col">
               {ongletsContent.evaluation || (
-                <div className="text-center py-12 text-[var(--color-text-muted)] text-[12px]">
+                <div className="flex-1 flex items-center justify-center text-center text-[var(--color-text-muted)] text-[13px] italic">
                   En attente d'évaluation par votre mentor
                 </div>
               )}
