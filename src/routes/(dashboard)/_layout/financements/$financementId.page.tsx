@@ -112,7 +112,7 @@ export default function FinancementDetailPage() {
       </button>
 
       {/* Header */}
-      <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-4">
+      <div className="bg-white border border-zinc-100 rounded-[22px] p-6 space-y-4 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3 flex-1 min-w-0">
             {investisseurAvatar && (
@@ -178,7 +178,7 @@ export default function FinancementDetailPage() {
       </div>
 
       {/* Informations clés */}
-      <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-3">
+      <div className="bg-white border border-zinc-100 rounded-[22px] p-6 space-y-3 shadow-sm">
         <h2 className="text-[13px] font-medium text-zinc-800">
           Informations clés
         </h2>
@@ -212,7 +212,7 @@ export default function FinancementDetailPage() {
 
       {/* Secteurs */}
       {offre.secteurs?.length > 0 && (
-        <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-3">
+        <div className="bg-white border border-zinc-100 rounded-[22px] p-6 space-y-3 shadow-sm">
           <h2 className="text-[13px] font-medium text-zinc-800">
             Secteurs ciblés
           </h2>
@@ -231,7 +231,7 @@ export default function FinancementDetailPage() {
 
       {/* Régions */}
       {offre.regions?.length > 0 && (
-        <div className="bg-white border border-zinc-200 rounded-xl p-5 space-y-3">
+        <div className="bg-white border border-zinc-100 rounded-[22px] p-6 space-y-3 shadow-sm">
           <h2 className="text-[13px] font-medium text-zinc-800">
             Régions couvertes
           </h2>

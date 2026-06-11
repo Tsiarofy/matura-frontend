@@ -108,7 +108,7 @@ const ETAPES_B2C: Etape[] = [
 ];
 
 // Styles partagés — cohérence avec les autres StadeXForm
-const inp = "flat-input h-10 px-3.5 py-2 text-[12.5px] rounded-[16px]";
+const inp = "flat-input h-11 px-4 py-2.5 text-[13px] rounded-[16px]";
 const sel = cn(inp, "appearance-none");
 const sec = "flat-section";
 
@@ -599,7 +599,7 @@ export function Stade3Form({
                 {getLabel("estimation_utilisateurs")}
               </p>
               <input
-                type="number"
+                type="number" min={0}
                 {...register("pct_utilisateurs", {
                   valueAsNumber: true,
                   min: 0,
@@ -645,7 +645,7 @@ export function Stade3Form({
                     {getLabel("enquete_taille")}
                   </label>
                   <input
-                    type="number"
+                    type="number" min={0}
                     {...register("enquete.taille_echantillon", {
                       valueAsNumber: true,
                     })}
@@ -682,7 +682,7 @@ export function Stade3Form({
                     {getLabel("enquete_prix")}
                   </label>
                   <input
-                    type="number"
+                    type="number" min={0}
                     {...register("enquete.wtp_moyen_ar", {
                       valueAsNumber: true,
                     })}
@@ -764,7 +764,7 @@ export function Stade3Form({
                   />
                   <div className="grid grid-cols-3 gap-2">
                     <input
-                      type="number"
+                      type="number" min={0}
                       {...register(`concurrents.${i}.part_globale_pct`, {
                         valueAsNumber: true,
                       })}
@@ -772,7 +772,7 @@ export function Stade3Form({
                       placeholder="% global"
                     />
                     <input
-                      type="number"
+                      type="number" min={0}
                       {...register(`concurrents.${i}.part_zone_pct`, {
                         valueAsNumber: true,
                       })}
@@ -780,7 +780,7 @@ export function Stade3Form({
                       placeholder="% zone"
                     />
                     <input
-                      type="number"
+                      type="number" min={0}
                       {...register(`concurrents.${i}.prix_estime_ar`, {
                         valueAsNumber: true,
                       })}
@@ -837,7 +837,7 @@ export function Stade3Form({
                 </div>
               ) : (
                 <input
-                  type="number"
+                  type="number" min={0}
                   {...register("taille_marche.tam_valeur", {
                     valueAsNumber: true,
                   })}
@@ -870,7 +870,7 @@ export function Stade3Form({
                 {getLabel("sam")}
               </p>
               <input
-                type="number"
+                type="number" min={0}
                 {...register("taille_marche.sam_valeur", {
                   valueAsNumber: true,
                 })}
@@ -914,7 +914,7 @@ export function Stade3Form({
                 {getLabel("som")}
               </p>
               <input
-                type="number"
+                type="number" min={0}
                 {...register("taille_marche.som_valeur", {
                   valueAsNumber: true,
                 })}
@@ -985,7 +985,7 @@ export function Stade3Form({
                 {getLabel("tam")}
               </p>
               <input
-                type="number"
+                type="number" min={0}
                 {...register("taille_marche.tam_valeur", {
                   valueAsNumber: true,
                 })}
@@ -998,7 +998,7 @@ export function Stade3Form({
                 {getLabel("sam")}
               </p>
               <input
-                type="number"
+                type="number" min={0}
                 {...register("taille_marche.sam_valeur", {
                   valueAsNumber: true,
                 })}
@@ -1011,7 +1011,7 @@ export function Stade3Form({
                 {getLabel("som")}
               </p>
               <input
-                type="number"
+                type="number" min={0}
                 {...register("taille_marche.som_valeur", {
                   valueAsNumber: true,
                 })}
@@ -1082,7 +1082,7 @@ export function Stade3Form({
                   />
                   <div className="grid grid-cols-2 gap-2">
                     <input
-                      type="number"
+                      type="number" min={0}
                       {...register(`concurrents.${i}.part_globale_pct`, {
                         valueAsNumber: true,
                       })}
@@ -1090,7 +1090,7 @@ export function Stade3Form({
                       placeholder="% marché global"
                     />
                     <input
-                      type="number"
+                      type="number" min={0}
                       {...register(`concurrents.${i}.prix_estime_ar`, {
                         valueAsNumber: true,
                       })}
@@ -1116,7 +1116,7 @@ export function Stade3Form({
                   Prix min (Ar)
                 </label>
                 <input
-                  type="number"
+                  type="number" min={0}
                   {...register("positionnement_prix.prix_min_acceptable_ar", {
                     valueAsNumber: true,
                   })}
@@ -1128,7 +1128,7 @@ export function Stade3Form({
                   Prix recommandé (Ar) *
                 </label>
                 <input
-                  type="number"
+                  type="number" min={0}
                   {...register("positionnement_prix.prix_recommande_ar", {
                     valueAsNumber: true,
                   })}
@@ -1140,7 +1140,7 @@ export function Stade3Form({
                   Prix max (Ar)
                 </label>
                 <input
-                  type="number"
+                  type="number" min={0}
                   {...register("positionnement_prix.prix_max_acceptable_ar", {
                     valueAsNumber: true,
                   })}
@@ -1170,7 +1170,7 @@ export function Stade3Form({
               </p>
               <div className="grid grid-cols-2 gap-2">
                 <input
-                  type="number"
+                  type="number" min={0}
                   {...register("positionnement_prix.irp.revenu_moyen_zone_ar", {
                     valueAsNumber: true,
                   })}
@@ -1238,7 +1238,7 @@ export function Stade3Form({
                   placeholder="Titre de la source"
                 />
                 <input
-                  type="number"
+                  type="number" min={0}
                   {...register(`sources_marche.${i}.annee`, {
                     valueAsNumber: true,
                   })}

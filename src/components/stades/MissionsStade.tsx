@@ -74,10 +74,11 @@ function LigneMissionEntrepreneur({
   const [fichierSelectionne, setFichierSelectionne] = useState<File | null>(
     null,
   );
+  const [commentaire, setCommentaire] = useState(mission.soumission?.commentaire ?? "");
   const soumettre = useSoumettreReponseMission(projetId, numStade, mission.id);
 
   const peutSoumettre =
-    mission.statut === "INACHEVEE" || mission.statut === "REJETEE";
+    mission.statut === "INACHEVEE" || mission.statut === "REJETEE" || mission.statut === "SOUMISE";
   const necessiteFichier = mission.type_preuve_attendue !== "AUCUN";
   const fichierRequis = necessiteFichier && mission.preuve_obligatoire === true;
   const labelAction = !necessiteFichier
@@ -93,6 +94,9 @@ function LigneMissionEntrepreneur({
     if (fichierSelectionne) {
       formData.append("fichier", fichierSelectionne);
     }
+    if (commentaire.trim()) {
+      formData.append("commentaire", commentaire.trim());
+    }
     soumettre.mutate(formData, {
       onSuccess: () => setFichierSelectionne(null),
     });
@@ -107,7 +111,13 @@ function LigneMissionEntrepreneur({
 
         <div>
           <p className="text-[11px] text-zinc-400 mb-0.5">Mission</p>
-          <p className="text-[13px] text-zinc-800">{mission.titre}</p>
+          <Link
+            to={`/projets/$projetId/stades/$numStade/missions/$missionId`}
+            params={{ projetId, numStade: numStade.toString(), missionId: mission.id }}
+            className="text-[13px] text-blue-600 hover:text-blue-800 hover:underline font-medium"
+          >
+            {mission.titre}
+          </Link>
         </div>
 
         <div>
@@ -122,14 +132,24 @@ function LigneMissionEntrepreneur({
               <span className="text-red-400">*</span>
             )}
           </p>
-          {mission.soumission?.fichier_url ? (
+          {mission.soumission?.fichier_url && !peutSoumettre ? (
             <FichierMiniViewer
               url={mission.soumission.fichier_url}
               type={mission.soumission.fichier_type}
               nom={mission.soumission.fichier_nom}
             />
           ) : necessiteFichier && peutSoumettre ? (
-            <div className="space-y-1">
+            <div className="space-y-2">
+              {mission.soumission?.fichier_url && (
+                <div className="mb-2">
+                  <p className="text-[10px] text-zinc-400 mb-1">Preuve actuelle :</p>
+                  <FichierMiniViewer
+                    url={mission.soumission.fichier_url}
+                    type={mission.soumission.fichier_type}
+                    nom={mission.soumission.fichier_nom}
+                  />
+                </div>
+              )}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -156,7 +176,11 @@ function LigneMissionEntrepreneur({
                   className="inline-flex items-center gap-2 px-3 py-2 border border-zinc-200 rounded-lg text-[12px] text-zinc-700 hover:bg-zinc-50 transition-colors"
                 >
                   <Upload className="w-3.5 h-3.5" />
-                  {fichierSelectionne ? "Changer le fichier" : "Ajouter un fichier"}
+                  {fichierSelectionne
+                    ? "Changer le fichier"
+                    : mission.soumission?.fichier_url
+                      ? "Remplacer le fichier"
+                      : "Ajouter un fichier"}
                 </button>
                 {fichierSelectionne && (
                   <button
@@ -171,9 +195,11 @@ function LigneMissionEntrepreneur({
               <p className="text-[11px] text-zinc-500">
                 {fichierSelectionne
                   ? fichierSelectionne.name
-                  : fichierRequis
-                    ? "Fichier obligatoire"
-                    : "Fichier optionnel"}
+                  : mission.soumission?.fichier_url
+                    ? "Fichier actuel conservé"
+                    : fichierRequis
+                      ? "Fichier obligatoire"
+                      : "Fichier optionnel"}
               </p>
             </div>
           ) : (
@@ -192,6 +218,26 @@ function LigneMissionEntrepreneur({
           </p>
         </div>
       </div>
+
+      {/* Zone Commentaire (optionnelle) */}
+      {(peutSoumettre || mission.soumission?.commentaire) && (
+        <div className="mt-3">
+          <p className="text-[11px] text-zinc-500 mb-1">Commentaire ou spécification (optionnel)</p>
+          {peutSoumettre ? (
+            <textarea
+              className="w-full text-[13px] p-2 border border-zinc-200 rounded-md focus:border-green-500 focus:ring-1 focus:ring-green-500 resize-none"
+              rows={2}
+              placeholder="Ajoutez un commentaire, un lien externe ou une précision pour votre mentor..."
+              value={commentaire}
+              onChange={(e) => setCommentaire(e.target.value)}
+            />
+          ) : (
+            <div className="bg-zinc-50 p-2 rounded-md border border-zinc-100 text-[13px] text-zinc-700 whitespace-pre-wrap">
+              {mission.soumission?.commentaire}
+            </div>
+          )}
+        </div>
+      )}
 
       {mission.statut === "REJETEE" && mission.soumission?.motif_rejet && (
         <div className="bg-red-50 border border-red-100 rounded-lg px-3 py-2">
@@ -263,7 +309,13 @@ function LigneMissionMentor({
 
         <div>
           <p className="text-[11px] text-zinc-400 mb-0.5">Mission</p>
-          <p className="text-[13px] text-zinc-800">{mission.titre}</p>
+          <Link
+            to={`/projets/$projetId/stades/$numStade/missions/$missionId`}
+            params={{ projetId, numStade: numStade.toString(), missionId: mission.id }}
+            className="text-[13px] text-blue-600 hover:text-blue-800 hover:underline font-medium"
+          >
+            {mission.titre}
+          </Link>
         </div>
 
         <div>
@@ -293,6 +345,13 @@ function LigneMissionMentor({
           </p>
         </div>
       </div>
+
+      {mission.soumission?.commentaire && (
+        <div className="mt-3 bg-zinc-50 border border-zinc-100 rounded-md p-3">
+          <p className="text-[11px] text-zinc-500 font-medium mb-1">Commentaire de l'entrepreneur</p>
+          <p className="text-[13px] text-zinc-700 whitespace-pre-wrap">{mission.soumission.commentaire}</p>
+        </div>
+      )}
 
       {mission.statut === "SOUMISE" && (
         <div className="space-y-2">

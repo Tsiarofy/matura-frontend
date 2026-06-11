@@ -122,7 +122,7 @@ function VueInvestisseur() {
                 to: '/mes-financements/$offreId/candidatures',
                 params: { offreId: offre.id },
               })}
-              className="bg-white border border-zinc-200 rounded-xl p-4 space-y-3 cursor-pointer hover:border-green-300 hover:shadow-sm transition-all"
+              className="bg-white border border-zinc-100 rounded-[22px] p-6 space-y-3 cursor-pointer hover:shadow-sm transition-all"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
@@ -224,7 +224,7 @@ function VueEntrepreneur() {
       ) : (
         <div className="space-y-3">
           {candidatures.map((c) => (
-            <div key={c.id} className="bg-white border border-zinc-200 rounded-xl p-4 space-y-2.5">
+            <div key={c.id} className="bg-white border border-zinc-100 rounded-[22px] p-6 space-y-2.5 shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <button

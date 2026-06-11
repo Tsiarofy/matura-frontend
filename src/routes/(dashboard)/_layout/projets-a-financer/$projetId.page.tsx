@@ -1,7 +1,19 @@
-import { useState } from 'react'
-import { useParams, useNavigate } from '@tanstack/react-router'
-import { useFicheInvestisseur } from '@/hooks/useInvestisseur'
-import { Loader2, ArrowLeft, Users, TrendingUp, FileText, Target, BarChart2, Banknote, ChevronDown, ChevronUp, Star } from 'lucide-react'
+import { useParams, useNavigate, useSearch } from '@tanstack/react-router'
+import { useFicheInvestisseur, useChangerStatutCandidature, useCandidaturesOffre } from '@/hooks/useInvestisseur'
+import { Loader2, ArrowLeft, BarChart2 } from 'lucide-react'
+import { FicheProjetInvestisseur } from '@/components/financement/FicheProjetInvestisseur'
+
+function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <section className="bg-white border border-zinc-100 rounded-[22px] p-6 shadow-sm">
+      <h2 className="flex items-center gap-2 text-[14px] font-semibold text-zinc-900 mb-4 pb-3 border-b border-zinc-100">
+        {icon}
+        {title}
+      </h2>
+      {children}
+    </section>
+  )
+}
 
 /**
  * Page de détail d'un projet vue par un investisseur.
@@ -11,7 +23,12 @@ import { Loader2, ArrowLeft, Users, TrendingUp, FileText, Target, BarChart2, Ban
 export default function ProjetAFinancerDetailPage() {
   const { projetId } = useParams({ from: '/(dashboard)/_layout/projets-a-financer/$projetId' })
   const navigate = useNavigate()
+  const { candidatureId, offreId } = useSearch({ from: '/(dashboard)/_layout/projets-a-financer/$projetId' })
   const { data: fiche, isLoading, isError } = useFicheInvestisseur(projetId)
+
+  const { data: candidatures } = useCandidaturesOffre(offreId ?? '', !!offreId)
+  const candidature = candidatures?.find((c) => c.id === candidatureId)
+  const changerStatut = useChangerStatutCandidature()
 
   if (isLoading) {
     return (
@@ -37,20 +54,26 @@ export default function ProjetAFinancerDetailPage() {
     )
   }
 
-  const { identite, equipe, score, finances, traction, besoins_financement, documents } = fiche
+  const { identite, score } = fiche
 
   return (
     <div className="max-w-3xl mx-auto space-y-5 pb-10">
       {/* ── Retour ──────────────────────────────────────────────────────── */}
       <button
         className="flex items-center gap-1.5 text-[12px] text-zinc-500 hover:text-zinc-800 transition-colors"
-        onClick={() => navigate({ to: '/projets-a-financer' })}
+        onClick={() => {
+          if (offreId) {
+            navigate({ to: '/mes-financements/$offreId/candidatures', params: { offreId } })
+          } else {
+            navigate({ to: '/projets-a-financer' })
+          }
+        }}
       >
-        <ArrowLeft className="w-3.5 h-3.5" /> Retour aux projets
+        <ArrowLeft className="w-3.5 h-3.5" /> {offreId ? 'Retour aux candidatures' : 'Retour aux projets'}
       </button>
 
       {/* ── En-tête ─────────────────────────────────────────────────────── */}
-      <div className="bg-white border border-zinc-200 rounded-xl p-5">
+      <div className="bg-white border border-zinc-100 rounded-[22px] p-6 shadow-sm">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -120,190 +143,82 @@ export default function ProjetAFinancerDetailPage() {
         </Section>
       )}
 
-      {/* ── Équipe ──────────────────────────────────────────────────────── */}
-      <Section icon={<Users className="w-4 h-4" />} title="Équipe">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            {equipe.fondateur.avatar_url ? (
-              <img
-                src={equipe.fondateur.avatar_url}
-                alt={equipe.fondateur.prenom_nom}
-                className="w-8 h-8 rounded-full object-cover border border-zinc-200"
-              />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 text-[12px] font-medium">
-                {equipe.fondateur.prenom_nom.slice(0, 1)}
-              </div>
-            )}
-            <div>
-              <p className="text-[12px] font-medium text-zinc-800">{equipe.fondateur.prenom_nom}</p>
-              <p className="text-[10px] text-zinc-400">Fondateur / Porteur de projet</p>
-            </div>
+      {/* ── Fiche Complète ─────────────────────────────────────────────────── */}
+      <div className="mt-8">
+        <FicheProjetInvestisseur fiche={fiche} />
+      </div>
+
+      {/* ── Actions Investisseur ───────────────────────────────────────────── */}
+      {candidature && (
+        <div className="flex gap-4 mt-6 p-5 bg-zinc-50 rounded-xl border border-zinc-200 items-center flex-wrap">
+          <div className="flex-1 min-w-[200px]">
+            <p className="text-[13px] text-zinc-800 font-semibold">
+              Décision de financement
+            </p>
+            <p className="text-[11px] text-zinc-500 mt-0.5">
+              Statut actuel de la candidature : <span className="font-semibold text-zinc-700">{candidature.statut}</span>
+            </p>
           </div>
-
-          {equipe.membres.length > 0 && (
-            <div className="border-t border-zinc-100 pt-2 space-y-1.5 mt-1">
-              {equipe.membres.map((m, i) => (
-                <div key={i} className="flex items-center justify-between gap-2">
-                  <div>
-                    <p className="text-[11px] font-medium text-zinc-700">{m.prenom_nom}</p>
-                    <p className="text-[10px] text-zinc-400">{m.role_projet}</p>
-                  </div>
-                  {m.disciplines.length > 0 && (
-                    <div className="flex gap-1 flex-wrap justify-end">
-                      {m.disciplines.slice(0, 2).map((d) => (
-                        <span key={d} className="text-[9px] px-1.5 py-0.5 bg-zinc-100 text-zinc-500 rounded">
-                          {d}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {equipe.mentor && (
-            <div className="border-t border-zinc-100 pt-2 mt-1 flex items-center gap-2">
-              <Star className="w-3.5 h-3.5 text-amber-400" />
-              <div>
-                <p className="text-[11px] font-medium text-zinc-700">
-                  Mentor : {equipe.mentor.prenom_nom}
-                </p>
-                <p className="text-[10px] text-zinc-400">
-                  {equipe.mentor.nb_evaluations} évaluation{equipe.mentor.nb_evaluations !== 1 ? 's' : ''}
-                  {equipe.mentor.note_moyenne !== null && ` · note moy. ${equipe.mentor.note_moyenne.toFixed(1)}`}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      </Section>
-
-      {/* ── Traction ────────────────────────────────────────────────────── */}
-      {traction && (
-        <Section icon={<TrendingUp className="w-4 h-4" />} title="Traction & validation">
-          <div className="grid grid-cols-2 gap-3">
-            <Kpi label="Clients actifs"   value={traction.nb_clients} suffix="" />
-            <Kpi label="Clients payants"  value={traction.clients_payants} suffix="" />
-            <Kpi label="Revenus générés"  value={traction.revenus_generes} suffix=" Ar" />
-            <Kpi label="Score NPS"        value={traction.score_nps} suffix="" />
-            <Kpi label="Rétention"        value={traction.taux_retention} suffix="%" />
-          </div>
-        </Section>
-      )}
-
-      {/* ── Finances ─────────────────────────────────────────────────────── */}
-      {finances && (
-        <Section icon={<Banknote className="w-4 h-4" />} title="Projections financières">
-          <div className="grid grid-cols-2 gap-3">
-            <Kpi label="Point mort (unités)" value={finances.point_mort_unites} suffix="" />
-            <Kpi label="ROI estimé"          value={finances.roi !== null ? `${finances.roi}%` : null} suffix="" raw />
-          </div>
-          {finances.ca_previsionnel && (
-            <div className="mt-3 space-y-2">
-              <p className="text-[10px] text-zinc-500 font-medium uppercase tracking-wide">CA prévisionnel</p>
-              <div className="grid grid-cols-3 gap-2">
-                {([1, 2, 3] as const).map((y) => {
-                  const caObj = finances.ca_previsionnel as any
-                  return (
-                    <div key={y} className="bg-zinc-50 rounded-lg px-3 py-2 text-center">
-                      <p className="text-[9px] text-zinc-400">An {y}</p>
-                      <p className="text-[12px] font-semibold text-zinc-800">
-                        {caObj?.[`annee${y}`]?.toLocaleString('fr') ?? '—'}
-                      </p>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-        </Section>
-      )}
-
-      {/* ── Besoins de financement ───────────────────────────────────────── */}
-      {besoins_financement && (
-        <Section icon={<Target className="w-4 h-4" />} title="Besoins de financement">
-          <div className="space-y-2">
-            {besoins_financement.montant_recherche !== null && (
-              <Row label="Montant recherché" value={`${(besoins_financement.montant_recherche ?? 0).toLocaleString('fr')} Ar`} />
+          <div className="flex gap-2 shrink-0">
+            {(candidature.statut === 'EN_ATTENTE' || candidature.statut === 'EN_REVUE') && (
+              <>
+                <button
+                  disabled={changerStatut.isPending}
+                  onClick={() =>
+                    changerStatut.mutate(
+                      { candidatureId: candidatureId!, statut: 'ACCEPTEE' as any, offreId: offreId! },
+                      {
+                        onSuccess: () =>
+                          navigate({
+                            to: '/mes-financements/$offreId/candidatures',
+                            params: { offreId: offreId! },
+                          }),
+                      }
+                    )
+                  }
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[12px] font-medium transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  ✓ Accepter
+                </button>
+                <button
+                  disabled={changerStatut.isPending}
+                  onClick={() =>
+                    changerStatut.mutate(
+                      { candidatureId: candidatureId!, statut: 'REJETEE' as any, offreId: offreId! },
+                      {
+                        onSuccess: () =>
+                          navigate({
+                            to: '/mes-financements/$offreId/candidatures',
+                            params: { offreId: offreId! },
+                          }),
+                      }
+                    )
+                  }
+                  className="px-4 py-2 border border-red-200 text-red-700 rounded-lg hover:bg-red-50 text-[12px] font-medium transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  ✕ Rejeter
+                </button>
+              </>
             )}
-            {besoins_financement.type_financement && (
-              <Row label="Type" value={besoins_financement.type_financement} />
-            )}
-            {besoins_financement.usage_des_fonds && (
-              <Row label="Usage des fonds" value={String(besoins_financement.usage_des_fonds)} />
-            )}
-          </div>
-        </Section>
-      )}
-
-      {/* ── Documents ───────────────────────────────────────────────────── */}
-      {documents.length > 0 && (
-        <Section icon={<FileText className="w-4 h-4" />} title="Documents">
-          <div className="space-y-1.5">
-            {documents.map((doc, i) => (
-              <a
-                key={i}
-                href={doc.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[11px] text-green-700 hover:text-green-800 transition-colors"
+            {(candidature.statut === 'ACCEPTEE' || candidature.statut === 'REJETEE') && (
+              <button
+                disabled={changerStatut.isPending}
+                onClick={() =>
+                  changerStatut.mutate({
+                    candidatureId: candidatureId!,
+                    statut: 'EN_REVUE' as any,
+                    offreId: offreId!,
+                  })
+                }
+                className="px-4 py-2 border border-zinc-200 text-zinc-600 rounded-lg hover:bg-zinc-50 text-[12px] font-medium transition-colors disabled:opacity-50 cursor-pointer"
               >
-                <FileText className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">{doc.nom || doc.type}</span>
-              </a>
-            ))}
+                ↩ Remettre en revue
+              </button>
+            )}
           </div>
-        </Section>
+        </div>
       )}
     </div>
   )
 }
 
-// ─── Composants utilitaires ────────────────────────────────────────────────────
-
-function Section({
-  icon, title, children,
-}: {
-  icon: React.ReactNode; title: string; children: React.ReactNode
-}) {
-  const [open, setOpen] = useState(true)
-  return (
-    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
-      <button
-        className="w-full flex items-center gap-2 px-4 py-3 text-left hover:bg-zinc-50 transition-colors"
-        onClick={() => setOpen((v) => !v)}
-      >
-        <span className="text-zinc-500">{icon}</span>
-        <span className="text-[13px] font-medium text-zinc-800 flex-1">{title}</span>
-        {open ? <ChevronUp className="w-3.5 h-3.5 text-zinc-400" /> : <ChevronDown className="w-3.5 h-3.5 text-zinc-400" />}
-      </button>
-      {open && <div className="px-4 pb-4 pt-1">{children}</div>}
-    </div>
-  )
-}
-
-function Kpi({
-  label, value, suffix, raw,
-}: {
-  label: string; value: number | string | null | undefined; suffix: string; raw?: boolean
-}) {
-  if (value === null || value === undefined) return null
-  const display = raw ? value : typeof value === 'number' ? value.toLocaleString('fr') + suffix : String(value)
-  return (
-    <div className="bg-zinc-50 rounded-lg px-3 py-2">
-      <p className="text-[9px] text-zinc-400 uppercase tracking-wide">{label}</p>
-      <p className="text-[14px] font-semibold text-zinc-800 mt-0.5">{display}</p>
-    </div>
-  )
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-start justify-between gap-3">
-      <span className="text-[11px] text-zinc-500 shrink-0">{label}</span>
-      <span className="text-[11px] text-zinc-800 font-medium text-right">{value}</span>
-    </div>
-  )
-}

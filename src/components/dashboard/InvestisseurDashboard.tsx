@@ -19,7 +19,6 @@ import {
   Cell
 } from 'recharts'
 import { useDashboardInvestisseur } from '@/hooks/useDashboard'
-import { WelcomeBanner } from '@/components/dashboard/WelcomeBanner'
 import { StatCard } from '@/components/shared/StatCard'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
 import { Button } from '@/components/ui/button'
@@ -84,17 +83,17 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <WelcomeBanner
-        prenom={user.prenom}
-        role="Investisseur"
-        subtitle="Gestion des offres de financement et analyse des candidatures."
-        icon={Layers}
-        colorClass="text-purple-600"
-        gradientClass="from-purple-500/10 via-violet-500/5 to-transparent"
-        borderClass="border-purple-200/60"
-        iconBgClass="bg-purple-100/50"
-      />
+      {/* ── Entête Minimaliste & Flat ── */}
+      <div className="flex items-end justify-between gap-4">
+        <div className="space-y-0.5">
+          <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+            Dashboard Investisseur
+          </h1>
+          <p className="text-[13px] font-medium text-[var(--color-text-muted)]">
+            Bienvenue, {user.prenom}. Gestion de vos offres de financement.
+          </p>
+        </div>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

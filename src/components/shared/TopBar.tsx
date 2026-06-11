@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import * as Icon from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNotifications, useNonLues, useMarquerToutesLues, useMarquerLue } from "@/hooks/useNotifications";
 
 // ─── BREADCRUMB ───────────────────────────────────────────────────────────────
 
@@ -211,6 +212,135 @@ function UserMenu({
   );
 }
 
+// ─── NOTIFICATION BELL ────────────────────────────────────────────────────────
+
+function NotificationBell() {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const { data: notifs } = useNotifications();
+  const { data: countData } = useNonLues();
+  const toutLire = useMarquerToutesLues();
+  const marquerLue = useMarquerLue();
+
+  const nonLues = countData?.count ?? 0;
+
+  // Fermer sur clic extérieur
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  // Fermer sur Escape
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "relative flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition-all duration-150 hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-text-secondary)]",
+          open && "bg-[var(--color-surface-soft)]",
+        )}
+        aria-label="Notifications"
+        aria-expanded={open}
+        aria-haspopup="menu"
+      >
+        <Icon.Bell size={20} strokeWidth={1.5} />
+        {nonLues > 0 && (
+          <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white ring-2 ring-white animate-in zoom-in">
+            {nonLues > 9 ? "9+" : nonLues}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div
+          role="menu"
+          className={cn(
+            "absolute right-0 top-[calc(100%+8px)] z-50 w-80",
+            "bg-white",
+            "border border-[var(--color-border)]",
+            "rounded-[20px] shadow-[var(--shadow-3)] overflow-hidden",
+            "animate-in fade-in-0 zoom-in-95 slide-in-from-top-1 duration-150",
+          )}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 bg-zinc-50/50">
+            <p className="text-[13px] font-semibold text-zinc-800">Notifications</p>
+            {nonLues > 0 && (
+              <button
+                onClick={() => toutLire.mutate()}
+                className="text-[11px] text-green-600 hover:text-green-700 font-medium transition-colors"
+              >
+                Tout marquer lu
+              </button>
+            )}
+          </div>
+
+          {/* List */}
+          <div className="max-h-80 overflow-y-auto divide-y divide-zinc-100">
+            {notifs && notifs.length > 0 ? (
+              notifs.map((n) => (
+                <Link
+                  key={n.id}
+                  to={n.lien_relatif ?? '/dashboard'}
+                  onClick={() => {
+                    if (!n.lue) marquerLue.mutate(n.id)
+                    setOpen(false)
+                  }}
+                  className={cn(
+                    "block px-4 py-3 hover:bg-zinc-50 transition-colors text-left",
+                    !n.lue && "bg-green-50/20",
+                  )}
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <p className={cn("text-[12px] text-zinc-800 leading-snug", !n.lue && "font-semibold")}>
+                      {n.titre}
+                    </p>
+                    {!n.lue && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0 mt-1" />
+                    )}
+                  </div>
+                  <p className="text-[11px] text-zinc-500 mt-1 leading-normal">
+                    {n.corps}
+                  </p>
+                  <p className="text-[9px] text-zinc-400 mt-1.5">
+                    {new Date(n.cree_le).toLocaleDateString('fr-FR', {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </Link>
+              ))
+            ) : (
+              <div className="flex flex-col items-center py-8 text-center px-4">
+                <Icon.BellOff className="w-8 h-8 text-zinc-300 mb-2" />
+                <p className="text-[12px] text-zinc-400">Aucune notification pour le moment.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── TOPBAR PRINCIPALE ────────────────────────────────────────────────────────
 
 export interface TopBarProps {
@@ -274,15 +404,7 @@ export function TopBar({ userName, userInitials, userRole, onDeconnexion }: TopB
           <Icon.Settings size={20} strokeWidth={1.5} />
         </button>
 
-        <button
-          className={cn(
-            'relative flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition-all duration-150 hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-text-secondary)]',
-          )}
-          aria-label="Notifications"
-        >
-          <Icon.Bell size={20} strokeWidth={1.5} />
-          <span className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-[var(--color-success)] ring-2 ring-[var(--color-bg-shell)]" />
-        </button>
+        <NotificationBell />
 
         <div className="w-px h-6 bg-[var(--color-border)] mx-1 hidden sm:block" />
 

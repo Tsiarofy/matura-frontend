@@ -43,14 +43,7 @@ function StadeCard({
 }: StadeCardProps) {
   const label = STADE_LABELS[numero] ?? `Stade ${numero}`;
   const isVerrouille = statut === "VERROUILLE";
-  const bgMap: Record<string, string> = {
-    VALIDE: "border-green-200 bg-green-50/40",
-    SOUMIS: "border-amber-200 bg-amber-50/40",
-    EN_REVISION: "border-red-200 bg-red-50/30",
-    BROUILLON: "border-blue-200 bg-blue-50/30",
-    DEBLOQUE: "border-zinc-200 bg-white",
-    VERROUILLE: "border-zinc-100 bg-zinc-50 opacity-50",
-  };
+
   const numBg: Record<string, string> = {
     VALIDE: "bg-green-100 text-green-700",
     SOUMIS: "bg-amber-100 text-amber-700",
@@ -63,21 +56,23 @@ function StadeCard({
   const inner = (
     <div
       className={cn(
-        "border rounded-[16px] p-3.5 transition-all",
-        bgMap[statut] ?? "border-zinc-200 bg-white",
-        !isVerrouille && "hover:bg-zinc-50/50",
+        "bg-white border rounded-[18px] p-5 transition-all duration-300",
+        statut === "VERROUILLE"
+          ? "border-zinc-100 bg-zinc-50/50 opacity-65"
+          : "border-zinc-200/60 shadow-sm",
+        !isVerrouille && "hover:border-zinc-350 hover:shadow-md cursor-pointer"
       )}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {/* Numéro */}
         <div
           className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-medium shrink-0",
+            "w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0",
             numBg[statut],
           )}
         >
           {statut === "VALIDE" ? (
-            <CheckCircle2 className="w-4 h-4" />
+            <CheckCircle2 className="w-4.5 h-4.5" />
           ) : isVerrouille ? (
             <Lock className="w-3.5 h-3.5" />
           ) : (
@@ -87,8 +82,8 @@ function StadeCard({
 
         {/* Infos */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[13px] text-zinc-800">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-[14px] font-bold text-zinc-900">
               {numero}. {label}
             </span>
             <StatutBadge statut={statut} />
@@ -96,14 +91,14 @@ function StadeCard({
 
           {/* Barre completion si actif */}
           {!isVerrouille && statut !== "VALIDE" && (
-            <div className="flex items-center gap-2 mt-1.5">
-              <div className="flex-1 h-1 bg-zinc-100 rounded-full overflow-hidden">
+            <div className="flex items-center gap-2 mt-2">
+              <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-400 rounded-full transition-all"
+                  className="h-full bg-blue-500 rounded-full transition-all"
                   style={{ width: `${completion_pct}%` }}
                 />
               </div>
-              <span className="text-[10px] text-zinc-400 shrink-0">
+              <span className="text-[10px] text-zinc-400 font-semibold shrink-0">
                 {completion_pct}%
               </span>
             </div>
@@ -111,9 +106,9 @@ function StadeCard({
 
           {/* Score si évalué */}
           {score_auto !== null && (
-            <div className="flex items-center gap-1 mt-1">
-              <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-              <span className="text-[11px] text-zinc-500">
+            <div className="flex items-center gap-1.5 mt-2">
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+              <span className="text-[12px] font-medium text-zinc-500">
                 Note mentor : {score_auto}/100
               </span>
             </div>
@@ -121,14 +116,14 @@ function StadeCard({
 
           {/* Soumis le */}
           {soumis_le && statut === "SOUMIS" && (
-            <p className="text-[10px] text-zinc-400 mt-0.5">
+            <p className="text-[10.5px] text-zinc-400 mt-1 font-medium">
               Soumis le {new Date(soumis_le).toLocaleDateString("fr-FR")}
             </p>
           )}
         </div>
 
         {!isVerrouille && (
-          <ChevronRight className="w-4 h-4 text-zinc-300 shrink-0" />
+          <ChevronRight className="w-5 h-5 text-zinc-300 shrink-0" />
         )}
       </div>
     </div>
@@ -157,9 +152,10 @@ export default function ProjetDetailPage() {
   const user = authStore((state) => state.utilisateur);
   const isMentor = user?.role === "MENTOR";
   const usrAvatarURL = useMemo(() => {
-    if (!projet?.mentor?.url_avatar) return "";
-    return `${import.meta.env.VITE_BASE_URL}${projet.mentor.url_avatar}`;
-  }, [projet?.mentor?.url_avatar]);
+    const mentorAny = projet?.mentor as any;
+    if (!mentorAny?.url_avatar) return "";
+    return `${import.meta.env.VITE_BASE_URL}${mentorAny.url_avatar}`;
+  }, [projet?.mentor]);
 
   // ── Loading ──
   if (isLoading) {
@@ -194,7 +190,7 @@ export default function ProjetDetailPage() {
   const scoreGlobal = projet.score?.score_global ?? null;
 
   return (
-    <div className="page-shell max-w-5xl">
+    <div className="page-shell max-w-3xl mx-auto w-full">
       {/* ── En-tête ── */}
       <div className="panel-flat flex items-start justify-between gap-4 p-5">
         <div className="flex-1 min-w-0">
@@ -264,7 +260,7 @@ export default function ProjetDetailPage() {
       ) : projet.mentor ? (
         <div className="panel-flat flex items-center gap-3 p-4">
           <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0 overflow-hidden border border-green-200">
-            {projet.mentor.url_avatar ? (
+            {(projet.mentor as any).url_avatar ? (
               <img
                 src={usrAvatarURL}
                 alt={`${projet.mentor.prenom} ${projet.mentor.nom}`}
@@ -337,12 +333,11 @@ export default function ProjetDetailPage() {
         </Link>
       )}
 
-      {/* ── Liste des 7 stades ── */}
       <div>
-        <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+        <p className="mb-6 text-[12px] font-medium uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
           Parcours de maturation
         </p>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {projet.stades.map((s) => (
             <StadeCard key={s.id} {...s} projetId={projetId} />
           ))}

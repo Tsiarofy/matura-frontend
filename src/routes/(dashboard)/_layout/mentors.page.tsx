@@ -30,74 +30,77 @@ function CarteMentor({
   const profil = mentor.profil;
   const domaines = profil?.domaines_expertise ?? [];
   const initiales = `${mentor.prenom[0]}${mentor.nom[0]}`.toUpperCase();
-  // console.log(mentor.url_avatar)
   return (
-    <div className="group w-full h-64 relative cursor-pointer rounded-lg border border-gray-200 bg-white p-4 flex flex-col gap-3 transition-all duration-300 hover:shadow-md">
-      {/* Header */}
-      <div className="flex items-start gap-3">
-        <div className="w-9 h-9 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-soft)] flex items-center justify-center shrink-0 overflow-hidden">
-          <img
-            src={
-              `${import.meta.env.VITE_BASE_URL}${mentor.url_avatar}` ||
-              undefined
-            }
-            alt={`${mentor.prenom} ${mentor.nom}`}
-            className="w-full h-full object-cover rounded-full"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                `https://ui-avatars.com/api/?name=${initiales}&background=10B981&color=fff&size=128`;
-            }}
-          />
-          {/* <span className="text-[13px] font-medium text-green-700">{initiales}</span> */}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[12.5px] font-semibold text-[var(--color-text-primary)]">
-            {mentor.prenom} {mentor.nom}
-          </p>
-          {profil?.annees_experience !== undefined && (
-            <p className="text-[10.5px] text-[var(--color-text-muted)] mt-0.5">
-              {profil.annees_experience} ans d'expérience
-            </p>
+    <div className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-5 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:border-zinc-200 min-h-[220px]">
+      <div>
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full border border-zinc-100 bg-zinc-50 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
+              <img
+                src={
+                  mentor.url_avatar ? `${import.meta.env.VITE_BASE_URL}${mentor.url_avatar}` : undefined
+                }
+                alt={`${mentor.prenom} ${mentor.nom}`}
+                className="w-full h-full object-cover rounded-full"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    `https://ui-avatars.com/api/?name=${initiales}&background=10B981&color=fff&size=128`;
+                }}
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[15px] font-bold text-zinc-900 group-hover:text-green-700 transition-colors">
+                {mentor.prenom} {mentor.nom}
+              </p>
+              {profil?.annees_experience !== undefined && (
+                <p className="text-[12px] text-zinc-400 font-medium mt-0.5">
+                  {profil.annees_experience} ans d'expérience
+                </p>
+              )}
+            </div>
+          </div>
+          {profil?.disponible === false && (
+            <span className="rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-red-50 text-red-700 border-red-200">
+              Indisponible
+            </span>
           )}
         </div>
-        {profil?.disponible === false && (
-          <span className="flat-chip shrink-0">Indisponible</span>
+
+        {/* Bio */}
+        {profil?.bio && (
+          <p className="text-[13px] text-zinc-500 leading-relaxed line-clamp-2">
+            {profil.bio}
+          </p>
+        )}
+
+        {/* Domaines */}
+        {domaines.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {domaines.slice(0, 3).map((d) => (
+              <span key={d} className="rounded-full bg-zinc-50 border border-zinc-100 px-2.5 py-1 text-[10px] font-semibold text-zinc-550 uppercase tracking-wider">
+                {d}
+              </span>
+            ))}
+            {domaines.length > 3 && (
+              <span className="text-[10px] text-zinc-400 font-bold self-center">
+                +{domaines.length - 3}
+              </span>
+            )}
+          </div>
         )}
       </div>
 
-      {/* Bio */}
-      {profil?.bio && (
-        <p className="text-[11.5px] leading-relaxed text-[var(--color-text-muted)] line-clamp-2">
-          {profil.bio}
-        </p>
-      )}
-
-      {/* Domaines */}
-      {domaines.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          {domaines.slice(0, 4).map((d) => (
-            <span key={d} className="flat-chip">
-              {d}
-            </span>
-          ))}
-          {domaines.length > 4 && (
-            <span className="text-[10px] text-[var(--color-text-muted)]">
-              +{domaines.length - 4}
-            </span>
-          )}
-        </div>
-      )}
-
       {/* Footer */}
-      <div className="flex items-center justify-between pt-2.5 border-t border-[var(--color-border)]">
+      <div className="flex items-center justify-between pt-3.5 border-t border-zinc-100 mt-1">
         {profil?.linkedin_url ? (
           <a
             href={profil.linkedin_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-[10.5px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+            className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-400 hover:text-zinc-900 transition-colors"
           >
-            <ExternalLink className="w-3 h-3" /> LinkedIn
+            <ExternalLink className="w-3.5 h-3.5" /> LinkedIn
           </a>
         ) : (
           <span />
@@ -106,8 +109,9 @@ function CarteMentor({
           onClick={() => onDemanderClick(mentor)}
           variant="success"
           size="sm"
+          className="rounded-full"
         >
-          <Send className="w-3.5 h-3.5" />
+          <Send className="w-3 h-3 mr-1.5" />
           Demander
         </Button>
       </div>

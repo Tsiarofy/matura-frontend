@@ -14,6 +14,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as dashboardLayoutRouteImport } from './routes/(dashboard)/_layout'
 import { Route as dashboardLayoutMesFormationsIndexRouteImport } from './routes/(dashboard)/_layout/mes-formations/index'
 import { Route as dashboardLayoutFormationsIndexRouteRouteImport } from './routes/(dashboard)/_layout/formations/index.route'
+import { Route as dashboardLayoutProjetsAFinancerProjetIdRouteImport } from './routes/(dashboard)/_layout/projets-a-financer/$projetId'
 import { Route as dashboardLayoutFinancementsIndexLazyOldRouteImport } from './routes/(dashboard)/_layout/financements/index.lazy.old'
 
 const authRegisterLazyRouteImport = createFileRoute('/(auth)/register')()
@@ -44,9 +45,6 @@ const dashboardLayoutMesFinancementsIndexLazyRouteImport = createFileRoute(
 )()
 const dashboardLayoutFinancementsIndexLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/financements/',
-)()
-const dashboardLayoutProjetsAFinancerProjetIdLazyRouteImport = createFileRoute(
-  '/(dashboard)/_layout/projets-a-financer/$projetId',
 )()
 const dashboardLayoutMesFormationsCreerLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/mes-formations/creer',
@@ -84,6 +82,10 @@ const dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRouteImport =
 const dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRouteImport =
   createFileRoute(
     '/(dashboard)/_layout/projets/$projetId/stades/$numStade/definir-missions',
+  )()
+const dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRouteImport =
+  createFileRoute(
+    '/(dashboard)/_layout/projets/$projetId/stades/$numStade/missions/$missionId',
   )()
 
 const authRegisterLazyRoute = authRegisterLazyRouteImport
@@ -229,18 +231,6 @@ const dashboardLayoutFormationsIndexRouteRoute =
         (d) => d.Route,
       ),
     )
-const dashboardLayoutProjetsAFinancerProjetIdLazyRoute =
-  dashboardLayoutProjetsAFinancerProjetIdLazyRouteImport
-    .update({
-      id: '/projets-a-financer/$projetId',
-      path: '/projets-a-financer/$projetId',
-      getParentRoute: () => dashboardLayoutRoute,
-    } as any)
-    .lazy(() =>
-      import('./routes/(dashboard)/_layout/projets-a-financer/$projetId.lazy').then(
-        (d) => d.Route,
-      ),
-    )
 const dashboardLayoutMesFormationsCreerLazyRoute =
   dashboardLayoutMesFormationsCreerLazyRouteImport
     .update({
@@ -262,6 +252,18 @@ const dashboardLayoutFinancementsFinancementIdLazyRoute =
     } as any)
     .lazy(() =>
       import('./routes/(dashboard)/_layout/financements/$financementId.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+const dashboardLayoutProjetsAFinancerProjetIdRoute =
+  dashboardLayoutProjetsAFinancerProjetIdRouteImport
+    .update({
+      id: '/projets-a-financer/$projetId',
+      path: '/projets-a-financer/$projetId',
+      getParentRoute: () => dashboardLayoutRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/projets-a-financer/$projetId.lazy').then(
         (d) => d.Route,
       ),
     )
@@ -392,6 +394,19 @@ const dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute =
         (d) => d.Route,
       ),
     )
+const dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute =
+  dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRouteImport
+    .update({
+      id: '/missions/$missionId',
+      path: '/missions/$missionId',
+      getParentRoute: () =>
+        dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/projets/$projetId/stades/$numStade/missions/$missionId.lazy').then(
+        (d) => d.Route,
+      ),
+    )
 
 export interface FileRoutesByFullPath {
   '/login': typeof authLoginLazyRoute
@@ -401,9 +416,9 @@ export interface FileRoutesByFullPath {
   '/mentors': typeof dashboardLayoutMentorsLazyRoute
   '/profil': typeof dashboardLayoutProfilLazyRoute
   '/projets-suivis': typeof dashboardLayoutProjetsSuivisLazyRoute
+  '/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdRoute
   '/financements/$financementId': typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   '/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
-  '/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdLazyRoute
   '/formations/': typeof dashboardLayoutFormationsIndexRouteRoute
   '/mes-formations/': typeof dashboardLayoutMesFormationsIndexRoute
   '/financements/': typeof dashboardLayoutFinancementsIndexLazyRoute
@@ -421,6 +436,7 @@ export interface FileRoutesByFullPath {
   '/projets/$projetId/stades/$numStade/definir-missions': typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
   '/formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   '/mes-formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
+  '/projets/$projetId/stades/$numStade/missions/$missionId': typeof dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginLazyRoute
@@ -430,9 +446,9 @@ export interface FileRoutesByTo {
   '/mentors': typeof dashboardLayoutMentorsLazyRoute
   '/profil': typeof dashboardLayoutProfilLazyRoute
   '/projets-suivis': typeof dashboardLayoutProjetsSuivisLazyRoute
+  '/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdRoute
   '/financements/$financementId': typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   '/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
-  '/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdLazyRoute
   '/formations': typeof dashboardLayoutFormationsIndexRouteRoute
   '/mes-formations': typeof dashboardLayoutMesFormationsIndexRoute
   '/financements': typeof dashboardLayoutFinancementsIndexLazyRoute
@@ -450,6 +466,7 @@ export interface FileRoutesByTo {
   '/projets/$projetId/stades/$numStade/definir-missions': typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
   '/formations/$formationId/lessons/$lessonId': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   '/mes-formations/$formationId/lessons/$lessonId': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
+  '/projets/$projetId/stades/$numStade/missions/$missionId': typeof dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -461,9 +478,9 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/mentors': typeof dashboardLayoutMentorsLazyRoute
   '/(dashboard)/_layout/profil': typeof dashboardLayoutProfilLazyRoute
   '/(dashboard)/_layout/projets-suivis': typeof dashboardLayoutProjetsSuivisLazyRoute
+  '/(dashboard)/_layout/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdRoute
   '/(dashboard)/_layout/financements/$financementId': typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   '/(dashboard)/_layout/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
-  '/(dashboard)/_layout/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdLazyRoute
   '/(dashboard)/_layout/formations/': typeof dashboardLayoutFormationsIndexRouteRoute
   '/(dashboard)/_layout/mes-formations/': typeof dashboardLayoutMesFormationsIndexRoute
   '/(dashboard)/_layout/financements/': typeof dashboardLayoutFinancementsIndexLazyRoute
@@ -481,6 +498,7 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/projets/$projetId/stades/$numStade/definir-missions': typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
   '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
+  '/(dashboard)/_layout/projets/$projetId/stades/$numStade/missions/$missionId': typeof dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -492,9 +510,9 @@ export interface FileRouteTypes {
     | '/mentors'
     | '/profil'
     | '/projets-suivis'
+    | '/projets-a-financer/$projetId'
     | '/financements/$financementId'
     | '/mes-formations/creer'
-    | '/projets-a-financer/$projetId'
     | '/formations/'
     | '/mes-formations/'
     | '/financements/'
@@ -512,6 +530,7 @@ export interface FileRouteTypes {
     | '/projets/$projetId/stades/$numStade/definir-missions'
     | '/formations/$formationId/lessons/$lessonId/'
     | '/mes-formations/$formationId/lessons/$lessonId/'
+    | '/projets/$projetId/stades/$numStade/missions/$missionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -521,9 +540,9 @@ export interface FileRouteTypes {
     | '/mentors'
     | '/profil'
     | '/projets-suivis'
+    | '/projets-a-financer/$projetId'
     | '/financements/$financementId'
     | '/mes-formations/creer'
-    | '/projets-a-financer/$projetId'
     | '/formations'
     | '/mes-formations'
     | '/financements'
@@ -541,6 +560,7 @@ export interface FileRouteTypes {
     | '/projets/$projetId/stades/$numStade/definir-missions'
     | '/formations/$formationId/lessons/$lessonId'
     | '/mes-formations/$formationId/lessons/$lessonId'
+    | '/projets/$projetId/stades/$numStade/missions/$missionId'
   id:
     | '__root__'
     | '/(dashboard)/_layout'
@@ -551,9 +571,9 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/mentors'
     | '/(dashboard)/_layout/profil'
     | '/(dashboard)/_layout/projets-suivis'
+    | '/(dashboard)/_layout/projets-a-financer/$projetId'
     | '/(dashboard)/_layout/financements/$financementId'
     | '/(dashboard)/_layout/mes-formations/creer'
-    | '/(dashboard)/_layout/projets-a-financer/$projetId'
     | '/(dashboard)/_layout/formations/'
     | '/(dashboard)/_layout/mes-formations/'
     | '/(dashboard)/_layout/financements/'
@@ -571,6 +591,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/projets/$projetId/stades/$numStade/definir-missions'
     | '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/'
     | '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/'
+    | '/(dashboard)/_layout/projets/$projetId/stades/$numStade/missions/$missionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -679,13 +700,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutFormationsIndexRouteRouteImport
       parentRoute: typeof dashboardLayoutRoute
     }
-    '/(dashboard)/_layout/projets-a-financer/$projetId': {
-      id: '/(dashboard)/_layout/projets-a-financer/$projetId'
-      path: '/projets-a-financer/$projetId'
-      fullPath: '/projets-a-financer/$projetId'
-      preLoaderRoute: typeof dashboardLayoutProjetsAFinancerProjetIdLazyRouteImport
-      parentRoute: typeof dashboardLayoutRoute
-    }
     '/(dashboard)/_layout/mes-formations/creer': {
       id: '/(dashboard)/_layout/mes-formations/creer'
       path: '/mes-formations/creer'
@@ -698,6 +712,13 @@ declare module '@tanstack/react-router' {
       path: '/financements/$financementId'
       fullPath: '/financements/$financementId'
       preLoaderRoute: typeof dashboardLayoutFinancementsFinancementIdLazyRouteImport
+      parentRoute: typeof dashboardLayoutRoute
+    }
+    '/(dashboard)/_layout/projets-a-financer/$projetId': {
+      id: '/(dashboard)/_layout/projets-a-financer/$projetId'
+      path: '/projets-a-financer/$projetId'
+      fullPath: '/projets-a-financer/$projetId'
+      preLoaderRoute: typeof dashboardLayoutProjetsAFinancerProjetIdRouteImport
       parentRoute: typeof dashboardLayoutRoute
     }
     '/(dashboard)/_layout/projets/$projetId/': {
@@ -777,17 +798,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRouteImport
       parentRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute
     }
+    '/(dashboard)/_layout/projets/$projetId/stades/$numStade/missions/$missionId': {
+      id: '/(dashboard)/_layout/projets/$projetId/stades/$numStade/missions/$missionId'
+      path: '/missions/$missionId'
+      fullPath: '/projets/$projetId/stades/$numStade/missions/$missionId'
+      preLoaderRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRouteImport
+      parentRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute
+    }
   }
 }
 
 interface dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteChildren {
   dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
+  dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute
 }
 
 const dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteChildren: dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteChildren =
   {
     dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute:
       dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute,
+    dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute:
+      dashboardLayoutProjetsProjetIdStadesNumStadeMissionsMissionIdLazyRoute,
   }
 
 const dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren =
@@ -801,9 +832,9 @@ interface dashboardLayoutRouteChildren {
   dashboardLayoutMentorsLazyRoute: typeof dashboardLayoutMentorsLazyRoute
   dashboardLayoutProfilLazyRoute: typeof dashboardLayoutProfilLazyRoute
   dashboardLayoutProjetsSuivisLazyRoute: typeof dashboardLayoutProjetsSuivisLazyRoute
+  dashboardLayoutProjetsAFinancerProjetIdRoute: typeof dashboardLayoutProjetsAFinancerProjetIdRoute
   dashboardLayoutFinancementsFinancementIdLazyRoute: typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   dashboardLayoutMesFormationsCreerLazyRoute: typeof dashboardLayoutMesFormationsCreerLazyRoute
-  dashboardLayoutProjetsAFinancerProjetIdLazyRoute: typeof dashboardLayoutProjetsAFinancerProjetIdLazyRoute
   dashboardLayoutFormationsIndexRouteRoute: typeof dashboardLayoutFormationsIndexRouteRoute
   dashboardLayoutMesFormationsIndexRoute: typeof dashboardLayoutMesFormationsIndexRoute
   dashboardLayoutFinancementsIndexLazyRoute: typeof dashboardLayoutFinancementsIndexLazyRoute
@@ -828,12 +859,12 @@ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
   dashboardLayoutMentorsLazyRoute: dashboardLayoutMentorsLazyRoute,
   dashboardLayoutProfilLazyRoute: dashboardLayoutProfilLazyRoute,
   dashboardLayoutProjetsSuivisLazyRoute: dashboardLayoutProjetsSuivisLazyRoute,
+  dashboardLayoutProjetsAFinancerProjetIdRoute:
+    dashboardLayoutProjetsAFinancerProjetIdRoute,
   dashboardLayoutFinancementsFinancementIdLazyRoute:
     dashboardLayoutFinancementsFinancementIdLazyRoute,
   dashboardLayoutMesFormationsCreerLazyRoute:
     dashboardLayoutMesFormationsCreerLazyRoute,
-  dashboardLayoutProjetsAFinancerProjetIdLazyRoute:
-    dashboardLayoutProjetsAFinancerProjetIdLazyRoute,
   dashboardLayoutFormationsIndexRouteRoute:
     dashboardLayoutFormationsIndexRouteRoute,
   dashboardLayoutMesFormationsIndexRoute:

@@ -1,4 +1,5 @@
 import { type CandidatureAvecProjet } from '@/hooks/useInvestisseur'
+import { Link } from '@tanstack/react-router'
 import { StatutCandidature } from '@matura/shared'
 import { cn } from '@/lib/utils'
 
@@ -45,9 +46,9 @@ export function ProjetCandidatCard({
 
   return (
     <div className={cn(
-      'bg-white border rounded-xl p-4 space-y-3',
+      'bg-white border rounded-[22px] p-6 space-y-4 shadow-sm',
       statut === StatutCandidature.ACCEPTEE ? 'border-green-200' :
-      statut === StatutCandidature.REJETEE  ? 'border-red-100' : 'border-zinc-200',
+      statut === StatutCandidature.REJETEE  ? 'border-red-100' : 'border-zinc-100',
     )}>
 
       {/* Header */}
@@ -135,6 +136,16 @@ export function ProjetCandidatCard({
           </button>
         )}
         {(statut === StatutCandidature.EN_ATTENTE || statut === StatutCandidature.EN_REVUE) && (
+          <Link
+            to="/projets-a-financer/$projetId"
+            params={{ projetId: projet.id }}
+            search={{ candidatureId: candidature.id, offreId: candidature.offre.id }}
+            className="text-[11px] px-3 py-1.5 border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-50 transition-colors inline-flex items-center"
+          >
+            📋 Voir détails du projet
+          </Link>
+        )}
+        {(statut === StatutCandidature.EN_ATTENTE || statut === StatutCandidature.EN_REVUE) && (
           <>
             <button
               disabled={isUpdating}
@@ -216,11 +227,11 @@ function StadeDetails({ projet, brl }: { projet: CandidatureAvecProjet['projet']
   }
 
   return (
-    <dl className="space-y-1.5">
+    <dl className="grid grid-cols-2 gap-3">
       {items.map(({ label, valeur }) => (
-        <div key={label} className="flex items-start gap-2">
-          <dt className="text-[10px] text-zinc-400 w-32 shrink-0 pt-0.5">{label}</dt>
-          <dd className="text-[11px] text-zinc-700 flex-1">{String(valeur)}</dd>
+        <div key={label} className="flex flex-col gap-1 bg-zinc-50 border border-zinc-100 rounded-[14px] p-3">
+          <dt className="text-[10px] uppercase tracking-wider font-semibold text-zinc-400">{label}</dt>
+          <dd className="text-[12px] font-medium text-zinc-800">{String(valeur)}</dd>
         </div>
       ))}
     </dl>

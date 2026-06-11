@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { apiClient } from '@/lib/apiClient'
 
 export interface MissionItemDto {
+  id?: string
   titre: string
   objectif: string
   type_preuve_attendue: 'PDF' | 'EXCEL' | 'IMAGE' | 'VIDEO' | 'AUCUN'
@@ -28,6 +29,19 @@ export function useMissions(projetId: string, numStade: number) {
     },
     enabled: !!projetId && numStade >= 1 && numStade <= 7,
     staleTime: 60 * 1000,
+  })
+}
+
+export function useMissionDetail(projetId: string, numStade: number, missionId: string) {
+  return useQuery({
+    queryKey: ['mission-detail', projetId, numStade, missionId],
+    queryFn: async () => {
+      const { data } = await apiClient.get(
+        `/projets/${projetId}/stades/${numStade}/missions/${missionId}`
+      )
+      return data
+    },
+    enabled: !!projetId && !!missionId,
   })
 }
 

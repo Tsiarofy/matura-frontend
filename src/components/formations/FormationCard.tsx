@@ -19,58 +19,59 @@ export function FormationCard({
       : "/formations/$formationId";
 
   return (
-    <div className="group w-full h-64 relative rounded-lg border border-gray-200 bg-white p-6 transition-all duration-300 hover:shadow-md">
-      <div className="relative space-y-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="icon-chip h-11 w-11 shrink-0 rounded-[16px]">
-            <GraduationCap
-              className="w-5 h-5 text-[var(--color-text-muted)]"
-              strokeWidth={1.7}
-            />
+    <div className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:border-zinc-200 flex flex-col justify-between gap-5 min-h-[240px]">
+      <div>
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="w-10 h-10 rounded-[14px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+            <GraduationCap className="w-5 h-5" strokeWidth={1.5} />
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-[16px] font-semibold leading-tight text-[var(--color-text-primary)] transition-colors group-hover:text-[var(--color-success-text)] truncate">
-              {formation.titre}
-            </h3>
-            <div className="flex items-center gap-2 mt-2">
-              <div className="w-6 h-6 rounded-full bg-[var(--color-text-primary)] flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
-                {formation.auteur.prenom.charAt(0)}
-              </div>
-              <p className="text-[12px] font-semibold text-[var(--color-text-muted)]">
-                {formation.auteur.prenom} {formation.auteur.nom}
-              </p>
-            </div>
+          <div className="flex items-center gap-1.5">
+            <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-zinc-50 text-zinc-500 border-zinc-200">
+              {DOMAINE_LABELS[formation.domaine] ?? formation.domaine}
+            </span>
+            {formation.stade_cible && (
+              <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-amber-50 text-amber-700 border-amber-200">
+                BRL ≥ {formation.stade_cible}
+              </span>
+            )}
           </div>
         </div>
 
+        {/* Title & Author */}
+        <div className="space-y-1.5 mb-3">
+          <h3 className="text-[16px] font-bold text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+            {formation.titre}
+          </h3>
+          <div className="flex items-center gap-2 mt-1.5">
+            <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[9px] font-bold text-white shadow-sm">
+              {formation.auteur.prenom.charAt(0)}
+            </div>
+            <p className="text-[12px] font-medium text-zinc-400">
+              Par {formation.auteur.prenom} {formation.auteur.nom}
+            </p>
+          </div>
+        </div>
+
+        {/* Description */}
         {formation.description && (
-          <p className="text-[13px] font-medium text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
+          <p className="text-[13px] text-zinc-500 leading-relaxed line-clamp-2">
             {formation.description}
           </p>
         )}
+      </div>
 
-        <div className="flex flex-wrap gap-2">
-          <span className="rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] bg-[var(--color-surface-input)] text-[var(--color-text-muted)] border-[var(--color-border)]">
-            {DOMAINE_LABELS[formation.domaine] ?? formation.domaine}
-          </span>
-          {formation.stade_cible && (
-            <span className="rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] bg-amber-50 text-amber-700 border-amber-200">
-              BRL ≥ {formation.stade_cible}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-4">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-text-disabled)]">
-            {formation.nombre_lessons} modules
-          </span>
-          <Button asChild size="sm" variant="success">
-            <Link to={formationRoute} params={{ formationId: formation.id }}>
-              <PlayCircle size={16} strokeWidth={2} />
-              {basePath === "/mes-formations" ? "Gérer" : "Lancer"}
-            </Link>
-          </Button>
-        </div>
+      {/* Footer */}
+      <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+          {formation.nombre_lessons} modules
+        </span>
+        <Button asChild size="sm" variant="success" className="rounded-full">
+          <Link to={formationRoute} params={{ formationId: formation.id }}>
+            <PlayCircle size={14} className="mr-1.5" />
+            {basePath === "/mes-formations" ? "Gérer" : "Lancer"}
+          </Link>
+        </Button>
       </div>
     </div>
   );

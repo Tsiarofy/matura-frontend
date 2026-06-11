@@ -43,6 +43,57 @@ const ETAPES_STADE2: Etape[] = [
   },
 ];
 
+const SectionWrapper = ({
+  etapeId,
+  children,
+  readOnly,
+  etapeActive,
+  isLocked,
+  markComplete,
+}: {
+  etapeId: string;
+  children: React.ReactNode;
+  readOnly?: boolean;
+  etapeActive: string;
+  isLocked: (id: string) => boolean;
+  markComplete: (id: string, next?: string) => void;
+}) => {
+  const locked = !readOnly && isLocked(etapeId);
+  const active = etapeActive === etapeId;
+  return (
+    <div
+      className={cn(
+        "relative flat-section transition-all",
+        locked && "opacity-40 pointer-events-none select-none",
+      )}
+    >
+      {locked && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <span className="text-[11px] font-medium text-zinc-500 bg-white px-3 py-1.5 rounded-full shadow border border-zinc-200">
+            à remplir progressivement
+          </span>
+        </div>
+      )}
+      <div className={cn(locked && "blur-[1px]")}>{children}</div>
+      {active && !locked && !readOnly && (
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={() => {
+              const idx = ETAPES_STADE2.findIndex((e) => e.id === etapeId);
+              const next = ETAPES_STADE2[idx + 1]?.id;
+              markComplete(etapeId, next);
+            }}
+            className="inline-flex items-center justify-center rounded-[999px] border border-[var(--color-success-border)] bg-[var(--color-success)] px-4 py-2 text-[12px] font-semibold text-white transition-[filter,transform] hover:brightness-[0.98] active:scale-[0.99]"
+          >
+            Valider et continuer →
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
   const { isEntrepreneur } = useRoleLabels();
   const d = stade.donnees as Record<string, unknown>;
@@ -141,8 +192,9 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
     name: "bloc_indicateurs_cles",
   });
 
-  const inp = "flat-input h-10 px-3.5 py-2 text-[12.5px] rounded-[16px]";
+  const inp = "flat-input h-11 px-4 py-2.5 text-[13px] rounded-[16px]";
   const sel = cn(inp, "appearance-none");
+  const textareaCls = "flat-input min-h-[90px] px-4 py-2.5 text-[13px] rounded-[16px] resize-none";
 
   const markComplete = (id: string, next?: string) => {
     setEtapesCompletees((prev) => new Set([...prev, id]));
@@ -158,48 +210,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
     );
   };
 
-  const SectionWrapper = ({
-    etapeId,
-    children,
-  }: {
-    etapeId: string;
-    children: React.ReactNode;
-  }) => {
-    const locked = !readOnly && isLocked(etapeId);
-    const active = etapeActive === etapeId;
-    return (
-      <div
-        className={cn(
-          "relative flat-section transition-all",
-          locked && "opacity-40 pointer-events-none select-none",
-        )}
-      >
-        {locked && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center">
-            <span className="text-[11px] font-medium text-zinc-500 bg-white px-3 py-1.5 rounded-full shadow border border-zinc-200">
-              à remplir progressivement
-            </span>
-          </div>
-        )}
-        <div className={cn(locked && "blur-[1px]")}>{children}</div>
-        {active && !locked && !readOnly && (
-          <div className="mt-3">
-            <button
-              type="button"
-              onClick={() => {
-                const idx = ETAPES_STADE2.findIndex((e) => e.id === etapeId);
-                const next = ETAPES_STADE2[idx + 1]?.id;
-                markComplete(etapeId, next);
-              }}
-              className="inline-flex items-center justify-center rounded-[999px] border border-[var(--color-success-border)] bg-[var(--color-success)] px-4 py-2 text-[12px] font-semibold text-white transition-[filter,transform] hover:brightness-[0.98] active:scale-[0.99]"
-            >
-              Valider et continuer →
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  };
+
 
   return (
     <form
@@ -216,7 +227,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
 
       <fieldset disabled={readOnly} className="space-y-4 border-none p-0 m-0">
         {/* Section 1 — Problème */}
-        <SectionWrapper etapeId="probleme">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="probleme">
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("bloc_probleme")}
           </p>
@@ -228,7 +239,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 2 — Segments clients */}
-        <SectionWrapper etapeId="segments">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="segments">
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("segment_principal")}
           </p>
@@ -255,7 +266,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 3 — Solution */}
-        <SectionWrapper etapeId="solution">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="solution">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("solution")}
@@ -304,7 +315,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 4 — Proposition de valeur */}
-        <SectionWrapper etapeId="proposition">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="proposition">
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("proposition_valeur")}
           </p>
@@ -322,7 +333,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 5 — Canaux */}
-        <SectionWrapper etapeId="canaux">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="canaux">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("canaux")}
@@ -377,7 +388,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 6 — Sources de revenus */}
-        <SectionWrapper etapeId="revenus">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="revenus">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("sources_revenus")}
@@ -429,6 +440,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
               />
               <input
                 type="number"
+                min={0}
                 {...register(
                   `bloc_sources_revenus.${i}.estimation_mensuelle_ar`,
                   { valueAsNumber: true },
@@ -460,7 +472,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 7 — Structure de coûts */}
-        <SectionWrapper etapeId="couts">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="couts">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("structure_couts")}
@@ -508,6 +520,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
               />
               <input
                 type="number"
+                min={0}
                 {...register(`bloc_structure_couts.${i}.montant_mensuel_ar`, {
                   valueAsNumber: true,
                 })}
@@ -528,14 +541,14 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 8 — Avantage unique */}
-        <SectionWrapper etapeId="avantage">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="avantage">
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("avantage_unique")}
           </p>
           <textarea
             {...register("bloc_avantage_unique.description")}
             rows={3}
-            className={cn(inp, "resize-none")}
+            className={textareaCls}
             placeholder="Ce qui vous rend difficile à copier..."
           />
           <select
@@ -558,7 +571,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 9 — Indicateurs clés */}
-        <SectionWrapper etapeId="indicateurs">
+        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="indicateurs">
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("indicateurs_cles")}
@@ -589,6 +602,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
               />
               <input
                 type="number"
+                min={0}
                 {...register(`bloc_indicateurs_cles.${i}.valeur_cible`, {
                   valueAsNumber: true,
                 })}
@@ -597,6 +611,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
               />
               <input
                 type="number"
+                min={0}
                 {...register(`bloc_indicateurs_cles.${i}.echeance_mois`, {
                   valueAsNumber: true,
                 })}

@@ -3,15 +3,15 @@ import {type  StadeDetail } from '@matura/shared'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { FileText, Upload, LineChart, UserCheck, HelpCircle, Target } from 'lucide-react'
+import { FileText, LineChart, UserCheck, HelpCircle, Target, AlertCircle } from 'lucide-react'
 import { authStore } from '@/stores/authStore'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 
 interface StadeTemplateProps {
   stade: StadeDetail
   ongletsContent: {
     missions?: ReactNode
     saisie: ReactNode
-    preuves: ReactNode
     metriques: ReactNode
     aide?: ReactNode // Optionnel — contenu d'aide pour le stade
     evaluation?: ReactNode // Optionnel — visible uniquement si stade SOUMIS/VALIDE/EN_REVISION
@@ -23,7 +23,6 @@ const TABS_CONFIG = [
   { value: 'missions', label: 'Missions', icon: Target },
   { value: 'saisie', label: 'Saisie', icon: FileText },
   { value: 'aide', label: 'Aide', icon: HelpCircle },
-  { value: 'preuves', label: 'Preuves', icon: Upload },
   { value: 'metriques', label: 'Métriques', icon: LineChart },
   { value: 'evaluation', label: 'Évaluation', icon: UserCheck },
 ]
@@ -36,6 +35,7 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
   const showEvaluation = isMentor || ['SOUMIS', 'VALIDE', 'EN_REVISION'].includes(stade.statut)
 
   const [activeTab, setActiveTab] = useState('saisie')
+  const [showMissionWarning, setShowMissionWarning] = useState(false)
   const hasAutoSelected = useRef(false)
 
   // Auto-sélectionner l'onglet Évaluation pour le Mentor si le stade est soumis
@@ -50,13 +50,13 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
     if (
       !isMentor &&
       ongletsContent.missions &&
-      stade.missions_completees === false &&
+      (stade as any).missions_completees === false &&
       ['DEBLOQUE', 'BROUILLON', 'EN_REVISION'].includes(stade.statut)
     ) {
       setActiveTab('missions')
       hasAutoSelected.current = true
     }
-  }, [isMentor, stade.statut, stade.missions_completees, ongletsContent.missions])
+  }, [isMentor, stade.statut, (stade as any).missions_completees, ongletsContent.missions])
 
   return (
     <div className={cn('w-full', className)}>
@@ -80,10 +80,10 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
                   key={tab.value}
                   value={tab.value}
                   onClick={
-                    tab.value === 'saisie' && !isMentor && stade.missions_completees === false
+                    tab.value === 'saisie' && !isMentor && (stade as any).missions_completees === false
                       ? (e) => {
                           e.preventDefault()
-                          setActiveTab('missions')
+                          setShowMissionWarning(true)
                         }
                       : undefined
                   }
@@ -91,7 +91,7 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
                     'px-2.5 py-1.5 rounded-[12px] text-[11px] transition-colors shadow-none',
                     'data-[state=active]:bg-[var(--color-surface-soft)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:font-semibold',
                     'data-[state=inactive]:text-[var(--color-text-muted)] data-[state=inactive]:hover:bg-[var(--color-surface-soft)] data-[state=inactive]:hover:text-[var(--color-text-primary)]',
-                    tab.value === 'saisie' && !isMentor && stade.missions_completees === false
+                    tab.value === 'saisie' && !isMentor && (stade as any).missions_completees === false
                       ? 'opacity-50 cursor-not-allowed'
                       : '',
                   )}
@@ -127,12 +127,6 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
           </TabsContent>
         )}
 
-        <TabsContent value="preuves" className="mt-0">
-          <Card className="mx-auto w-full max-w-3xl p-5">
-            {ongletsContent.preuves}
-          </Card>
-        </TabsContent>
-
         <TabsContent value="metriques" className="mt-0">
           <Card className="mx-auto w-full max-w-3xl p-5">
             {ongletsContent.metriques}
@@ -151,6 +145,35 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
           </TabsContent>
         )}
       </Tabs>
+
+      {/* Modale d'avertissement missions non complétées */}
+      <Dialog open={showMissionWarning} onOpenChange={setShowMissionWarning}>
+        <DialogContent className="sm:max-w-[420px] p-6">
+          <div className="flex flex-col items-center text-center gap-4">
+            <div className="w-14 h-14 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
+              <AlertCircle className="w-7 h-7 text-amber-500" />
+            </div>
+            <div>
+              <h3 className="text-[15px] font-semibold text-zinc-800 mb-1">
+                Saisie non disponible
+              </h3>
+              <p className="text-[13px] text-zinc-500 leading-relaxed">
+                Vous devez compléter et faire valider <strong>toutes vos missions</strong> avant 
+                de pouvoir accéder au formulaire de saisie de ce stade.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setShowMissionWarning(false)
+                setActiveTab('missions')
+              }}
+              className="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[13px] font-medium transition-colors"
+            >
+              Voir mes missions
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -18,13 +18,16 @@ export function cn(...inputs: ClassValue[]) {
  * @example formatAr(1500000, { compact: true }) → '1,5M Ar'
  */
 export function formatAr(
-  montant: number,
+  montant: number | null | undefined,
   options?: {
     compact?: boolean
     decimales?: number
     afficherSymbole?: boolean
   }
 ): string {
+  if (montant === null || montant === undefined || isNaN(montant)) {
+    return ''
+  }
   const { compact = false, decimales = 0, afficherSymbole = true } = options || {}
 
   if (compact && montant >= 1_000_000) {

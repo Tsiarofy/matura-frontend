@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
 import {
-  Compass,
   Users,
   Clock,
   FileCheck2,
@@ -12,7 +11,6 @@ import {
 } from 'lucide-react'
 import { useDashboardMentor } from '@/hooks/useDashboard'
 import { useRepondreDemande } from '@/hooks/useAccompagnement'
-import { WelcomeBanner } from '@/components/dashboard/WelcomeBanner'
 import { StatCard } from '@/components/shared/StatCard'
 import { ActivityFeed } from '@/components/dashboard/ActivityFeed'
 import { Button } from '@/components/ui/button'
@@ -75,17 +73,17 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <WelcomeBanner
-        prenom={user.prenom}
-        role="Mentor"
-        subtitle="Accompagnement et évaluation des projets assignés."
-        icon={Compass}
-        colorClass="text-blue-600"
-        gradientClass="from-blue-500/10 via-indigo-500/5 to-transparent"
-        borderClass="border-blue-200/60"
-        iconBgClass="bg-blue-100/50"
-      />
+      {/* ── Entête Minimaliste & Flat ── */}
+      <div className="flex items-end justify-between gap-4">
+        <div className="space-y-0.5">
+          <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+            Dashboard Mentor
+          </h1>
+          <p className="text-[13px] font-medium text-[var(--color-text-muted)]">
+            Bienvenue, {user.prenom}. Voici les projets que vous accompagnez.
+          </p>
+        </div>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

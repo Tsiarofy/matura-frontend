@@ -133,7 +133,7 @@ export function ProfilInvestisseurForm() {
     : `${import.meta.env.VITE_BASE_URL}${urlAvatar}`;
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6">
       {/* Avatar Section */}
       <Card>
         <CardHeader>

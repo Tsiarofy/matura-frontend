@@ -50,101 +50,98 @@ export function FinancementCard({ offre, onClick }: Props) {
       onClick={onClick}
       onKeyDown={(e) => e.key === "Enter" && onClick()}
       className={cn(
-        "group w-full h-64 relative cursor-pointer rounded-lg border border-gray-200 bg-white p-5 transition-all duration-300 hover:shadow-md",
+        "group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:border-zinc-200 flex flex-col justify-between gap-5 min-h-[240px]",
         !isActive && "opacity-60",
       )}
     >
-      <div className="relative space-y-4">
+      <div>
         {/* Header Section */}
-        <div className="flex items-start justify-between gap-4">
-          <div className="icon-chip h-10 w-10 shrink-0 rounded-[14px]">
-            <BadgeDollarSign
-              className="w-4.5 h-4.5 text-[var(--color-text-muted)]"
-              strokeWidth={1.7}
-            />
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="w-10 h-10 rounded-[14px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+            <BadgeDollarSign className="w-5 h-5" strokeWidth={1.5} />
           </div>
-          <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span
-                className={cn(
-                  "rounded-full border px-2.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.14em]",
-                  TYPE_COLORS[offre.typeFinancement],
-                )}
-              >
-                {TYPE_LABELS[offre.typeFinancement] ?? offre.typeFinancement}
-              </span>
-              <span
-                className={cn(
-                  "rounded-full border px-2.5 py-0.5 text-[9.5px] font-semibold uppercase tracking-[0.14em]",
-                  isActive
-                    ? "bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-[var(--color-success-border)]"
-                    : "bg-[var(--color-surface-input)] text-[var(--color-text-muted)] border-[var(--color-border)]",
-                )}
-              >
-                {STATUT_LABELS[offre.statut]}
-              </span>
-            </div>
-            <h3 className="text-[15px] font-semibold leading-tight text-[var(--color-text-primary)] transition-colors group-hover:text-[var(--color-success-text)]">
-              {offre.titre}
-            </h3>
+          <div className="flex items-center gap-1.5">
+            <span
+              className={cn(
+                "rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em]",
+                TYPE_COLORS[offre.typeFinancement],
+              )}
+            >
+              {TYPE_LABELS[offre.typeFinancement] ?? offre.typeFinancement}
+            </span>
+            <span
+              className={cn(
+                "rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em]",
+                isActive
+                  ? "bg-green-50 text-green-700 border-green-200"
+                  : "bg-zinc-50 text-zinc-400 border-zinc-200",
+              )}
+            >
+              {STATUT_LABELS[offre.statut]}
+            </span>
           </div>
         </div>
 
-        {/* Investor Info */}
-        {offre.investisseur && (
-          <div className="flex items-center gap-2.5 text-[11px] text-[var(--color-text-muted)]">
-            <div className="w-6 h-6 rounded-full bg-[var(--color-text-primary)] flex items-center justify-center text-[10px] font-bold text-white">
-              {offre.investisseur.prenom.charAt(0)}
+        {/* Title & Info */}
+        <div className="space-y-1.5 mb-3">
+          <h3 className="text-[16px] font-bold text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+            {offre.titre}
+          </h3>
+          {offre.investisseur && (
+            <div className="flex items-center gap-2 text-[12px] text-zinc-400">
+              <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[9px] font-bold text-white shadow-sm">
+                {offre.investisseur.prenom.charAt(0)}
+              </div>
+              <span className="font-semibold text-zinc-500">
+                {offre.investisseur.prenom} {offre.investisseur.nom}
+              </span>
+              <span>·</span>
+              <span className="font-bold text-zinc-500">BRL ≥ {offre.stadeCible}</span>
             </div>
-            <span className="font-semibold text-[var(--color-text-secondary)]">
-              {offre.investisseur.prenom} {offre.investisseur.nom}
-            </span>
-            <span>·</span>
-            <span className="font-bold">BRL ≥ {offre.stadeCible}</span>
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Description */}
-        <p className="text-[12px] font-medium text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
-          {offre.description}
+        <p className="text-[13px] text-zinc-500 leading-relaxed line-clamp-2">
+          {offre.description || "Aucune description fournie pour cette offre."}
         </p>
+      </div>
 
-        {/* Footer Metrics */}
-        <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-3.5">
-          <div className="flex gap-4">
-            <div className="flex flex-col">
-              <span className="text-[var(--color-text-disabled)] uppercase text-[9px] font-bold tracking-widest mb-0.5">
-                Montant
+      {/* Footer Metrics */}
+      <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1">
+        <div className="flex gap-4">
+          <div className="flex flex-col">
+            <span className="text-zinc-400 uppercase text-[9px] font-bold tracking-wider mb-0.5">
+              Montant
+            </span>
+            <span className="text-zinc-800 font-bold text-[14px]">
+              {offre.montantMax
+                ? `${(offre.montantMax / 1000000).toFixed(1)}M`
+                : "—"}
+              <span className="text-[10px] ml-1 text-zinc-400 font-normal">
+                {offre.devise}
               </span>
-              <span className="text-[var(--color-text-primary)] font-bold text-[14px]">
-                {offre.montantMax
-                  ? `${(offre.montantMax / 1000000).toFixed(1)}M`
-                  : "—"}
-                <span className="text-[10px] ml-1 text-[var(--color-text-muted)]">
-                  {offre.devise}
-                </span>
+            </span>
+          </div>
+          {offre.dateCloture && (
+            <div className="flex flex-col">
+              <span className="text-zinc-400 uppercase text-[9px] font-bold tracking-wider mb-0.5">
+                Clôture
+              </span>
+              <span className="text-zinc-800 font-bold text-[14px]">
+                {new Date(offre.dateCloture).toLocaleDateString("fr-FR", {
+                  day: "numeric",
+                  month: "short",
+                })}
               </span>
             </div>
-            {offre.dateCloture && (
-              <div className="flex flex-col">
-                <span className="text-[var(--color-text-disabled)] uppercase text-[9px] font-bold tracking-widest mb-0.5">
-                  Clôture
-                </span>
-                <span className="text-[var(--color-text-primary)] font-bold text-[14px]">
-                  {new Date(offre.dateCloture).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </span>
-              </div>
-            )}
-          </div>
-          <ChevronRight
-            size={18}
-            strokeWidth={2}
-            className="text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-primary)] transition-colors"
-          />
+          )}
         </div>
+        <ChevronRight
+          size={18}
+          strokeWidth={2}
+          className="text-zinc-350 group-hover:text-zinc-800 transition-colors"
+        />
       </div>
     </div>
   );

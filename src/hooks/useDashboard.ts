@@ -34,7 +34,7 @@ export interface StatsDashboardEntrepreneur {
 
 export interface EvenementActivite {
   id: string
-  type: 'STADE_VALIDE' | 'STADE_SOUMIS' | 'EVALUATION' | 'CANDIDATURE' | 'MENTOR'
+  type: 'STADE_VALIDE' | 'STADE_SOUMIS' | 'EVALUATION' | 'CANDIDATURE' | 'MENTOR' | 'MISSION_SOUMISE' | 'CANDIDATURE_RECUE' | 'MISSION_VALIDEE' | 'MISSION_REJETEE' | 'DEMANDE_ACCEPTEE' | 'DEMANDE_REFUSEE'
   label: string
   date: string
 }

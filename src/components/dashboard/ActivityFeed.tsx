@@ -58,6 +58,38 @@ export function ActivityFeed({ activities, className }: ActivityFeedProps) {
             iconBg = 'bg-purple-50'
             iconColor = 'text-purple-600'
             break
+          case 'MISSION_SOUMISE':
+            iconBg = 'bg-blue-50'
+            iconColor = 'text-blue-600'
+            break
+          case 'CANDIDATURE_RECUE':
+            iconBg = 'bg-indigo-50'
+            iconColor = 'text-indigo-600'
+            break
+          case 'MISSION_VALIDEE':
+            iconBg = 'bg-emerald-50'
+            iconColor = 'text-emerald-600'
+            break
+          case 'MISSION_REJETEE':
+            iconBg = 'bg-red-50'
+            iconColor = 'text-red-600'
+            break
+          case 'DEMANDE_ACCEPTEE':
+            iconBg = 'bg-blue-50'
+            iconColor = 'text-blue-700'
+            break
+          case 'DEMANDE_REFUSEE':
+            iconBg = 'bg-orange-50'
+            iconColor = 'text-orange-600'
+            break
+          case 'CANDIDATURE':
+            iconBg = 'bg-indigo-50'
+            iconColor = 'text-indigo-600'
+            break
+          case 'MENTOR':
+            iconBg = 'bg-teal-50'
+            iconColor = 'text-teal-600'
+            break
         }
 
         return (

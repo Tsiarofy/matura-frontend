@@ -3,6 +3,7 @@
 // Retourne les 9 champs spec IEME/BRL + champs affichage frontend
 
 import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { apiClient } from '@/lib/apiClient'
 
 interface SousZones {
@@ -185,29 +186,34 @@ function calculerMarcheLocal(params: CalculMarcheParams, statsZone: Statistiques
   }
 }
 export function useCalculMarche(params: CalculMarcheParams) {
-  // const enabled = !!params.codeZone && !!params.niveauZone
-  // const enabled=false;
-  return useQuery<CalculMarcheResult>({
-    queryKey: ['calcul-marche', params],
-    queryFn: async (): Promise<CalculMarcheResult> => {
-      try {
-        console.log("Lancement du calcul de marché avec params:", params)
-        console.log("Lancement du calcul de marché avec params:", params.codeZone)
-        console.log("Niveau de zone:", params.niveauZone)
-        console.log("Sous-zones:", params.sousZone)
-        console.log("- - - - - FIN- - - - - - - - ")
-
-        const stats = await apiClient.post<StatistiquesZone>('/geo/population',{ code: params.codeZone, niveau: params.niveauZone, sousZones: params.sousZone }
-        )
-        console.log("Stats de population reçues du GeoService:", stats.data)
-        return calculerMarcheLocal(params, stats.data)
-      } catch (error) {
-        // Log d'erreur spécifique ici
-        console.error("Erreur API Population:", error)
-        throw error // Important : TanStack Query a besoin que l'erreur soit "jetée"
-      }
+  // 1. Query API pour les stats de zone (ne change que quand la zone change)
+  const statsQuery = useQuery<StatistiquesZone>({
+    queryKey: ['geo-population', params.codeZone, params.niveauZone, JSON.stringify(params.sousZone)],
+    queryFn: async () => {
+      const stats = await apiClient.post<StatistiquesZone>('/geo/population', {
+        code: params.codeZone,
+        niveau: params.niveauZone,
+        sousZones: params.sousZone,
+      })
+      return stats.data
     },
-    // enabled,
-    staleTime: 5 * 60 * 1000,
+    enabled: !!params.codeZone && !!params.niveauZone && params.typeClient === 'B2C',
+    staleTime: 10 * 60 * 1000, // Zone change rarement
   })
+
+  // 2. Calcul local réactif (recalculé à chaque changement de pctUtilisateurs, concurrents, etc.)
+  const data: CalculMarcheResult | undefined = useMemo(() => {
+    if (params.typeClient === 'B2B') {
+      return calculerMarcheLocal(params, { population_2018: 0, projection_actuelle: 0, nb_fokontany: 0 })
+    }
+    if (!statsQuery.data) return undefined
+    return calculerMarcheLocal(params, statsQuery.data)
+  }, [params, statsQuery.data])
+
+  return {
+    data,
+    isLoading: statsQuery.isLoading,
+    isError: statsQuery.isError,
+    error: statsQuery.error,
+  }
 }

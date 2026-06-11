@@ -28,7 +28,6 @@ import { MetriquesStade } from "@/components/stades/MetriquesStade";
 import { EvaluationStade } from "@/components/stades/EvaluationStade";
 import { AffichageCalculsInformatifs } from "@/components/stades/AffichageCalculsInformatifs";
 import { GatePanel } from "@/components/stades/GatePanel";
-import { EvidencePanel } from "@/components/stades/EvidencePanel";
 import type { StadeData } from "@/hooks/useStades";
 import { AideStade1 } from "@/components/stades/AideStade1";
 import { AideStade2 } from "@/components/stades/AideStade2";
@@ -225,7 +224,8 @@ export default function StadeNumPage() {
                   (projet?.type_cible as "B2C" | "B2B" | "B2B2C") ?? "B2C"
                 }
                 contexteGeographiqueStade1={
-                  (stade1?.donnees?.contexte_geographique as {
+                  ((stade1?.donnees?.contexte_geographique ??
+                    (stade1?.donnees?.bloc_marche as any)?.contexte_geographique) as {
                     niveau_principal: string;
                     zone_principale: { code: string; nom: string };
                     sous_zones?: {
@@ -251,7 +251,6 @@ export default function StadeNumPage() {
             </p>
           ),
           aide: AIDES[numStade],
-          preuves: <EvidencePanel stadeId={stade.id} readOnly={isMentor} />,
           metriques: (
             <div>
               <AffichageCalculsInformatifs

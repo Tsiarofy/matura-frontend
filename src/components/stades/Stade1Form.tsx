@@ -114,10 +114,11 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
   const onSubmit = (data: unknown) => onSave(data as Record<string, unknown>);
 
   // ── Styles (identiques à l'ancienne version) ─────────────────────────────
-  const inputCls = "flat-input h-10 px-3.5 py-2 text-[12.5px] rounded-[16px]";
+  const inputCls = "flat-input h-11 px-4 py-2.5 text-[13px] rounded-[16px]";
   const labelCls = "flat-label";
   const sectionCls = "flat-section";
   const selectCls = cn(inputCls, "appearance-none");
+  const textareaCls = "flat-input min-h-[90px] px-4 py-2.5 text-[13px] rounded-[16px] resize-none";
 
   const SectionHeader = ({
     letter,
@@ -148,7 +149,7 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
             <textarea
               {...register("enonce_probleme")}
               rows={3}
-              className={cn(inputCls, "resize-none")}
+              className={textareaCls}
               placeholder="Décrivez le problème observé..."
             />
           </div>
@@ -195,6 +196,7 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
               </label>
               <input
                 type="number"
+                min={0}
                 {...register("profil_affecte.nombre_estime", {
                   valueAsNumber: true,
                 })}
@@ -209,6 +211,7 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
               <label className={labelCls}>Coût actuel (Ar)</label>
               <input
                 type="number"
+                min={0}
                 {...register("intensite_probleme.cout_actuel_ar", {
                   valueAsNumber: true,
                 })}
@@ -258,6 +261,7 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
               </label>
               <input
                 type="number"
+                min={0}
                 {...register("observations_terrain.nb_personnes_interrogees", {
                   valueAsNumber: true,
                 })}

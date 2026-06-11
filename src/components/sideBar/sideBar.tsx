@@ -96,18 +96,18 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
                 key={item.lien}
                 to={item.lien as never}
                 className={cn(
-                  "group relative flex items-center gap-2.5 rounded-[13px] border border-transparent px-3 py-2 text-[11px] transition-colors duration-200",
+                  "group relative flex items-center gap-3 rounded-[12px] px-4 py-3 text-[13.5px] font-semibold transition-all duration-200",
                   isActive
-                    ? "bg-white font-semibold text-[var(--color-text-primary)] border-[var(--color-border)]"
-                    : "text-[var(--color-text-muted)] hover:bg-white/60 hover:text-[var(--color-text-primary)]",
+                    ? "bg-white text-zinc-950 shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-zinc-200/50"
+                    : "text-zinc-550 hover:bg-white/60 hover:text-zinc-950",
                 )}
               >
                 <div
                   className={cn(
-                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[var(--color-border)] transition-all duration-150",
+                    "flex shrink-0 items-center justify-center transition-colors duration-200",
                     isActive
-                      ? "bg-[var(--color-surface-soft)] text-[var(--color-text-primary)]"
-                      : "bg-white text-[var(--color-text-muted)] group-hover:bg-[var(--color-surface-soft)] group-hover:text-[var(--color-text-primary)]",
+                      ? "text-zinc-950"
+                      : "text-zinc-400 group-hover:text-zinc-950",
                   )}
                 >
                   <IconNavigation name={item.icon} isActive={isActive} />
@@ -131,20 +131,20 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
         <div className="shrink-0 px-3 pb-5">
           <Link
             to="/profil"
-            className="group flex items-center gap-2.5 rounded-[15px] border border-transparent px-3 py-2.5 transition-all duration-200 hover:border-[var(--color-border)] hover:bg-white"
+            className="group flex items-center gap-2.5 rounded-[15px] border border-transparent px-3 py-2.5 transition-all duration-200 hover:border-zinc-200/60 hover:bg-white hover:shadow-[0_4px_12px_rgba(0,0,0,0.02)]"
           >
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white bg-[var(--color-surface-icon-bg)]">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white bg-zinc-100">
               <Icon.User
                 size={14}
-                strokeWidth={1.7}
-                className="text-[var(--color-text-muted)]"
+                strokeWidth={1.8}
+                className="text-zinc-500 group-hover:text-zinc-950"
               />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="truncate text-[11px] font-semibold text-[var(--color-text-primary)]">
+              <p className="truncate text-[11.5px] font-bold text-zinc-950">
                 {userName}
               </p>
-              <p className="text-[9px] font-medium text-[var(--color-text-muted)]">
+              <p className="text-[9.5px] font-semibold text-zinc-400">
                 Mon compte
               </p>
             </div>
@@ -165,7 +165,7 @@ function IconNavigation({
   isActive?: boolean;
 }) {
   const IconComp = (Icon as any)[name] ?? Icon.LayoutDashboard;
-  return <IconComp size={20} strokeWidth={1.5} />;
+  return <IconComp size={18} strokeWidth={isActive ? 2 : 1.6} />;
 }
 
 // ─── Sous-composant Projet Courant ────────────────────────────────────────────

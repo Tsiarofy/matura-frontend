@@ -10,8 +10,9 @@ import { LABELS_STADE4, LABELS_STADE5, LABELS_STADE6, LABELS_STADE7 } from '@/li
 
 interface Props { stade: StadeData; onSave: (d: Record<string, unknown>) => void; saving: boolean; readOnly?: boolean }
 
-const inp = 'flat-input h-10 px-3.5 py-2 text-[12.5px] rounded-[16px]'
+const inp = 'flat-input h-11 px-4 py-2.5 text-[13px] rounded-[16px]'
 const sel = cn(inp, 'appearance-none')
+const textareaCls = 'flat-input min-h-[90px] px-4 py-2.5 text-[13px] rounded-[16px] resize-none'
 const SaveBtn = ({ saving, label }: { saving: boolean; label: string }) => (
   <button type="submit" disabled={saving}
     className="w-full flex items-center justify-center gap-2 h-11 px-5 rounded-[999px] border border-[var(--color-success-border)] bg-[var(--color-success)] text-white text-[13px] font-semibold transition-[filter,transform] hover:brightness-[0.98] active:scale-[0.99] disabled:opacity-50">
@@ -61,7 +62,7 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <p className="text-[12px] font-medium text-zinc-700">{getLabel('evolution_lean_canvas')}</p>
         <textarea {...register('evolution_lean_canvas.ce_qui_a_change')} rows={3}
-          className={cn(inp, 'resize-none')} placeholder="Ce qui a changé depuis S2 (min 20 car.)..." />
+          className={textareaCls} placeholder="Ce qui a changé depuis S2 (min 20 car.)..." />
       </div>
 
       {/* Propositions de valeur */}
@@ -90,7 +91,7 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
         {segF.map((f, i) => (
           <div key={f.id} className="flex gap-2 items-center">
             <input {...register(`segments_clients.${i}.nom`)} className={cn(inp, 'flex-1')} placeholder="Segment" />
-            <input type="number" {...register(`segments_clients.${i}.taille_estimee`, { valueAsNumber: true })} className={cn(inp, 'w-24')} placeholder="Taille" />
+            <input type="number" min={0} {...register(`segments_clients.${i}.taille_estimee`, { valueAsNumber: true })} className={cn(inp, 'w-24')} placeholder="Taille" />
             {segF.length > 1 && <button type="button" onClick={() => remSeg(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
           </div>
         ))}
@@ -174,8 +175,8 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
               {['ABONNEMENT','ACHAT_UNIQUE','COMMISSION','FREEMIUM','B2B_CONTRACT','SUBVENTION','AUTRE'].map(m => <option key={m} value={m}>{m}</option>)}
             </select>
             <input {...register(`sources_revenus.${i}.nom`)} className={inp} placeholder="Nom" />
-            <input type="number" {...register(`sources_revenus.${i}.prix_ar`, { valueAsNumber: true })} className={inp} placeholder="Prix (Ar)" />
-            <input type="number" {...register(`sources_revenus.${i}.volume_mensuel`, { valueAsNumber: true })} className={inp} placeholder="Volume/mois" />
+            <input type="number" min={0} {...register(`sources_revenus.${i}.prix_ar`, { valueAsNumber: true })} className={inp} placeholder="Prix (Ar)" />
+            <input type="number" min={0} {...register(`sources_revenus.${i}.volume_mensuel`, { valueAsNumber: true })} className={inp} placeholder="Volume/mois" />
             <div className="flex gap-2 col-span-2">
               <select {...register(`sources_revenus.${i}.confiance`)} className={cn(sel, 'flex-1')}>
                 <option value="FAIBLE">Faible</option>
@@ -201,7 +202,7 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
               {['PERSONNEL','TECH','MARKETING','LOGISTIQUE','LOYER','AUTRE'].map(c => <option key={c} value={c}>{c}</option>)}
             </select>
             <input {...register(`structure_couts.${i}.libelle`)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-            <input type="number" {...register(`structure_couts.${i}.montant_mensuel_ar`, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
+            <input type="number" min={0} {...register(`structure_couts.${i}.montant_mensuel_ar`, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
             {coutF.length > 1 && <button type="button" onClick={() => remCout(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
           </div>
         ))}
@@ -315,7 +316,7 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
               <select {...register(`membres_equipe.${i}.engagement`)} className={sel}>
                 <option value="TEMPS_PLEIN">Temps plein</option><option value="TEMPS_PARTIEL">Temps partiel</option><option value="CONSEILLER">Conseiller</option>
               </select>
-              <input type="number" {...register(`membres_equipe.${i}.annees_experience`, { valueAsNumber: true })} className={inp} placeholder="Années d'exp." />
+              <input type="number" min={0} {...register(`membres_equipe.${i}.annees_experience`, { valueAsNumber: true })} className={inp} placeholder="Années d'exp." />
             </div>
             <div className="flex flex-wrap gap-1">
               {DISCIPLINES.map((disc) => (
@@ -335,22 +336,22 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
         <div className="grid grid-cols-3 gap-2">
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Prix vente (Ar) *</label>
-            <input type="number" {...register('finances.prix_vente_ar', { valueAsNumber: true })} className={inp} />
+            <input type="number" min={0} {...register('finances.prix_vente_ar', { valueAsNumber: true })} className={inp} />
           </div>
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Investissement initial (Ar)</label>
-            <input type="number" {...register('finances.investissement_initial_ar', { valueAsNumber: true })} className={inp} />
+            <input type="number" min={0} {...register('finances.investissement_initial_ar', { valueAsNumber: true })} className={inp} />
           </div>
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Besoin financement (Ar)</label>
-            <input type="number" {...register('finances.besoin_financement_ar', { valueAsNumber: true })} className={inp} />
+            <input type="number" min={0} {...register('finances.besoin_financement_ar', { valueAsNumber: true })} className={inp} />
           </div>
         </div>
         <div className="grid grid-cols-3 gap-2">
           {['annee1','annee2','annee3'].map((a, i) => (
             <div key={a}>
               <label className="text-[11px] text-zinc-500 block mb-1">Unités an {i+1}</label>
-              <input type="number" {...register(`finances.unites_projetees.${a}` as never, { valueAsNumber: true })} className={inp} />
+              <input type="number" min={0} {...register(`finances.unites_projetees.${a}` as never, { valueAsNumber: true })} className={inp} />
             </div>
           ))}
         </div>
@@ -362,7 +363,7 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
           {fixF.map((f, i) => (
             <div key={f.id} className="flex gap-2 mb-1">
               <input {...register(`finances.charges_fixes.${i}.libelle` as never)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-              <input type="number" {...register(`finances.charges_fixes.${i}.montant_mensuel_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
+              <input type="number" min={0} {...register(`finances.charges_fixes.${i}.montant_mensuel_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
               {fixF.length > 1 && <button type="button" onClick={() => remFix(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
             </div>
           ))}
@@ -375,7 +376,7 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
           {varF.map((f, i) => (
             <div key={f.id} className="flex gap-2 mb-1">
               <input {...register(`finances.charges_variables.${i}.libelle` as never)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-              <input type="number" {...register(`finances.charges_variables.${i}.montant_par_unite_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/unité" />
+              <input type="number" min={0} {...register(`finances.charges_variables.${i}.montant_par_unite_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/unité" />
               {varF.length > 1 && <button type="button" onClick={() => remVar(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
             </div>
           ))}
@@ -459,7 +460,7 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
           </select>
           <input {...register('mvp.url')} className={inp} placeholder="URL (optionnel)" />
         </div>
-        <textarea {...register('mvp.description')} rows={3} className={cn(inp, 'resize-none')} placeholder="Description du MVP (min 20 car.)" />
+        <textarea {...register('mvp.description')} rows={3} className={textareaCls} placeholder="Description du MVP (min 20 car.)" />
       </div>
 
       {/* Métriques d'usage */}
@@ -476,7 +477,7 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
           ].map(([k, label]) => (
             <div key={k}>
               <label className="text-[11px] text-zinc-500 block mb-1">{label}</label>
-              <input type="number" {...register(`metriques_usage.${k}` as never, { valueAsNumber: true })} className={inp} />
+              <input type="number" min={0} {...register(`metriques_usage.${k}` as never, { valueAsNumber: true })} className={inp} />
             </div>
           ))}
         </div>
@@ -577,7 +578,7 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <p className="text-[12px] font-medium text-zinc-700">{getLabel('resume_executif')}</p>
         <input {...register('resume_executif.phrase_accroche')} className={inp} maxLength={200} placeholder="Phrase d'accroche (max 200 car.) *" />
-        <textarea {...register('resume_executif.description_courte')} rows={4} className={cn(inp, 'resize-none')} placeholder="Description courte (50-1000 car.) *" />
+        <textarea {...register('resume_executif.description_courte')} rows={4} className={textareaCls} placeholder="Description courte (50-1000 car.) *" />
       </div>
 
       {/* Demande financement */}
@@ -586,7 +587,7 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Montant demandé (Ar) *</label>
-            <input type="number" {...register('demande_financement.montant_ar', { valueAsNumber: true })} className={inp} />
+            <input type="number" min={0} {...register('demande_financement.montant_ar', { valueAsNumber: true })} className={inp} />
           </div>
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Type de financement</label>
@@ -599,7 +600,7 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
           {[['ca_annee1_ar','CA An 1'],['ca_annee2_ar','CA An 2'],['ca_annee3_ar','CA An 3']].map(([k,l]) => (
             <div key={k}>
               <label className="text-[11px] text-zinc-500 block mb-1">{l} (Ar)</label>
-              <input type="number" {...register(`demande_financement.projections_retour.${k}` as never, { valueAsNumber: true })} className={inp} />
+              <input type="number" min={0} {...register(`demande_financement.projections_retour.${k}` as never, { valueAsNumber: true })} className={inp} />
             </div>
           ))}
         </div>
@@ -614,7 +615,7 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
               <select {...register(`demande_financement.utilisation.${i}.categorie` as never)} className={cn(sel, 'w-36')}>
                 {['DEV_PRODUIT','MARKETING','EQUIPE','INFRASTRUCTURE','FONDS_ROULEMENT','AUTRE'].map(c => <option key={c} value={c}>{c.replace('_',' ')}</option>)}
               </select>
-              <input type="number" {...register(`demande_financement.utilisation.${i}.montant_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Montant Ar" />
+              <input type="number" min={0} {...register(`demande_financement.utilisation.${i}.montant_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Montant Ar" />
               <input {...register(`demande_financement.utilisation.${i}.justification` as never)} className={cn(inp, 'flex-1')} placeholder="Justification" />
               {utilF.length > 1 && <button type="button" onClick={() => remUtil(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
             </div>
@@ -635,11 +636,11 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
         </div>
         <div>
           <label className="text-[11px] text-zinc-500 block mb-1">Pourquoi maintenant ? *</label>
-          <textarea {...register('contexte_investisseur.pourquoi_maintenant')} rows={2} className={cn(inp, 'resize-none')} />
+          <textarea {...register('contexte_investisseur.pourquoi_maintenant')} rows={2} className={textareaCls} />
         </div>
         <div>
           <label className="text-[11px] text-zinc-500 block mb-1">Impact local Madagascar *</label>
-          <textarea {...register('contexte_investisseur.impact_local_madagascar')} rows={2} className={cn(inp, 'resize-none')} />
+          <textarea {...register('contexte_investisseur.impact_local_madagascar')} rows={2} className={textareaCls} />
         </div>
       </div>
 

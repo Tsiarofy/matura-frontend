@@ -46,6 +46,7 @@ export function DefinirMissionsForm({
     if (missionsExistantes && missionsExistantes.length > 0) {
       setMissions(
         missionsExistantes.map((m) => ({
+          id: m.id,
           titre: m.titre,
           objectif: m.objectif,
           type_preuve_attendue: m.type_preuve_attendue as any,
