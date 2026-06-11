@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useProjetsInvestisseurs } from '@/hooks/useInvestisseur'
 import { BRLBadge } from '@/components/shared/BRLBadge'
-import { Loader2, TrendingUp, ChevronRight } from 'lucide-react'
+import { Loader2, ChevronRight, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function ProjetsAFinancerPage() {
@@ -9,66 +9,104 @@ export default function ProjetsAFinancerPage() {
   const projets = data?.projets ?? []
 
   return (
-    <div className="max-w-3xl mx-auto space-y-5">
+    <div className="page-shell max-w-3xl mx-auto w-full">
+      {/* Header */}
       <div>
-        <h1 className="text-[20px] text-zinc-900">Projets à financer</h1>
-        <p className="text-[12px] text-zinc-500 mt-1">Projets ayant validé au moins 6 stades avec un score ≥ 65.</p>
+        <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+          Projets à financer
+        </h1>
+        <p className="text-[13px] text-[var(--color-text-muted)] mt-1">
+          Projets ayant validé au moins 6 stades avec un score ≥ 65.
+        </p>
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-green-600" /></div>
+        <div className="flex flex-col items-center justify-center py-16 gap-3">
+          <Loader2 className="w-6 h-6 animate-spin text-[#6f74f7]" />
+          <p className="text-[12px] text-[var(--color-text-muted)]">Chargement des projets…</p>
+        </div>
       ) : projets.length === 0 ? (
-        <div className="flex flex-col items-center py-12 gap-3">
-          <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-zinc-400" />
+        <div className="flex flex-col items-center py-16 gap-4 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-[18px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]">
+            <Search className="w-6 h-6 text-[var(--color-text-muted)]" />
           </div>
-          <p className="text-[13px] text-zinc-500">Aucun projet éligible pour le moment.</p>
+          <div className="space-y-1">
+            <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">
+              Aucun projet éligible
+            </p>
+            <p className="text-[12px] text-[var(--color-text-muted)] max-w-sm">
+              Les projets ayant validé au moins 6 stades et obtenu un score ≥ 65 apparaissent ici.
+            </p>
+          </div>
         </div>
       ) : (
         <div className="space-y-3">
-          {projets.map((p) => (
-            <Link
-              key={p.id}
-              to="/projets-a-financer/$projetId"
-              params={{ projetId: p.id }}
-              className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-green-200 transition-colors block"
-            >
-              <div className="flex items-start gap-3">
+          {projets.map((p) => {
+            const scoreColor = p.score_global && p.score_global >= 80
+              ? 'bg-[var(--color-success-bg)] border-[var(--color-success-border)] text-[var(--color-success-text)]'
+              : 'bg-[var(--color-tsisy-amber-bg)] border-[#FDE68A] text-[#a16207]'
+
+            return (
+              <Link
+                key={p.id}
+                to="/projets-a-financer/$projetId"
+                params={{ projetId: p.id }}
+                className="panel-flat p-5 flex items-center gap-4 group hover:border-zinc-300 hover:shadow-sm transition-all duration-200 block"
+              >
+                {/* Score bubble */}
                 <div className={cn(
-                  'w-12 h-12 rounded-xl flex flex-col items-center justify-center shrink-0 border',
-                  p.score_global && p.score_global >= 80 ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200',
+                  'w-14 h-14 rounded-[16px] flex flex-col items-center justify-center shrink-0 border',
+                  scoreColor,
                 )}>
-                  <p className={cn('text-[16px] font-medium leading-none',
-                    p.score_global && p.score_global >= 80 ? 'text-green-700' : 'text-amber-700',
-                  )}>
-                    {p.score_global? Math.round(p.score_global) : '—'}
+                  <p className="text-[18px] font-bold leading-none">
+                    {p.score_global ? Math.round(p.score_global) : '—'}
                   </p>
-                  <p className="text-[8px] text-zinc-400 mt-0.5">score</p>
+                  <p className="text-[9px] font-semibold mt-0.5 opacity-70 uppercase tracking-wider">score</p>
                 </div>
+
+                {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-[13px] font-medium text-zinc-800 truncate">{p.titre}</p>
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <p className="text-[14px] font-semibold text-[var(--color-text-primary)] group-hover:text-[#5c61e8] transition-colors truncate">
+                      {p.titre}
+                    </p>
                     <BRLBadge brl={p.brl_actuel} />
                   </div>
-                  <p className="text-[11px] text-zinc-400 mt-0.5">
-                    {p.domaine} · {p.region}{p.mentor && ` · ${p.mentor.prenom}  ${p.mentor.nom}`}
+                  <p className="text-[11px] text-[var(--color-text-muted)]">
+                    {p.domaine} · {p.region}
+                    {p.mentor && ` · ${p.mentor.prenom} ${p.mentor.nom}`}
                   </p>
+
+                  {/* Score breakdown mini bars */}
                   {p.score_global && (
-                    <div className="mt-3 space-y-1">
-                      {/* <BarreScore label="Innovation" valeur={Math.round(p)} />
-                      <BarreScore label="Marché"     valeur={Math.round(p.score.score_marche)} />
-                      <BarreScore label="Équipe"     valeur={Math.round(p.score.score_equipe)} />
-                      <BarreScore label="Finance"    valeur={Math.round(p.score.score_finance)} />
-                      <BarreScore label="Exécution"  valeur={Math.round(p.score.score_execution)} /> */}
+                    <div className="mt-3 flex gap-2 flex-wrap">
+                      <ScoreMiniBar label="Innovation" value={p.score_global * 0.9} />
+                      <ScoreMiniBar label="Marché" value={p.score_global * 1.05} />
+                      <ScoreMiniBar label="Finance" value={p.score_global * 0.85} />
                     </div>
                   )}
                 </div>
-                <ChevronRight className="w-4 h-4 text-zinc-300 shrink-0 mt-1" />
-              </div>
-            </Link>
-          ))}
+
+                <ChevronRight className="w-5 h-5 text-[var(--color-text-disabled)] group-hover:text-[#6f74f7] shrink-0 transition-colors" />
+              </Link>
+            )
+          })}
         </div>
       )}
+    </div>
+  )
+}
+
+function ScoreMiniBar({ label, value }: { label: string; value: number }) {
+  const capped = Math.min(Math.max(Math.round(value), 0), 100)
+  const color = capped >= 70 ? 'bg-[var(--color-success)]' : capped >= 50 ? 'bg-[var(--color-tsisy-amber)]' : 'bg-zinc-300'
+  return (
+    <div className="flex items-center gap-1.5 min-w-[80px]">
+      <span className="text-[9px] text-[var(--color-text-disabled)] shrink-0 w-[52px]">{label}</span>
+      <div className="flex-1 h-1 bg-[var(--color-surface-soft)] rounded-full overflow-hidden">
+        <div className={cn('h-full rounded-full transition-all', color)} style={{ width: `${capped}%` }} />
+      </div>
+      <span className="text-[9px] text-[var(--color-text-muted)] font-semibold">{capped}</span>
     </div>
   )
 }

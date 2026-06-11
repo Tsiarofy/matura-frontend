@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils'
 import {
   Loader2, Bell, FolderOpen, CheckCircle2,
   XCircle, ChevronRight, Clock, AlertCircle,
-  Briefcase,
 } from 'lucide-react'
 
 // ─── CARTE DEMANDE ────────────────────────────────────────────────────────────
@@ -29,15 +28,16 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
 
   return (
     <div className={cn(
-      'bg-white border rounded-xl p-4 space-y-3 transition-all',
-      isEnAttente ? 'border-amber-200' : 'border-zinc-200 opacity-70',
+      'bg-white border rounded-[18px] p-5 space-y-3 transition-all',
+      isEnAttente
+        ? 'border-[#FDE68A]'
+        : 'border-[var(--color-border)] opacity-70',
     )}>
       {/* En-tête */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <Briefcase className="w-4 h-4 text-zinc-500 shrink-0" />
-            <p className="text-[13px] font-medium text-zinc-800 truncate">
+            <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate">
               {projet?.titre ?? '—'}
             </p>
             {projet?.brl_actuel !== undefined && (
@@ -45,7 +45,7 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
             )}
           </div>
           {entrepreneur && (
-            <p className="text-[11px] text-zinc-400 mt-0.5">
+            <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
               par {entrepreneur.prenom} {entrepreneur.nom}
             </p>
           )}
@@ -55,19 +55,19 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
 
       {/* Description projet */}
       {projet?.description && (
-        <p className="text-[12px] text-zinc-500 line-clamp-2">{projet.description}</p>
+        <p className="text-[12px] text-[var(--color-text-muted)] line-clamp-2">{projet.description}</p>
       )}
 
       {/* Message de l'entrepreneur */}
       {demande.message && (
-        <div className="bg-zinc-50 rounded-lg px-3 py-2">
-          <p className="text-[10px] text-zinc-400 mb-0.5">Message</p>
-          <p className="text-[12px] text-zinc-600 italic">"{demande.message}"</p>
+        <div className="rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-3 py-2.5">
+          <p className="text-[10px] font-semibold text-[var(--color-text-disabled)] mb-0.5">Message</p>
+          <p className="text-[12px] text-[var(--color-text-secondary)] italic">"{demande.message}"</p>
         </div>
       )}
 
       {/* Date */}
-      <p className="text-[10px] text-zinc-400">
+      <p className="text-[10px] text-[var(--color-text-disabled)] font-medium">
         Reçu le {new Date(demande.cree_le).toLocaleDateString('fr-FR')}
       </p>
 
@@ -77,7 +77,7 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
           <button
             onClick={() => repondre.mutate({ demandeId: demande.id, statut: 'REFUSE' })}
             disabled={repondre.isPending}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-zinc-200 text-zinc-600 rounded-lg text-[12px] hover:bg-zinc-50 transition-colors disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-[var(--color-border)] text-[var(--color-text-muted)] rounded-[12px] text-[12px] font-semibold hover:bg-[var(--color-error-bg)] hover:text-[var(--color-error)] hover:border-[var(--color-error-border)] transition-all disabled:opacity-50"
           >
             <XCircle className="w-3.5 h-3.5" />
             Refuser
@@ -100,7 +100,7 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
               )
             }
             disabled={repondre.isPending}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[12px] font-medium transition-colors disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-[var(--color-success)] hover:brightness-95 text-white rounded-[12px] text-[12px] font-semibold transition-all disabled:opacity-50"
           >
             {repondre.isPending
               ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -119,46 +119,45 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
 function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
   const stade = projet.stade_actif
   const label = stade ? STADE_LABELS[stade.numero] : null
+  const needsEval = stade?.en_attente_evaluation
 
   return (
     <Link
       to="/projets/$projetId"
       params={{ projetId: projet.id }}
-      className="bg-white border border-zinc-200 rounded-xl p-4 hover:border-green-200 transition-colors block"
+      className="panel-flat p-4 flex items-start gap-3 group hover:border-zinc-300 hover:shadow-sm transition-all duration-200 block"
     >
-      <div className="flex items-start gap-3">
-        <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 mt-0.5">
-          <Briefcase className="w-4 h-4 text-zinc-500" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-[13px] font-medium text-zinc-800 truncate">
-              {projet.titre}
-            </p>
-            <BRLBadge brl={projet.brl_actuel} />
-          </div>
-          <p className="text-[11px] text-zinc-400 mt-0.5">
-            {projet.proprietaire.prenom} {projet.proprietaire.nom} · {projet.region}
-          </p>
-
-          {stade && (
-            <div className={cn(
-              'inline-flex items-center gap-1.5 mt-2 px-2 py-1 rounded-lg text-[11px]',
-              stade.en_attente_evaluation
-                ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                : 'bg-zinc-50 text-zinc-600',
-            )}>
-              {stade.en_attente_evaluation
-                ? <AlertCircle className="w-3 h-3" />
-                : <Clock className="w-3 h-3" />
-              }
-              Stade {stade.numero} — {label}
-              {stade.en_attente_evaluation && ' · À évaluer'}
-            </div>
-          )}
-        </div>
-        <ChevronRight className="w-4 h-4 text-zinc-300 shrink-0 mt-1" />
+      <div className="w-8 h-8 rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface-soft)] flex items-center justify-center shrink-0 mt-0.5 text-[11px] font-bold text-[var(--color-text-muted)] group-hover:bg-[var(--color-success-bg)] group-hover:border-[var(--color-success-border)] group-hover:text-[var(--color-success-text)] transition-colors">
+        {projet.titre.charAt(0).toUpperCase()}
       </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate group-hover:text-[var(--color-success-text)] transition-colors">
+            {projet.titre}
+          </p>
+          <BRLBadge brl={projet.brl_actuel} />
+        </div>
+        <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
+          {projet.proprietaire.prenom} {projet.proprietaire.nom} · {projet.region}
+        </p>
+
+        {stade && (
+          <div className={cn(
+            'inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-[10px] font-semibold border',
+            needsEval
+              ? 'bg-[var(--color-tsisy-amber-bg)] text-[#a16207] border-[#FDE68A]'
+              : 'bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)]',
+          )}>
+            {needsEval
+              ? <AlertCircle className="w-3 h-3" />
+              : <Clock className="w-3 h-3" />
+            }
+            Stade {stade.numero} — {label}
+            {needsEval && ' · À évaluer'}
+          </div>
+        )}
+      </div>
+      <ChevronRight className="w-4 h-4 text-[var(--color-text-disabled)] group-hover:text-[var(--color-success)] shrink-0 mt-1 transition-colors" />
     </Link>
   )
 }
@@ -176,37 +175,33 @@ export default function DemandesPage() {
   const projets = projetsSuivis ?? []
   const projetsAvecEval = projets.filter((p) => p.stade_actif?.en_attente_evaluation)
 
-  console.log("demandesData", demandesData)
-  console.log("projetsSuivis", projetsSuivis)
-  console.log("demandes", demandes)
-  console.log("enAttente", enAttente)
-  console.log("projets", projets)
-  console.log("projetsAvecEval", projetsAvecEval)
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
+    <div className="page-shell max-w-3xl mx-auto w-full">
       {/* En-tête */}
       <div>
-        <h1 className="text-[20px] text-zinc-900">Espace mentor</h1>
-        <p className="text-[12px] text-zinc-500 mt-1">
+        <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
+          Espace mentor
+        </h1>
+        <p className="text-[13px] text-[var(--color-text-muted)] mt-1">
           Gérez vos demandes et évaluez les projets que vous suivez.
         </p>
       </div>
 
       {/* Onglets */}
-      <div className="flex gap-1 bg-zinc-100 p-1 rounded-xl">
+      <div className="flex gap-1 rounded-[16px] border border-[var(--color-border)] bg-[var(--color-surface-soft)] p-1">
         <button
           onClick={() => setOnglet('demandes')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-[12px] transition-all',
+            'flex-1 flex items-center justify-center gap-2 py-2 rounded-[12px] text-[12px] font-semibold transition-all',
             onglet === 'demandes'
-              ? 'bg-white text-zinc-800 font-medium shadow-sm'
-              : 'text-zinc-500 hover:text-zinc-700',
+              ? 'bg-white text-[var(--color-text-primary)] shadow-sm border border-[var(--color-border)]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
           )}
         >
           <Bell className="w-3.5 h-3.5" />
           Demandes reçues
           {enAttente.length > 0 && (
-            <span className="w-4 h-4 rounded-full bg-amber-400 text-white text-[9px] flex items-center justify-center">
+            <span className="w-4 h-4 rounded-full bg-[var(--color-tsisy-amber)] text-white text-[9px] flex items-center justify-center">
               {enAttente.length}
             </span>
           )}
@@ -214,16 +209,16 @@ export default function DemandesPage() {
         <button
           onClick={() => setOnglet('projets')}
           className={cn(
-            'flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-[12px] transition-all',
+            'flex-1 flex items-center justify-center gap-2 py-2 rounded-[12px] text-[12px] font-semibold transition-all',
             onglet === 'projets'
-              ? 'bg-white text-zinc-800 font-medium shadow-sm'
-              : 'text-zinc-500 hover:text-zinc-700',
+              ? 'bg-white text-[var(--color-text-primary)] shadow-sm border border-[var(--color-border)]'
+              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
           )}
         >
           <FolderOpen className="w-3.5 h-3.5" />
           Projets suivis
           {projetsAvecEval.length > 0 && (
-            <span className="w-4 h-4 rounded-full bg-red-400 text-white text-[9px] flex items-center justify-center">
+            <span className="w-4 h-4 rounded-full bg-[var(--color-error)] text-white text-[9px] flex items-center justify-center">
               {projetsAvecEval.length}
             </span>
           )}
@@ -235,22 +230,20 @@ export default function DemandesPage() {
         <div className="space-y-3">
           {loadingDemandes ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-green-600" />
+              <Loader2 className="w-6 h-6 animate-spin text-[var(--color-success)]" />
             </div>
           ) : demandes.length === 0 ? (
-            <div className="flex flex-col items-center py-12 gap-3">
-              <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center">
-                <Bell className="w-5 h-5 text-zinc-400" />
+            <div className="flex flex-col items-center py-12 gap-4 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]">
+                <Bell className="w-5 h-5 text-[var(--color-text-muted)]" />
               </div>
-              <p className="text-[13px] text-zinc-500">Aucune demande reçue.</p>
+              <p className="text-[13px] text-[var(--color-text-muted)]">Aucune demande reçue.</p>
             </div>
           ) : (
             <>
               {enAttente.length > 0 && (
                 <div>
-                  <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
-                    En attente ({enAttente.length})
-                  </p>
+                  <p className="flat-label mb-2">En attente ({enAttente.length})</p>
                   <div className="space-y-2">
                     {enAttente.map((d) => <CarteDemande key={d.id} demande={d} />)}
                   </div>
@@ -258,9 +251,7 @@ export default function DemandesPage() {
               )}
               {demandes.filter((d) => d.statut !== 'EN_ATTENTE').length > 0 && (
                 <div>
-                  <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2 mt-4">
-                    Traitées
-                  </p>
+                  <p className="flat-label mb-2 mt-4">Traitées</p>
                   <div className="space-y-2">
                     {demandes
                       .filter((d) => d.statut !== 'EN_ATTENTE')
@@ -278,31 +269,33 @@ export default function DemandesPage() {
         <div className="space-y-3">
           {loadingProjets ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-6 h-6 animate-spin text-green-600" />
+              <Loader2 className="w-6 h-6 animate-spin text-[var(--color-success)]" />
             </div>
           ) : projets.length === 0 ? (
-            <div className="flex flex-col items-center py-12 gap-3">
-              <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center">
-                <FolderOpen className="w-5 h-5 text-zinc-400" />
+            <div className="flex flex-col items-center py-12 gap-4 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[16px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]">
+                <FolderOpen className="w-5 h-5 text-[var(--color-text-muted)]" />
               </div>
-              <p className="text-[13px] text-zinc-500">
-                Vous ne suivez aucun projet pour l'instant.
-              </p>
-              <p className="text-[11px] text-zinc-400 text-center max-w-xs">
-                Acceptez une demande d'accompagnement pour commencer.
-              </p>
+              <div className="space-y-1">
+                <p className="text-[13px] font-semibold text-[var(--color-text-primary)]">
+                  Vous ne suivez aucun projet pour l'instant.
+                </p>
+                <p className="text-[11px] text-[var(--color-text-muted)] text-center max-w-xs">
+                  Acceptez une demande d'accompagnement pour commencer.
+                </p>
+              </div>
             </div>
           ) : (
             <>
               {projetsAvecEval.length > 0 && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <p className="text-[12px] text-amber-700">
+                <div className="flex items-center gap-3 rounded-[18px] border border-[#FDE68A] bg-[var(--color-tsisy-amber-bg)] px-4 py-3.5">
+                  <AlertCircle className="w-4 h-4 text-[var(--color-tsisy-amber)] shrink-0" />
+                  <p className="text-[12px] font-semibold text-[#a16207]">
                     {projetsAvecEval.length} stade{projetsAvecEval.length > 1 ? 's' : ''} en attente d'évaluation.
                   </p>
                 </div>
               )}
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {projets.map((p) => <CarteProjetSuivi key={p.id} projet={p} />)}
               </div>
             </>

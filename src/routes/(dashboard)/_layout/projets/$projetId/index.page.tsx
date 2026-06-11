@@ -56,11 +56,11 @@ function StadeCard({
   const inner = (
     <div
       className={cn(
-        "bg-white border rounded-[18px] p-5 transition-all duration-300",
+        "bg-white border rounded-[18px] p-4 transition-all duration-200",
         statut === "VERROUILLE"
-          ? "border-zinc-100 bg-zinc-50/50 opacity-65"
-          : "border-zinc-200/60 shadow-sm",
-        !isVerrouille && "hover:border-zinc-350 hover:shadow-md cursor-pointer"
+          ? "border-[var(--color-border)] bg-[var(--color-surface-soft)]/50 opacity-60"
+          : "border-[var(--color-border)]",
+        !isVerrouille && "hover:border-zinc-300 hover:shadow-sm cursor-pointer"
       )}
     >
       <div className="flex items-center gap-4">
@@ -334,10 +334,10 @@ export default function ProjetDetailPage() {
       )}
 
       <div>
-        <p className="mb-6 text-[12px] font-medium uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+        <p className="mb-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
           Parcours de maturation
         </p>
-        <div className="space-y-6">
+        <div className="space-y-3">
           {projet.stades.map((s) => (
             <StadeCard key={s.id} {...s} projetId={projetId} />
           ))}

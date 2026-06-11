@@ -77,25 +77,30 @@ export function EvaluationStade({
   if (stade.statut === "VALIDE" || stade.statut === "EN_REVISION") {
     const estValide = stade.statut === "VALIDE";
     return (
-      <div className="flex flex-col py-6 gap-5 max-w-2xl mx-auto">
+      <div className="flex flex-col py-4 gap-5">
         <div className="flex flex-col items-center gap-3 mb-2">
           <div
             className={cn(
-              "w-12 h-12 rounded-full flex items-center justify-center",
-              estValide ? "bg-green-100" : "bg-red-100",
+              "w-12 h-12 rounded-[16px] border flex items-center justify-center",
+              estValide
+                ? "bg-[var(--color-success-bg)] border-[var(--color-success-border)]"
+                : "bg-[var(--color-error-bg)] border-[var(--color-error-border)]",
             )}
           >
             {estValide ? (
-              <CheckCircle2 className="w-6 h-6 text-green-600" />
+              <CheckCircle2 className="w-6 h-6 text-[var(--color-success)]" />
             ) : (
-              <RotateCcw className="w-6 h-6 text-red-500" />
+              <RotateCcw className="w-6 h-6 text-[var(--color-error)]" />
             )}
           </div>
-          <p className="text-[15px] text-zinc-800 font-medium">
+          <p className={cn(
+            "text-[15px] font-semibold",
+            estValide ? "text-[var(--color-success-text)]" : "text-[var(--color-error)]"
+          )}>
             {estValide ? "Stade validé" : "Renvoyé en révision"}
           </p>
           {stade.score_auto !== null && (
-            <p className="text-[13px] text-zinc-500">
+            <p className="text-[13px] text-[var(--color-text-muted)]">
               Note globale :{" "}
               <span
                 className={cn(
@@ -110,30 +115,30 @@ export function EvaluationStade({
         </div>
 
         {derniereEvaluation && (
-          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-5 space-y-4">
+          <div className="rounded-[18px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]/50 p-5 space-y-4">
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-1.5">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-disabled)] mb-2">
                 Commentaire du mentor
               </p>
-              <p className="text-[13px] text-zinc-700 whitespace-pre-wrap">
+              <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed whitespace-pre-wrap">
                 {derniereEvaluation.commentaire}
               </p>
             </div>
 
             {!estValide && derniereEvaluation.motif_renvoi && (
               <div>
-                <p className="text-[11px] uppercase tracking-wider text-red-400 font-medium mb-1.5">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-error)] mb-2">
                   Motif du renvoi
                 </p>
-                <p className="text-[13px] text-red-700 bg-red-50 p-3 rounded-lg border border-red-100 whitespace-pre-wrap">
+                <p className="text-[13px] text-[var(--color-error)] bg-[var(--color-error-bg)] p-3.5 rounded-[14px] border border-[var(--color-error-border)] whitespace-pre-wrap leading-relaxed">
                   {derniereEvaluation.motif_renvoi}
                 </p>
               </div>
             )}
 
             {Object.keys(derniereEvaluation.criteres).length > 0 && (
-              <div className="pt-2">
-                <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
+              <div className="pt-1">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-disabled)] mb-3">
                   Détail par critère
                 </p>
                 <div className="space-y-2">
@@ -141,19 +146,29 @@ export function EvaluationStade({
                     ([c, score]) => (
                       <div
                         key={c}
-                        className="flex justify-between items-center bg-white border border-zinc-100 p-2.5 rounded-lg"
+                        className="flex justify-between items-center bg-white border border-[var(--color-border)] p-3 rounded-[12px]"
                       >
-                        <span className="text-[12px] text-zinc-600 font-medium">
+                        <span className="text-[11px] font-medium text-[var(--color-text-secondary)]">
                           {CRITERE_LABELS[c] ?? c}
                         </span>
-                        <div className="flex items-center gap-2">
-                          <div className="w-24 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-20 h-1.5 bg-[var(--color-surface-soft)] rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-blue-500"
+                              className={cn(
+                                'h-full rounded-full transition-all',
+                                (score as number) >= 65 ? 'bg-[var(--color-success)]' : (score as number) >= 40 ? 'bg-[var(--color-tsisy-amber)]' : 'bg-zinc-300'
+                              )}
                               style={{ width: `${score}%` }}
                             />
                           </div>
-                          <span className="text-[12px] text-zinc-500 w-8 text-right">
+                          <span className={cn(
+                            'text-[11px] font-semibold px-1.5 py-0.5 rounded-full',
+                            (score as number) >= 65
+                              ? 'text-[var(--color-success-text)] bg-[var(--color-success-bg)]'
+                              : (score as number) >= 40
+                                ? 'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]'
+                                : 'text-zinc-500 bg-zinc-100'
+                          )}>
                             {score}/100
                           </span>
                         </div>
@@ -173,14 +188,14 @@ export function EvaluationStade({
   if (!isMentor) {
     if (stade.statut === "SOUMIS") {
       return (
-        <div className="flex flex-col items-center py-8 gap-3">
-          <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
-            <Star className="w-6 h-6 text-amber-500" />
+        <div className="flex flex-col items-center py-10 gap-3">
+          <div className="w-12 h-12 rounded-[16px] border border-[#FDE68A] bg-[var(--color-tsisy-amber-bg)] flex items-center justify-center">
+            <Star className="w-6 h-6 text-[var(--color-tsisy-amber)]" />
           </div>
-          <p className="text-[13px] text-zinc-700 font-medium">
+          <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">
             En attente d'évaluation
           </p>
-          <p className="text-[12px] text-zinc-400 text-center max-w-xs">
+          <p className="text-[12px] text-[var(--color-text-muted)] text-center max-w-xs leading-relaxed">
             Votre mentor est en train d'évaluer ce stade. Vous serez notifié du
             résultat.
           </p>
@@ -193,7 +208,7 @@ export function EvaluationStade({
   // ── Formulaire mentor ─────────────────────────────────────────────────────────
   if (stade.statut !== "SOUMIS") {
     return (
-      <div className="text-center py-8 text-[12px] text-zinc-400">
+      <div className="text-center py-8 text-[12px] text-[var(--color-text-muted)]">
         Ce stade n'est pas encore soumis.
       </div>
     );
@@ -234,31 +249,40 @@ export function EvaluationStade({
         role={user?.role as "MENTOR" | "INVESTISSEUR" | "ENTREPRENEUR"}
       />
 
-      <p className="text-[12px] text-zinc-500">
+      <p className="text-[12px] text-[var(--color-text-muted)]">
         Évaluez ce stade soumis par l'entrepreneur.
       </p>
 
       {/* Note globale */}
-      <div>
-        <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium block mb-2">
-          Note globale :{" "}
-          <span className="text-zinc-800 text-[14px]">{note}/100</span>
-        </label>
+      <div className="rounded-[18px] border border-[var(--color-border)] bg-white p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="flat-label mb-0">
+            Note globale
+          </label>
+          <span className={cn(
+            'text-[14px] font-bold px-3 py-1 rounded-full',
+            note >= 65 ? 'text-[var(--color-success-text)] bg-[var(--color-success-bg)]'
+            : note >= 40 ? 'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]'
+            : 'text-[var(--color-error)] bg-[var(--color-error-bg)]'
+          )}>
+            {note}/100
+          </span>
+        </div>
         <input
           type="range"
           min={0}
           max={100}
           value={note}
           onChange={(e) => setNote(Number(e.target.value))}
-          className="w-full accent-green-600"
+          className="w-full accent-[var(--color-success)]"
         />
-        <div className="flex justify-between text-[10px] text-zinc-400 mt-1">
+        <div className="flex justify-between text-[10px] text-[var(--color-text-disabled)] font-medium">
           <span>0 — Insuffisant</span>
           <span>40 — Seuil minimal</span>
           <span>100 — Excellent</span>
         </div>
         {note < 40 && (
-          <p className="text-[11px] text-amber-600 mt-1">
+          <p className="text-[11px] font-medium text-[#a16207] bg-[var(--color-tsisy-amber-bg)] rounded-[10px] px-3 py-2 border border-[#FDE68A]">
             Note &lt; 40 → décision RENVOYE automatique
           </p>
         )}
@@ -266,17 +290,22 @@ export function EvaluationStade({
 
       {/* Critères par stade */}
       {criteres.length > 0 && (
-        <div className="space-y-3">
-          <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium">
-            Critères détaillés
-          </p>
+        <div className="rounded-[18px] border border-[var(--color-border)] bg-white p-4 space-y-4">
+          <p className="flat-label mb-0">Critères détaillés</p>
           {criteres.map((c) => (
-            <div key={c}>
-              <div className="flex justify-between mb-1">
-                <span className="text-[12px] text-zinc-700">
+            <div key={c} className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <span className="text-[12px] font-medium text-[var(--color-text-secondary)]">
                   {CRITERE_LABELS[c] ?? c}
                 </span>
-                <span className="text-[12px] text-zinc-500">
+                <span className={cn(
+                  'text-[11px] font-semibold px-2 py-0.5 rounded-full',
+                  (scoresCriteres[c] ?? 70) >= 65
+                    ? 'text-[var(--color-success-text)] bg-[var(--color-success-bg)]'
+                    : (scoresCriteres[c] ?? 70) >= 40
+                      ? 'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]'
+                      : 'text-[var(--color-error)] bg-[var(--color-error-bg)]'
+                )}>
                   {scoresCriteres[c] ?? 70}/100
                 </span>
               </div>
@@ -291,7 +320,7 @@ export function EvaluationStade({
                     [c]: Number(e.target.value),
                   }))
                 }
-                className="w-full accent-green-600"
+                className="w-full accent-[var(--color-success)]"
               />
             </div>
           ))}
@@ -300,34 +329,35 @@ export function EvaluationStade({
 
       {/* Commentaire */}
       <div>
-        <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium block mb-2">
-          Commentaire (min. 50 caractères)
+        <label className="flat-label">
+          Commentaire <span className="text-[var(--color-text-disabled)]">(min. 50 caractères)</span>
         </label>
         <textarea
           value={commentaire}
           onChange={(e) => setCommentaire(e.target.value)}
           rows={4}
           placeholder="Détaillez votre évaluation..."
-          className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-[13px] text-zinc-800 resize-none focus:outline-none focus:border-green-400"
+          className="flat-input min-h-[100px] resize-none"
         />
-        <p className="text-[10px] text-zinc-400 mt-0.5">
+        <p className={cn(
+          'text-[10px] mt-0.5',
+          commentaire.length >= 50 ? 'text-[var(--color-success-text)]' : 'text-[var(--color-text-muted)]'
+        )}>
           {commentaire.length}/50 min
         </p>
       </div>
 
       {/* Décision */}
       <div>
-        <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2">
-          Décision
-        </p>
+        <p className="flat-label">Décision</p>
         <div className="flex gap-3">
           <button
             onClick={() => setDecision("VALIDE")}
             className={cn(
-              "flex-1 py-2.5 rounded-xl text-[13px] border transition-all",
+              "flex-1 py-2.5 rounded-[14px] text-[13px] font-semibold border transition-all",
               decision === "VALIDE"
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-zinc-600 border-zinc-200 hover:border-green-300",
+                ? "bg-[var(--color-success)] text-white border-[var(--color-success)]"
+                : "bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-success-border)] hover:bg-[var(--color-success-bg)]",
             )}
           >
             ✓ Valider
@@ -335,10 +365,10 @@ export function EvaluationStade({
           <button
             onClick={() => setDecision("RENVOYE")}
             className={cn(
-              "flex-1 py-2.5 rounded-xl text-[13px] border transition-all",
+              "flex-1 py-2.5 rounded-[14px] text-[13px] font-semibold border transition-all",
               decision === "RENVOYE"
-                ? "bg-red-500 text-white border-red-500"
-                : "bg-white text-zinc-600 border-zinc-200 hover:border-red-300",
+                ? "bg-[var(--color-error)] text-white border-[var(--color-error)]"
+                : "bg-white text-[var(--color-text-secondary)] border-[var(--color-border)] hover:border-[var(--color-error-border)] hover:bg-[var(--color-error-bg)]",
             )}
           >
             ↩ Renvoyer
@@ -349,7 +379,7 @@ export function EvaluationStade({
       {/* Motif renvoi */}
       {(decision === "RENVOYE" || note < 40) && (
         <div>
-          <label className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium block mb-2">
+          <label className="flat-label">
             Motif du renvoi *
           </label>
           <textarea
@@ -357,7 +387,7 @@ export function EvaluationStade({
             onChange={(e) => setMotifRenvoi(e.target.value)}
             rows={3}
             placeholder="Expliquez ce que l'entrepreneur doit corriger..."
-            className="w-full border border-red-200 rounded-lg px-3 py-2 text-[13px] text-zinc-800 resize-none focus:outline-none focus:border-red-400"
+            className="flat-input min-h-[80px] resize-none border-[var(--color-error-border)] focus:ring-[color:rgba(239,91,120,0.10)]"
           />
         </div>
       )}
@@ -370,7 +400,7 @@ export function EvaluationStade({
           commentaire.length < 50 ||
           (decision === "RENVOYE" && !motifRenvoi)
         }
-        className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white rounded-xl text-[13px] font-medium transition-colors flex items-center justify-center gap-2"
+        className="w-full py-3 bg-[var(--color-success)] hover:brightness-95 disabled:opacity-50 text-white rounded-[14px] text-[13px] font-semibold transition-all flex items-center justify-center gap-2"
       >
         {evaluerMutation.isPending && (
           <Loader2 className="w-4 h-4 animate-spin" />

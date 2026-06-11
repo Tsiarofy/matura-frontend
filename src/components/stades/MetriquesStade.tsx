@@ -5,11 +5,29 @@ interface MetriquesStadeProps {
   numStade: number
 }
 
-function MetriqueItem({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function MetriqueItem({
+  label,
+  value,
+  highlight,
+  color,
+}: {
+  label: string
+  value: string
+  highlight?: boolean
+  color?: 'green' | 'amber' | 'red' | 'indigo'
+}) {
+  const colorMap = {
+    green:  'text-[var(--color-success-text)] bg-[var(--color-success-bg)]',
+    amber:  'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]',
+    red:    'text-[var(--color-error)] bg-[var(--color-error-bg)]',
+    indigo: 'text-[#5c61e8] bg-[var(--color-tsisy-indigo-bg)]',
+  }
+  const valueColor = color ? colorMap[color] : highlight ? colorMap.green : 'text-[var(--color-text-primary)] bg-transparent'
+
   return (
-    <div className="bg-zinc-50 rounded-lg px-3 py-2.5 flex items-center justify-between gap-2">
-      <span className="text-[11px] text-zinc-500">{label}</span>
-      <span className={cn('text-[13px] font-medium', highlight ? 'text-green-700' : 'text-zinc-800')}>
+    <div className="flex items-center justify-between gap-3 rounded-[14px] border border-[var(--color-border)] bg-white px-3.5 py-2.5">
+      <span className="text-[11px] font-medium text-[var(--color-text-muted)]">{label}</span>
+      <span className={cn('text-[12px] font-semibold px-2 py-0.5 rounded-[8px]', valueColor)}>
         {value}
       </span>
     </div>
@@ -19,13 +37,19 @@ function MetriqueItem({ label, value, highlight }: { label: string; value: strin
 export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
   if (!metriques || Object.keys(metriques).length === 0) {
     return (
-      <div className="text-center py-8 text-[12px] text-zinc-400">
+      <div className="text-center py-8 text-[12px] text-[var(--color-text-muted)]">
         Enregistrez vos données pour voir les métriques calculées.
       </div>
     )
   }
 
   const get = (k: string) => metriques[k]
+
+  const SectionTitle = ({ label }: { label: string }) => (
+    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-disabled)] mb-3">
+      {label}
+    </p>
+  )
 
   // ── Stade 1 ──────────────────────────────────────────────────────────────────
   if (numStade === 1) {
@@ -35,11 +59,19 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
     const sol = get('nb_solutions_existantes') as number | undefined
     return (
       <div className="space-y-2">
-        <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-3">Métriques Stade 1</p>
-        {score !== undefined && <MetriqueItem label="Score solidité problème" value={`${score}/100`} highlight={score >= 50} />}
+        <SectionTitle label="Métriques Stade 1" />
+        {score !== undefined && (
+          <MetriqueItem
+            label="Score solidité problème"
+            value={`${score}/100`}
+            color={score >= 65 ? 'green' : score >= 40 ? 'amber' : 'red'}
+          />
+        )}
         {nb !== undefined && <MetriqueItem label="Personnes interrogées" value={String(nb)} />}
         {sol !== undefined && <MetriqueItem label="Solutions existantes" value={String(sol)} />}
-        {marche !== undefined && marche > 0 && <MetriqueItem label="Marché préliminaire" value={formatAr(marche, { compact: true })} />}
+        {marche !== undefined && marche > 0 && (
+          <MetriqueItem label="Marché préliminaire" value={formatAr(marche, { compact: true })} color="indigo" />
+        )}
       </div>
     )
   }
@@ -50,18 +82,24 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
     const ratio = get('ratio_revenu_pct') as number | undefined
     const realisme = get('niveau_realisme') as string | undefined
     const nb = get('nb_concurrents') as number | undefined
-    const realismeColor = realisme === 'REALISTE' ? 'text-green-700' : realisme === 'ATTENTION' ? 'text-amber-700' : 'text-red-600'
     return (
       <div className="space-y-2">
-        <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-3">Métriques Stade 3</p>
-        {score !== undefined && <MetriqueItem label="Score marché" value={`${score}/100`} highlight={score >= 50} />}
+        <SectionTitle label="Métriques Stade 3" />
+        {score !== undefined && (
+          <MetriqueItem
+            label="Score marché"
+            value={`${score}/100`}
+            color={score >= 65 ? 'green' : score >= 40 ? 'amber' : 'red'}
+          />
+        )}
         {nb !== undefined && <MetriqueItem label="Nombre de concurrents" value={String(nb)} />}
         {ratio !== undefined && <MetriqueItem label="Ratio prix/revenu (IRP)" value={`${ratio}%`} />}
         {realisme && (
-          <div className="bg-zinc-50 rounded-lg px-3 py-2.5 flex items-center justify-between">
-            <span className="text-[11px] text-zinc-500">Réalisme prix</span>
-            <span className={cn('text-[12px] font-medium', realismeColor)}>{realisme}</span>
-          </div>
+          <MetriqueItem
+            label="Réalisme prix"
+            value={realisme}
+            color={realisme === 'REALISTE' ? 'green' : realisme === 'ATTENTION' ? 'amber' : 'red'}
+          />
         )}
       </div>
     )
@@ -77,27 +115,47 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
     const manquantes = get('disciplines_manquantes') as string[] | undefined
     return (
       <div className="space-y-2">
-        <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-3">Métriques Stade 5</p>
-        {pm !== undefined && <MetriqueItem label="Point mort (unités/an)" value={pm > 0 ? String(pm) : 'Non calculé'} highlight={pm > 0} />}
-        {marge !== undefined && <MetriqueItem label="Marge sur coût variable" value={formatAr(marge)} highlight={marge > 0} />}
-        {roi !== undefined && <MetriqueItem label="ROI estimé (an 3)" value={`${roi}%`} highlight={roi > 0} />}
-        {scoreEquipe !== undefined && <MetriqueItem label="Interdisciplinarité équipe" value={`${scoreEquipe}%`} highlight={scoreEquipe >= 50} />}
+        <SectionTitle label="Métriques Stade 5" />
+        {pm !== undefined && (
+          <MetriqueItem
+            label="Point mort (unités/an)"
+            value={pm > 0 ? String(pm) : 'Non calculé'}
+            color={pm > 0 ? 'green' : undefined}
+          />
+        )}
+        {marge !== undefined && (
+          <MetriqueItem label="Marge sur coût variable" value={formatAr(marge)} color={marge > 0 ? 'green' : undefined} />
+        )}
+        {roi !== undefined && (
+          <MetriqueItem label="ROI estimé (an 3)" value={`${roi}%`} color={roi > 0 ? 'green' : 'red'} />
+        )}
+        {scoreEquipe !== undefined && (
+          <MetriqueItem
+            label="Interdisciplinarité équipe"
+            value={`${scoreEquipe}%`}
+            color={scoreEquipe >= 50 ? 'green' : 'amber'}
+          />
+        )}
         {ca && (
-          <div className="bg-zinc-50 rounded-lg px-3 py-2.5 space-y-1">
-            <span className="text-[11px] text-zinc-500 block mb-1">CA prévisionnel</span>
+          <div className="rounded-[14px] border border-[var(--color-border)] bg-white px-3.5 py-3 space-y-2">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-text-disabled)] block">
+              CA prévisionnel
+            </span>
             <div className="flex gap-3 text-[11px]">
               {['annee1', 'annee2', 'annee3'].map((k, i) => (
-                <div key={k} className="flex-1 text-center">
-                  <p className="text-zinc-400">An {i + 1}</p>
-                  <p className="text-zinc-800 font-medium">{formatAr(ca[k] ?? 0, { compact: true })}</p>
+                <div key={k} className="flex-1 text-center rounded-[10px] bg-[var(--color-surface-soft)] py-2">
+                  <p className="text-[var(--color-text-muted)] text-[9px] font-semibold uppercase">An {i + 1}</p>
+                  <p className="text-[var(--color-text-primary)] font-semibold mt-0.5">
+                    {formatAr(ca[k] ?? 0, { compact: true })}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         )}
         {manquantes && manquantes.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2.5">
-            <p className="text-[11px] text-amber-700">
+          <div className="rounded-[14px] border border-[#FDE68A] bg-[var(--color-tsisy-amber-bg)] px-3.5 py-2.5">
+            <p className="text-[11px] font-medium text-[#a16207]">
               Disciplines manquantes : {manquantes.join(', ')}
             </p>
           </div>
@@ -106,14 +164,20 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
     )
   }
 
-  // ── Autres stades (métriques génériques) ──────────────────────────────────────
+  // ── Autres stades (métriques génériques) ───────────────────────────────────
   const entries = Object.entries(metriques).filter(([k]) => !k.startsWith('_'))
   if (entries.length === 0) {
-    return <div className="text-center py-8 text-[12px] text-zinc-400">Aucune métrique disponible pour ce stade.</div>
+    return (
+      <div className="text-center py-8 text-[12px] text-[var(--color-text-muted)]">
+        Aucune métrique disponible pour ce stade.
+      </div>
+    )
   }
   return (
     <div className="space-y-2">
-      <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-3">Métriques</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-disabled)] mb-3">
+        Métriques
+      </p>
       {entries.map(([k, v]) => (
         <MetriqueItem key={k} label={k.replace(/_/g, ' ')} value={String(v)} />
       ))}
