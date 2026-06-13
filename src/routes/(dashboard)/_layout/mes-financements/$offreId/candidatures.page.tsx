@@ -43,7 +43,7 @@ export default function CandidaturesOffrePage() {
     : null
 
   return (
-    <div className="max-w-2xl mx-auto space-y-5">
+    <div className="max-w-3xl mx-auto space-y-5">
       {/* Navigation */}
       <button
         onClick={() => navigate({ to: '/mes-financements' })}

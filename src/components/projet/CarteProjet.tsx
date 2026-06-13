@@ -17,31 +17,33 @@ export function CarteProjet({ projet, className }: CarteProjetProps) {
     <Link to="/projets/$projetId" params={{ projetId: projet.id }} className="block w-full">
       <Card
         className={cn(
-          "group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:border-zinc-200 flex flex-col justify-between min-h-[240px]",
+          "w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 min-h-[240px]",
           className
         )}
       >
         <div>
-          {/* Header */}
-          <div className="flex items-start justify-between gap-3 mb-4">
-            <div className="w-10 h-10 rounded-[14px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
-              <Briefcase className="w-5 h-5" strokeWidth={1.5} />
+          {/* Header (badges on the right, title + icon on the left) */}
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 shrink-0">
+                <Briefcase className="w-4.5 h-4.5" strokeWidth={1.25} />
+              </div>
+              <h3 className="font-heading font-semibold text-[15px] text-zinc-900 truncate">
+                {projet.titre}
+              </h3>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 shrink-0">
               <BRLBadge brl={projet.brl_actuel} />
               <StatutBadge statut={projet.statut} />
             </div>
           </div>
 
-          {/* Title & Sectors */}
-          <div className="space-y-1.5 mb-4">
-            <h3 className="text-[17px] font-bold text-zinc-900 group-hover:text-green-700 transition-colors truncate">
-              {projet.titre}
-            </h3>
-            <p className="text-[11.5px] font-semibold text-zinc-400 uppercase tracking-wider">
+          {/* Sectors & Info */}
+          <div className="space-y-1.5 mb-4 pl-11">
+            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.10em]">
               {projet.secteur} · {projet.domaine}
             </p>
-            <p className="text-[13px] text-zinc-500 leading-relaxed line-clamp-2">
+            <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 text-thin">
               Projet ciblant {projet.type_cible} dans le domaine {projet.domaine.toLowerCase()}.
             </p>
           </div>

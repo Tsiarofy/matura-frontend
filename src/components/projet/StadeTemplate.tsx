@@ -96,7 +96,7 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
                       : '',
                   )}
                 >
-                  <Icon className="w-4 h-4 mr-2" strokeWidth={2} />
+                  <Icon className="w-4 h-4 mr-2" strokeWidth={1.25} />
                   {tab.label}
                 </TabsTrigger>
               )
@@ -107,35 +107,35 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
         {/* Contenu des onglets */}
         {ongletsContent.missions && (
           <TabsContent value="missions" className="mt-0">
-            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-6 lg:p-8 rounded-[22px] border border-zinc-100 bg-white shadow-none">
               {ongletsContent.missions}
             </Card>
           </TabsContent>
         )}
 
         <TabsContent value="saisie" className="mt-0">
-          <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
+          <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-6 lg:p-8 rounded-[22px] border border-zinc-100 bg-white shadow-none">
             {ongletsContent.saisie}
           </Card>
         </TabsContent>
 
         {ongletsContent.aide && !isMentor && (
           <TabsContent value="aide" className="mt-0">
-            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-6 lg:p-8 rounded-[22px] border border-zinc-100 bg-white shadow-none">
               {ongletsContent.aide}
             </Card>
           </TabsContent>
         )}
 
         <TabsContent value="metriques" className="mt-0">
-          <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm">
+          <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-6 lg:p-8 rounded-[22px] border border-zinc-100 bg-white shadow-none">
             {ongletsContent.metriques}
           </Card>
         </TabsContent>
 
         {showEvaluation && (
           <TabsContent value="evaluation" className="mt-0">
-            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-5 lg:p-8 shadow-sm flex flex-col">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-6 lg:p-8 rounded-[22px] border border-zinc-100 bg-white shadow-none flex flex-col">
               {ongletsContent.evaluation || (
                 <div className="flex-1 flex items-center justify-center text-center text-[var(--color-text-muted)] text-[13px] italic">
                   En attente d'évaluation par votre mentor

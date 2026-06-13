@@ -76,7 +76,7 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
         <div className="flex h-8 w-8 items-center justify-center rounded-[12px] border border-[var(--color-border-strong)] bg-white shadow-sm">
           <Icon.LayoutGrid
             size={16}
-            strokeWidth={1.9}
+            strokeWidth={1.25}
             className="text-[var(--color-text-primary)]"
           />
         </div>
@@ -96,18 +96,18 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
                 key={item.lien}
                 to={item.lien as never}
                 className={cn(
-                  "group relative flex items-center gap-3 rounded-[12px] px-4 py-3 text-[13.5px] font-semibold transition-all duration-200",
+                  "group relative flex items-center gap-3.5 rounded-[18px] px-3.5 py-2.5 text-[13.5px] font-semibold transition-all duration-200 active:scale-[0.98]",
                   isActive
-                    ? "bg-white text-zinc-950 shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-zinc-200/50"
+                    ? "bg-white text-zinc-950 shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-zinc-200"
                     : "text-zinc-550 hover:bg-white/60 hover:text-zinc-950",
                 )}
               >
                 <div
                   className={cn(
-                    "flex shrink-0 items-center justify-center transition-colors duration-200",
+                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border shadow-[0_1px_2px_rgba(0,0,0,0.02)] transition-all duration-150 active:scale-[0.92]",
                     isActive
-                      ? "text-zinc-950"
-                      : "text-zinc-400 group-hover:text-zinc-950",
+                      ? "border-zinc-300 bg-zinc-50 text-zinc-950"
+                      : "border-zinc-200/80 bg-white text-zinc-400 group-hover:border-zinc-350 group-hover:bg-zinc-50 group-hover:text-zinc-800",
                   )}
                 >
                   <IconNavigation name={item.icon} isActive={isActive} />
@@ -136,7 +136,7 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
             <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white bg-zinc-100">
               <Icon.User
                 size={14}
-                strokeWidth={1.8}
+                strokeWidth={1.25}
                 className="text-zinc-500 group-hover:text-zinc-950"
               />
             </div>
@@ -165,7 +165,7 @@ function IconNavigation({
   isActive?: boolean;
 }) {
   const IconComp = (Icon as any)[name] ?? Icon.LayoutDashboard;
-  return <IconComp size={18} strokeWidth={isActive ? 2 : 1.6} />;
+  return <IconComp size={20} strokeWidth={isActive ? 1.5 : 1.25} />;
 }
 
 // ─── Sous-composant Projet Courant ────────────────────────────────────────────

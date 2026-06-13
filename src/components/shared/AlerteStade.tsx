@@ -49,7 +49,7 @@ export function AlerteStade({ alerte, onResolve, className }: AlerteStadeProps) 
         className
       )}
     >
-      <Icon className={cn('w-4 h-4 mt-0.5 flex-shrink-0', config.iconClasses)} strokeWidth={2} />
+      <Icon className={cn('w-4 h-4 mt-0.5 flex-shrink-0', config.iconClasses)} strokeWidth={1.25} />
       
       <div className="flex-1 min-w-0">
         <p className="leading-relaxed">{alerte.message}</p>

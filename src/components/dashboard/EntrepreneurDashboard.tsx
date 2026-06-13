@@ -79,7 +79,7 @@ function ProjetListCard({ projet }: { projet: ProjetResume }) {
       </div>
 
       <div className="shrink-0 text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-primary)] transition-colors">
-        <ArrowRight size={18} strokeWidth={2} />
+        <ArrowRight size={18} strokeWidth={1.25} />
       </div>
     </Link>
   );
@@ -262,7 +262,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
                 to="/projets"
                 className="flex items-center gap-1 text-[11.5px] font-semibold text-[var(--color-success-text)] transition-colors hover:text-[var(--color-success)]"
               >
-                Voir tout <ArrowRight size={13} strokeWidth={2.5} />
+                Voir tout <ArrowRight size={13} strokeWidth={1.25} />
               </Link>
             </div>
             <div className="grid grid-cols-1 gap-2.5">

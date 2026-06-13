@@ -72,7 +72,7 @@ export function ScoreRadarChart({ score, className }: ScoreRadarChartProps) {
               dataKey="value"
               startAngle={90}
               endAngle={-270}
-              strokeWidth={0}
+              strokeWidth={1.25}
             >
               {data.map((entry, i) => (
                 <Cell key={`cell-${i}`} fill={entry.color} />

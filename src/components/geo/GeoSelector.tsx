@@ -73,7 +73,7 @@ function CheckboxItem({ label, checked, onChange }: CheckboxItemProps) {
           checked ? 'bg-green-500 border-green-500' : 'border-zinc-300 bg-white',
         )}
       >
-        {checked && <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />}
+        {checked && <Check className="w-2.5 h-2.5 text-white" strokeWidth={1.25} />}
       </span>
       <span className="truncate">{label}</span>
     </button>

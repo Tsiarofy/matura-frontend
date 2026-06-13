@@ -19,7 +19,7 @@ export function EmptyState({ icon: Icon, title, description, action, className }
       {/* Icône */}
       {Icon && (
         <div className="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center mb-4">
-          <Icon className="w-6 h-6 text-zinc-400" strokeWidth={1.5} />
+          <Icon className="w-6 h-6 text-zinc-400" strokeWidth={1.25} />
         </div>
       )}
 

@@ -37,7 +37,7 @@ function SearchInput({
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2.5">
         <Search
           size={14}
-          strokeWidth={1.8}
+          strokeWidth={1.25}
           className="text-[var(--color-text-placeholder)]"
         />
       </div>
@@ -61,7 +61,7 @@ function SearchInput({
           className="absolute inset-y-0 right-0 flex items-center pr-2.5 text-[var(--color-text-placeholder)] transition-colors hover:text-[var(--color-text-primary)]"
           aria-label="Effacer la recherche"
         >
-          <X size={14} strokeWidth={2} />
+          <X size={14} strokeWidth={1.25} />
         </button>
       )}
     </div>

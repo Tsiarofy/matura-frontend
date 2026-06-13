@@ -32,7 +32,7 @@ export function StatCard({ label, value, delta, icon: Icon, className }: StatCar
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">{label}</p>
           {Icon && (
             <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border transition-colors", accentColor)}>
-              <Icon size={18} strokeWidth={2.05} />
+              <Icon size={18} strokeWidth={1.25} />
             </div>
           )}
         </div>
@@ -50,7 +50,7 @@ export function StatCard({ label, value, delta, icon: Icon, className }: StatCar
                   ? 'bg-[#EFFBF3] text-[#157347] border-[#CFEEDA]' 
                   : 'bg-[#FFF1F4] text-[#BE3456] border-[#FFD9E1]'
               )}>
-                {delta.isPositive ? <ArrowUpRight size={10} strokeWidth={3} /> : <ArrowDownRight size={10} strokeWidth={3} />}
+                {delta.isPositive ? <ArrowUpRight size={10} strokeWidth={1.25} /> : <ArrowDownRight size={10} strokeWidth={1.25} />}
                 {delta.value}%
               </div>
               <span className="text-[10px] font-medium text-[var(--color-text-muted)]">

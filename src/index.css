@@ -157,8 +157,8 @@
 }
 
 @theme inline {
-  --font-sans: "Geist Variable", "Geist", "Inter", system-ui, sans-serif;
-  --font-heading: "Geist Variable", "Geist", "Inter", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-heading: "Montserrat", sans-serif;
   
   /* Compact Typography Scale */
   --text-xs: 0.6875rem;   /* 11px */
@@ -172,7 +172,7 @@
 /* Minimalist Utilities */
 @layer utilities {
   .card-minimal {
-    @apply rounded-[var(--radius)] border border-[var(--color-border)] bg-white shadow-none;
+    @apply rounded-[var(--radius)] border border-[#e5e5e5] bg-white shadow-none transition-none;
   }
   .spacing-tsisy {
     @apply gap-8 md:gap-12;
@@ -190,7 +190,7 @@
     @apply mx-auto w-full max-w-6xl space-y-5;
   }
   .panel-flat {
-    @apply rounded-[22px] border border-[var(--color-border)] bg-white shadow-none;
+    @apply rounded-[22px] border border-[#e5e5e5] bg-white shadow-none transition-none;
   }
   .panel-soft {
     @apply rounded-[18px] border border-[var(--color-border)] bg-[var(--color-surface-soft)];
@@ -277,6 +277,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
   body {
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
@@ -305,6 +309,18 @@
   /* Transitions fluides */
   .transition-smooth    { transition: all var(--transition-base); }
   .transition-fast      { transition: all var(--transition-fast); }
+
+  /* Typography Thin */
+  .text-thin {
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+  
+  .text-secondary-thin {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    color: var(--color-text-secondary);
+  }
 
   /* Sidebar active indicator */
   .nav-item-active::before {

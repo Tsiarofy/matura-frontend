@@ -3,7 +3,7 @@ import { useProjetsSuivis, type ProjetSuivi } from '@/hooks/useAccompagnement'
 import { BRLBadge } from '@/components/shared/BRLBadge'
 import { STADE_LABELS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import { Loader2, FolderOpen, ChevronRight, Clock, AlertCircle } from 'lucide-react'
+import { Loader2, FolderOpen, Clock, AlertCircle } from 'lucide-react'
 
 // ─── CARTE PROJET SUIVI ───────────────────────────────────────────────────────
 
@@ -16,44 +16,47 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
     <Link
       to="/projets/$projetId"
       params={{ projetId: projet.id }}
-      className="panel-flat p-5 flex items-start gap-4 group hover:border-zinc-300 hover:shadow-sm transition-all duration-200 block"
+      className="w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-5 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 block group"
     >
-      {/* Avatar initiales */}
-      <div className="w-10 h-10 rounded-[13px] bg-[var(--color-surface-soft)] border border-[var(--color-border)] flex items-center justify-center shrink-0 text-[13px] font-bold text-[var(--color-text-muted)] group-hover:bg-[var(--color-success-bg)] group-hover:border-[var(--color-success-border)] group-hover:text-[var(--color-success-text)] transition-colors">
-        {projet.titre.charAt(0).toUpperCase()}
-      </div>
-
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap mb-0.5">
-          <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate group-hover:text-[var(--color-success-text)] transition-colors">
-            {projet.titre}
-          </p>
+      <div>
+        {/* Header: Avatar + Title + Badge */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-9 h-9 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 text-[12px] font-bold text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+            {projet.titre.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+              {projet.titre}
+            </h3>
+          </div>
           {projet.brl_actuel !== undefined && (
             <BRLBadge brl={projet.brl_actuel} />
           )}
         </div>
-        <p className="text-[11px] text-[var(--color-text-muted)]">
-          {projet.proprietaire.prenom} {projet.proprietaire.nom} · {projet.region}
-        </p>
 
-        {stade && (
-          <div className={cn(
-            'inline-flex items-center gap-1.5 mt-2.5 px-2.5 py-1 rounded-full text-[10px] font-semibold border',
-            needsEval
-              ? 'bg-[var(--color-tsisy-amber-bg)] text-[#a16207] border-[#FDE68A]'
-              : 'bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)]',
-          )}>
-            {needsEval
-              ? <AlertCircle className="w-3 h-3" />
-              : <Clock className="w-3 h-3" />
-            }
-            Stade {stade.numero} — {label}
-            {needsEval && ' · À évaluer'}
-          </div>
-        )}
+        {/* Content block: owner, region, stade details indented */}
+        <div className="pl-12 space-y-2.5">
+          <p className="text-[11.5px] text-zinc-550 font-semibold leading-none">
+            {projet.proprietaire.prenom} {projet.proprietaire.nom} · <span className="text-zinc-400 font-medium">{projet.region}</span>
+          </p>
+
+          {stade && (
+            <div className={cn(
+              'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.10em] border',
+              needsEval
+                ? 'bg-amber-50 text-amber-700 border-amber-200'
+                : 'bg-zinc-50 text-zinc-500 border-zinc-200',
+            )}>
+              {needsEval
+                ? <AlertCircle className="w-3 h-3" />
+                : <Clock className="w-3 h-3" />
+              }
+              Stade {stade.numero} — {label}
+              {needsEval && ' · À évaluer'}
+            </div>
+          )}
+        </div>
       </div>
-
-      <ChevronRight className="w-4 h-4 text-[var(--color-text-disabled)] group-hover:text-[var(--color-success)] shrink-0 mt-1 transition-colors" />
     </Link>
   )
 }
@@ -66,7 +69,7 @@ export default function ProjetsSuivisPage() {
   const projetsAvecEval = projets.filter((p) => p.stade_actif?.en_attente_evaluation)
 
   return (
-    <div className="page-shell max-w-3xl mx-auto w-full">
+    <div className="w-full max-w-3xl mx-auto space-y-6 pb-12">
       {/* En-tête */}
       <div>
         <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">

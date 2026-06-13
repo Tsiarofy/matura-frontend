@@ -13,7 +13,7 @@ import { STADE_LABELS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import {
   Loader2, Bell, FolderOpen, CheckCircle2,
-  XCircle, ChevronRight, Clock, AlertCircle,
+  XCircle, Clock, AlertCircle, Briefcase,
 } from 'lucide-react'
 
 // ─── CARTE DEMANDE ────────────────────────────────────────────────────────────
@@ -28,56 +28,67 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
 
   return (
     <div className={cn(
-      'bg-white border rounded-[18px] p-5 space-y-3 transition-all',
+      'w-full relative rounded-[22px] border bg-white p-6 flex flex-col justify-between gap-4 transition-all duration-300',
       isEnAttente
-        ? 'border-[#FDE68A]'
-        : 'border-[var(--color-border)] opacity-70',
+        ? 'border-amber-200 shadow-[0_8px_30px_rgba(243,182,63,0.06)]'
+        : 'border-zinc-100 opacity-70',
     )}>
-      {/* En-tête */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate">
+      <div>
+        {/* Header: Icon + Title + BRLBadge & Statut */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 shrink-0">
+            <Briefcase className="w-4.5 h-4.5" strokeWidth={1.25} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading text-[15px] font-semibold text-zinc-900 truncate">
               {projet?.titre ?? '—'}
-            </p>
+            </h3>
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
             {projet?.brl_actuel !== undefined && (
               <BRLBadge brl={projet.brl_actuel} />
             )}
+            <StatutBadge statut={demande.statut} />
           </div>
+        </div>
+
+        {/* Content Block indented */}
+        <div className="pl-12 space-y-3">
           {entrepreneur && (
-            <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
+            <p className="text-[12px] text-zinc-500 font-semibold leading-none">
               par {entrepreneur.prenom} {entrepreneur.nom}
             </p>
           )}
+
+          {/* Description projet */}
+          {projet?.description && (
+            <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 text-thin">
+              {projet.description}
+            </p>
+          )}
+
+          {/* Message de l'entrepreneur */}
+          {demande.message && (
+            <div className="rounded-[14px] border border-zinc-100 bg-zinc-50/50 p-3.5">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Message de l'entrepreneur</p>
+              <p className="text-[12px] text-zinc-650 italic font-medium leading-relaxed">"{demande.message}"</p>
+            </div>
+          )}
+
+          {/* Date */}
+          <p className="text-[10px] text-zinc-400 font-semibold">
+            Reçu le {new Date(demande.cree_le).toLocaleDateString('fr-FR')}
+          </p>
         </div>
-        <StatutBadge statut={demande.statut} />
       </div>
-
-      {/* Description projet */}
-      {projet?.description && (
-        <p className="text-[12px] text-[var(--color-text-muted)] line-clamp-2">{projet.description}</p>
-      )}
-
-      {/* Message de l'entrepreneur */}
-      {demande.message && (
-        <div className="rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-soft)] px-3 py-2.5">
-          <p className="text-[10px] font-semibold text-[var(--color-text-disabled)] mb-0.5">Message</p>
-          <p className="text-[12px] text-[var(--color-text-secondary)] italic">"{demande.message}"</p>
-        </div>
-      )}
-
-      {/* Date */}
-      <p className="text-[10px] text-[var(--color-text-disabled)] font-medium">
-        Reçu le {new Date(demande.cree_le).toLocaleDateString('fr-FR')}
-      </p>
 
       {/* Actions */}
       {isEnAttente && (
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-2 pt-2 pl-12">
           <button
             onClick={() => repondre.mutate({ demandeId: demande.id, statut: 'REFUSE' })}
             disabled={repondre.isPending}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-[var(--color-border)] text-[var(--color-text-muted)] rounded-[12px] text-[12px] font-semibold hover:bg-[var(--color-error-bg)] hover:text-[var(--color-error)] hover:border-[var(--color-error-border)] transition-all disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-zinc-200 text-zinc-600 rounded-[12px] text-[12px] font-semibold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all disabled:opacity-50"
           >
             <XCircle className="w-3.5 h-3.5" />
             Refuser
@@ -100,7 +111,7 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
               )
             }
             disabled={repondre.isPending}
-            className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-[var(--color-success)] hover:brightness-95 text-white rounded-[12px] text-[12px] font-semibold transition-all disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-[12px] text-[12px] font-semibold transition-all disabled:opacity-50"
           >
             {repondre.isPending
               ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -125,39 +136,47 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
     <Link
       to="/projets/$projetId"
       params={{ projetId: projet.id }}
-      className="panel-flat p-4 flex items-start gap-3 group hover:border-zinc-300 hover:shadow-sm transition-all duration-200 block"
+      className="w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-5 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 block group"
     >
-      <div className="w-8 h-8 rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface-soft)] flex items-center justify-center shrink-0 mt-0.5 text-[11px] font-bold text-[var(--color-text-muted)] group-hover:bg-[var(--color-success-bg)] group-hover:border-[var(--color-success-border)] group-hover:text-[var(--color-success-text)] transition-colors">
-        {projet.titre.charAt(0).toUpperCase()}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-[13px] font-semibold text-[var(--color-text-primary)] truncate group-hover:text-[var(--color-success-text)] transition-colors">
-            {projet.titre}
-          </p>
-          <BRLBadge brl={projet.brl_actuel} />
-        </div>
-        <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
-          {projet.proprietaire.prenom} {projet.proprietaire.nom} · {projet.region}
-        </p>
-
-        {stade && (
-          <div className={cn(
-            'inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full text-[10px] font-semibold border',
-            needsEval
-              ? 'bg-[var(--color-tsisy-amber-bg)] text-[#a16207] border-[#FDE68A]'
-              : 'bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)]',
-          )}>
-            {needsEval
-              ? <AlertCircle className="w-3 h-3" />
-              : <Clock className="w-3 h-3" />
-            }
-            Stade {stade.numero} — {label}
-            {needsEval && ' · À évaluer'}
+      <div>
+        {/* Header: Avatar + Title + Badge */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-9 h-9 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 text-[12px] font-bold text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+            {projet.titre.charAt(0).toUpperCase()}
           </div>
-        )}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+              {projet.titre}
+            </h3>
+          </div>
+          {projet.brl_actuel !== undefined && (
+            <BRLBadge brl={projet.brl_actuel} />
+          )}
+        </div>
+
+        {/* Content block: owner, region, stade details indented */}
+        <div className="pl-12 space-y-2.5">
+          <p className="text-[11.5px] text-zinc-550 font-semibold leading-none">
+            {projet.proprietaire.prenom} {projet.proprietaire.nom} · <span className="text-zinc-400 font-medium">{projet.region}</span>
+          </p>
+
+          {stade && (
+            <div className={cn(
+              'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.10em] border',
+              needsEval
+                ? 'bg-amber-50 text-amber-700 border-amber-200'
+                : 'bg-zinc-50 text-zinc-500 border-zinc-200',
+            )}>
+              {needsEval
+                ? <AlertCircle className="w-3 h-3" />
+                : <Clock className="w-3 h-3" />
+              }
+              Stade {stade.numero} — {label}
+              {needsEval && ' · À évaluer'}
+            </div>
+          )}
+        </div>
       </div>
-      <ChevronRight className="w-4 h-4 text-[var(--color-text-disabled)] group-hover:text-[var(--color-success)] shrink-0 mt-1 transition-colors" />
     </Link>
   )
 }
@@ -176,7 +195,7 @@ export default function DemandesPage() {
   const projetsAvecEval = projets.filter((p) => p.stade_actif?.en_attente_evaluation)
 
   return (
-    <div className="page-shell max-w-3xl mx-auto w-full">
+    <div className="w-full max-w-3xl mx-auto space-y-6 pb-12">
       {/* En-tête */}
       <div>
         <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">

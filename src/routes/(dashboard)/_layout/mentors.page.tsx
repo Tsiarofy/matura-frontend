@@ -31,7 +31,7 @@ function CarteMentor({
   const domaines = profil?.domaines_expertise ?? [];
   const initiales = `${mentor.prenom[0]}${mentor.nom[0]}`.toUpperCase();
   return (
-    <div className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-5 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:border-zinc-200 min-h-[220px]">
+    <div className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-5 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 min-h-[220px]">
       <div>
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -50,11 +50,11 @@ function CarteMentor({
               />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-bold text-zinc-900 group-hover:text-green-700 transition-colors">
+              <p className="font-heading text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors">
                 {mentor.prenom} {mentor.nom}
               </p>
               {profil?.annees_experience !== undefined && (
-                <p className="text-[12px] text-zinc-400 font-medium mt-0.5">
+                <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5">
                   {profil.annees_experience} ans d'expérience
                 </p>
               )}
@@ -67,32 +67,33 @@ function CarteMentor({
           )}
         </div>
 
-        {/* Bio */}
-        {profil?.bio && (
-          <p className="text-[13px] text-zinc-500 leading-relaxed line-clamp-2">
-            {profil.bio}
-          </p>
-        )}
+        {/* Bio & expertises indented */}
+        <div className="pl-13 space-y-3">
+          {profil?.bio && (
+            <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 text-thin">
+              {profil.bio}
+            </p>
+          )}
 
-        {/* Domaines */}
-        {domaines.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {domaines.slice(0, 3).map((d) => (
-              <span key={d} className="rounded-full bg-zinc-50 border border-zinc-100 px-2.5 py-1 text-[10px] font-semibold text-zinc-550 uppercase tracking-wider">
-                {d}
-              </span>
-            ))}
-            {domaines.length > 3 && (
-              <span className="text-[10px] text-zinc-400 font-bold self-center">
-                +{domaines.length - 3}
-              </span>
-            )}
-          </div>
-        )}
+          {domaines.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {domaines.slice(0, 3).map((d) => (
+                <span key={d} className="rounded-full bg-zinc-50 border border-zinc-100 px-2.5 py-1 text-[9px] font-bold text-zinc-500 uppercase tracking-wider">
+                  {d}
+                </span>
+              ))}
+              {domaines.length > 3 && (
+                <span className="text-[10px] text-zinc-450 font-bold self-center">
+                  +{domaines.length - 3}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3.5 border-t border-zinc-100 mt-1">
+      <div className="flex items-center justify-between pt-3.5 border-t border-zinc-100 mt-1 pl-13">
         {profil?.linkedin_url ? (
           <a
             href={profil.linkedin_url}

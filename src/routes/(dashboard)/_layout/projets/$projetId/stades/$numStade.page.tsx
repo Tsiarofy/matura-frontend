@@ -128,7 +128,7 @@ export default function StadeNumPage() {
   const isMentor = user?.role === "MENTOR" && projet?.mentor?.id === user?.id;
 
   return (
-    <div className="page-shell max-w-3xl mx-auto w-full">
+    <div className="w-full max-w-3xl mx-auto space-y-6 pb-12">
       {/* Fil d'Ariane */}
       <div className="flex items-center gap-2">
         <Link
@@ -140,7 +140,7 @@ export default function StadeNumPage() {
           Retour au projet
         </Link>
         <span className="text-[var(--color-text-disabled)] text-[12px]">/</span>
-        <span className="text-[12px] text-[var(--color-text-secondary)]">
+        <span className="text-[12px] text-[var(--color-text-secondary)] font-semibold">
           {titre}
         </span>
       </div>
@@ -167,7 +167,7 @@ export default function StadeNumPage() {
       {/* En-tête stade */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[20px] font-semibold text-[var(--color-text-primary)]">
+          <h1 className="font-heading text-[20px] font-semibold text-[var(--color-text-primary)]">
             {titre}
           </h1>
           <p className="text-[12px] text-[var(--color-text-muted)] mt-0.5">
@@ -178,7 +178,7 @@ export default function StadeNumPage() {
 
       {/* Gate panel (conditions) */}
       {gate && !isMentor && (
-        <div className="mx-auto w-full max-w-3xl mb-4 mt-6 flex justify-center">
+        <div className="w-full max-w-3xl mb-4 mt-6">
           <GatePanel
             gate={gate}
             statut={stade.statut}

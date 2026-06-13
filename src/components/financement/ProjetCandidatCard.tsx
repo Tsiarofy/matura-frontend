@@ -2,6 +2,7 @@ import { type CandidatureAvecProjet } from '@/hooks/useInvestisseur'
 import { Link } from '@tanstack/react-router'
 import { StatutCandidature } from '@matura/shared'
 import { cn } from '@/lib/utils'
+import { Briefcase, User, MapPin, Users } from 'lucide-react'
 
 const STATUT_LABELS: Record<StatutCandidature, string> = {
   [StatutCandidature.EN_ATTENTE]: 'En attente',
@@ -46,86 +47,109 @@ export function ProjetCandidatCard({
 
   return (
     <div className={cn(
-      'bg-white border rounded-[22px] p-6 space-y-4 shadow-sm',
+      'bg-white border rounded-[22px] p-6 space-y-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200',
       statut === StatutCandidature.ACCEPTEE ? 'border-green-200' :
       statut === StatutCandidature.REJETEE  ? 'border-red-100' : 'border-zinc-100',
     )}>
 
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-2.5 flex-1 min-w-0">
-          <div className="bg-green-50 border border-green-200 rounded-lg px-2 py-1 text-center shrink-0">
-            <p className="text-[13px] font-medium text-green-700 leading-none">{brl}</p>
-            <p className="text-[8px] text-green-600 mt-0.5">BRL</p>
+      {/* Header: Briefcase Icon + Title + Status Badges */}
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2.5 flex-1 min-w-0">
+          <div className="w-9 h-9 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 shrink-0">
+            <Briefcase className="w-4.5 h-4.5" strokeWidth={1.25} />
           </div>
-          <div className="flex-1 min-w-0">
-            {/* "titre" = champ réel Prisma Projet */}
-            <p className="text-[13px] font-medium text-zinc-800 truncate">{projet.titre}</p>
-            <div className="flex flex-wrap gap-2 mt-0.5 text-[11px] text-zinc-400">
-              {projet.proprietaire && (
-                <span>👤 {projet.proprietaire.prenom} {projet.proprietaire.nom}</span>
-              )}
-              {projet.secteur && <span> {projet.secteur}</span>}
-              {projet.region && <span> {projet.region}</span>}
-              {projet.equipe && (
-                <span>👥 {projet.equipe.length} membre{projet.equipe.length > 1 ? 's' : ''}</span>
-              )}
-            </div>
-          </div>
+          <h3 className="font-heading font-semibold text-[15px] text-zinc-900 truncate">
+            {projet.titre}
+          </h3>
         </div>
-        <div className="flex flex-col items-end gap-1 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="bg-green-50 border border-green-200 rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-green-700">
+            BRL {brl}
+          </div>
           <span className={cn(
-            'text-[10px] px-2 py-0.5 rounded border',
+            'text-[9px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-[0.12em]',
             STATUT_COLORS[statut as StatutCandidature],
           )}>
             {STATUT_LABELS[statut as StatutCandidature]}
           </span>
           {createdAt && (
-            <p className="text-[10px] text-zinc-400">
+            <p className="text-[10px] text-zinc-400 font-semibold ml-1">
               {new Date(createdAt).toLocaleDateString('fr-FR')}
             </p>
           )}
         </div>
       </div>
 
-      {/* Description */}
-      {projet.description && (
-        <p className="text-[11px] text-zinc-500 line-clamp-2">{projet.description}</p>
-      )}
-
-      {/* Infos universelles minimales */}
-      <div className="flex flex-wrap gap-2 text-[10px] text-zinc-400">
-        {projet.statut && <span>{projet.statut}</span>}
-        <span> BRL {brl} — {BRL_LABELS[brl] ?? `Stade ${brl}`}</span>
-      </div>
-
-      {/* Accordéon détail par stade */}
-      <button
-        onClick={onToggleDetail}
-        aria-expanded={detailOuvert}
-        className="w-full text-left text-[11px] text-zinc-500 hover:text-zinc-700 transition-colors py-1"
-      >
-        {detailOuvert
-          ? '▲ Réduire les détails'
-          : `▼ Voir les détails — BRL ${brl} : ${BRL_LABELS[brl] ?? ''}`}
-      </button>
-
-      {detailOuvert && (
-        <div className="border-t border-zinc-100 pt-3">
-          <StadeDetails projet={projet} brl={brl} />
+      {/* Content block indented to align with the title */}
+      <div className="pl-12 space-y-3">
+        {/* Meta Info */}
+        <div className="flex flex-wrap gap-3 text-[11.5px] text-zinc-450 font-medium">
+          {projet.proprietaire && (
+            <span className="flex items-center gap-1">
+              <User className="w-3.5 h-3.5 text-zinc-300" />
+              {projet.proprietaire.prenom} {projet.proprietaire.nom}
+            </span>
+          )}
+          {projet.secteur && (
+            <span className="flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+              {projet.secteur}
+            </span>
+          )}
+          {projet.region && (
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5 text-zinc-300" />
+              {projet.region}
+            </span>
+          )}
+          {projet.equipe && (
+            <span className="flex items-center gap-1">
+              <Users className="w-3.5 h-3.5 text-zinc-300" />
+              {projet.equipe.length} membre{projet.equipe.length > 1 ? 's' : ''}
+            </span>
+          )}
         </div>
-      )}
 
-      {/* Message de motivation */}
-      {messageMotivation && (
-        <div className="bg-zinc-50 border border-zinc-100 rounded-lg px-3 py-2.5">
-          <p className="text-[10px] text-zinc-400 mb-1">💬 Message de motivation</p>
-          <p className="text-[11px] text-zinc-600">{messageMotivation}</p>
+        {/* Description */}
+        {projet.description && (
+          <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 text-thin">
+            {projet.description}
+          </p>
+        )}
+
+        {/* Infos universelles minimales */}
+        <div className="flex flex-wrap gap-2 text-[10px] text-zinc-400 font-semibold uppercase tracking-wider">
+          {projet.statut && <span className="bg-zinc-50 border border-zinc-200 px-2 py-0.5 rounded-full">{projet.statut}</span>}
+          <span className="bg-zinc-50 border border-zinc-200 px-2 py-0.5 rounded-full">BRL {brl} — {BRL_LABELS[brl] ?? `Stade ${brl}`}</span>
         </div>
-      )}
 
-      {/* Actions investisseur */}
-      <div className="flex flex-wrap gap-2 pt-1">
+        {/* Accordéon détail par stade */}
+        <button
+          onClick={onToggleDetail}
+          aria-expanded={detailOuvert}
+          className="w-full text-left text-[11.5px] font-semibold text-zinc-550 hover:text-green-700 transition-colors py-1"
+        >
+          {detailOuvert
+            ? '▲ Réduire les détails'
+            : `▼ Voir les détails — BRL ${brl} : ${BRL_LABELS[brl] ?? ''}`}
+        </button>
+
+        {detailOuvert && (
+          <div className="border-t border-zinc-100 pt-3">
+            <StadeDetails projet={projet} brl={brl} />
+          </div>
+        )}
+
+        {/* Message de motivation */}
+        {messageMotivation && (
+          <div className="bg-zinc-50 border border-zinc-100 rounded-[14px] px-4 py-3">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Message de motivation</p>
+            <p className="text-[12px] text-zinc-650 italic leading-relaxed">"{messageMotivation}"</p>
+          </div>
+        )}
+
+        {/* Actions investisseur */}
+        <div className="flex flex-wrap gap-2 pt-2">
         {statut === StatutCandidature.EN_ATTENTE && (
           <button
             disabled={isUpdating}
@@ -172,6 +196,7 @@ export function ProjetCandidatCard({
             ↩ Remettre en revue
           </button>
         )}
+      </div>
       </div>
     </div>
   )

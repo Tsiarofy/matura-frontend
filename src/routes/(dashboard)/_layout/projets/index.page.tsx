@@ -69,7 +69,7 @@ export default function ProjetsIndexPage() {
           onClick={() => setDialogOpen(true)}
           variant="success"
         >
-          <Plus className="w-4 h-4 mr-2" strokeWidth={2} />
+          <Plus className="w-4 h-4 mr-2" strokeWidth={1.25} />
           Nouveau projet
         </Button>
       </div>

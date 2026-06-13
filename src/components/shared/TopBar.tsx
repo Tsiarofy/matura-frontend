@@ -1,61 +1,23 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { useState, useRef, useEffect } from "react";
+import { Link } from "@tanstack/react-router";
 import * as Icon from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNotifications, useNonLues, useMarquerToutesLues, useMarquerLue } from "@/hooks/useNotifications";
 
 // ─── BREADCRUMB ───────────────────────────────────────────────────────────────
+// Breadcrumb supprimé pour un design plus minimaliste
 
-const ROUTE_LABELS: Record<string, string> = {
-  "/dashboard": "Tableau de bord",
-  "/projets": "Mes Projets",
-  "/financements": "Financements",
-  "/mentors": "Mentors disponibles",
-  "/profil": "Profil",
-  "/projets-suivis": "Projets suivis",
-  "/demandes": "Demandes",
-  "/projets-a-financer": "Projets à financer",
-  "/admin": "Administration",
-  "/admin/mentors": "Mentors",
-  "/admin/investisseurs": "Investisseurs",
-  "/admin/entrepreneurs": "Entrepreneurs",
-  "/stades": "Stades",
-};
-
-function useBreadcrumbs() {
-  const routerState = useRouterState();
-  const pathname = routerState.location.pathname;
-
-  const segments = pathname.split("/").filter(Boolean);
-  const crumbs: { path: string; label: string }[] = [];
-  let path = "";
-
-  for (const seg of segments) {
-    path += "/" + seg;
-    const label = ROUTE_LABELS[path];
-    if (label) {
-      crumbs.push({ path, label });
-    } else if (/^\d+$/.test(seg)) {
-      // ID numérique — on ignore dans le breadcrumb
-    } else {
-      // Segment non mappé : on capitalize
-      crumbs.push({ path, label: seg.charAt(0).toUpperCase() + seg.slice(1) });
-    }
-  }
-
-  return crumbs;
-}
 
 // ─── USER MENU DROPDOWN ───────────────────────────────────────────────────────
 
-interface UserMenuProps {
+export interface UserMenuProps {
   userName?: string;
   userInitials?: string;
   userRole?: string;
   onDeconnexion: () => void;
 }
 
-function UserMenu({
+export function UserMenu({
   userName,
   userInitials,
   userRole,
@@ -112,7 +74,7 @@ function UserMenu({
         {/* Chevron animé */}
         <Icon.ChevronRight
           size={16}
-          strokeWidth={1.5}
+          strokeWidth={1.25}
           className={cn(
             "transition-transform duration-200 hidden sm:block text-[var(--color-text-muted)]",
             open ? "rotate-90" : "rotate-0",
@@ -162,7 +124,7 @@ function UserMenu({
           >
             <Icon.User
               size={16}
-              strokeWidth={1.5}
+              strokeWidth={1.25}
               className="shrink-0 text-[var(--color-text-muted)]"
             />
             Mon profil
@@ -180,7 +142,7 @@ function UserMenu({
           >
             <Icon.Settings
               size={16}
-              strokeWidth={1.5}
+              strokeWidth={1.25}
               className="shrink-0 text-[var(--color-text-muted)]"
             />
             Paramètres
@@ -203,7 +165,7 @@ function UserMenu({
             )}
             role="menuitem"
           >
-            <Icon.LogOut size={16} strokeWidth={1.5} className="shrink-0" />
+            <Icon.LogOut size={16} strokeWidth={1.25} className="shrink-0" />
             Déconnexion
           </button>
         </div>
@@ -214,7 +176,7 @@ function UserMenu({
 
 // ─── NOTIFICATION BELL ────────────────────────────────────────────────────────
 
-function NotificationBell() {
+export function NotificationBell() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -259,7 +221,7 @@ function NotificationBell() {
         aria-expanded={open}
         aria-haspopup="menu"
       >
-        <Icon.Bell size={20} strokeWidth={1.5} />
+        <Icon.Bell size={20} strokeWidth={1.25} />
         {nonLues > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white ring-2 ring-white animate-in zoom-in">
             {nonLues > 9 ? "9+" : nonLues}
@@ -351,48 +313,12 @@ export interface TopBarProps {
 }
 
 export function TopBar({ userName, userInitials, userRole, onDeconnexion }: TopBarProps) {
-  const crumbs = useBreadcrumbs()
-
   return (
     <header
       className={cn(
-        'z-20 flex h-[76px] shrink-0 items-center justify-between border-b border-[var(--color-border)] bg-[var(--color-bg-shell)] px-8',
+        'z-20 flex h-[60px] shrink-0 items-center justify-end bg-transparent px-8 pt-4 pb-2',
       )}
     >
-      {/* ── Breadcrumb ── */}
-      <div className="flex min-w-0 flex-1 items-center gap-4">
-        <nav
-          aria-label="Fil d'Ariane"
-          className="hidden min-w-0 items-center gap-1 text-[14px] lg:flex"
-        >
-          <span className="shrink-0 font-medium text-[var(--color-text-muted)]">MaturaProj</span>
-          {crumbs.map((crumb, i) => {
-            const isLast = i === crumbs.length - 1
-            return (
-              <React.Fragment key={crumb.path}>
-                <Icon.ChevronRight
-                  size={14}
-                  strokeWidth={1.5}
-                  className="shrink-0 text-[var(--color-text-disabled)] mx-1"
-                />
-                {isLast ? (
-                  <span className="font-bold truncate text-[var(--color-text-primary)]">
-                    {crumb.label}
-                  </span>
-                ) : (
-                  <Link
-                    to={crumb.path as never}
-                    className="transition-colors truncate text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
-                  >
-                    {crumb.label}
-                  </Link>
-                )}
-              </React.Fragment>
-            )
-          })}
-        </nav>
-      </div>
-
       {/* ── Actions droite ── */}
       <div className="flex shrink-0 items-center gap-2">
         <button
@@ -401,7 +327,7 @@ export function TopBar({ userName, userInitials, userRole, onDeconnexion }: TopB
           )}
           aria-label="Settings"
         >
-          <Icon.Settings size={20} strokeWidth={1.5} />
+          <Icon.Settings size={20} strokeWidth={1.25} />
         </button>
 
         <NotificationBell />

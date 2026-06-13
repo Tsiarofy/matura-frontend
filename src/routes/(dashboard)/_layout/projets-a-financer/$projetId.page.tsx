@@ -10,8 +10,8 @@ import { cn } from '@/lib/utils'
 
 function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="panel-flat p-6">
-      <h2 className="flex items-center gap-2 text-[14px] font-semibold text-[var(--color-text-primary)] mb-5 pb-3.5 border-b border-[var(--color-border)]">
+    <section className="border border-zinc-100 bg-white rounded-[22px] p-6">
+      <h2 className="font-heading flex items-center gap-2 text-[14px] font-semibold text-[var(--color-text-primary)] mb-5 pb-3.5 border-b border-zinc-100">
         <span className="flex items-center justify-center h-7 w-7 rounded-[10px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]">
           {icon}
         </span>
@@ -90,7 +90,7 @@ export default function ProjetAFinancerDetailPage() {
   const { identite, score } = fiche
 
   return (
-    <div className="page-shell max-w-3xl mx-auto w-full pb-10">
+    <div className="w-full max-w-3xl mx-auto space-y-6 pb-12">
       {/* ── Back ── */}
       <button
         className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
@@ -107,7 +107,7 @@ export default function ProjetAFinancerDetailPage() {
       </button>
 
       {/* ── En-tête héros ── */}
-      <div className="panel-flat p-6">
+      <div className="border border-zinc-100 bg-white rounded-[22px] p-6">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex-1 min-w-0">
             {/* Tags */}
@@ -179,7 +179,7 @@ export default function ProjetAFinancerDetailPage() {
 
       {/* ── Decision Investisseur ── */}
       {candidature && (
-        <div className="panel-flat p-5">
+        <div className="border border-zinc-100 bg-white rounded-[22px] p-6">
           <div className="flex gap-4 items-center flex-wrap">
             <div className="flex-1 min-w-[200px]">
               <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">

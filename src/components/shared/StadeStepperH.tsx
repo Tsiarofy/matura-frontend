@@ -78,7 +78,7 @@ export function StadeStepperH({ stades, currentStade, onStadeClick, className }:
                   )}
                 >
                   {stade.statut === 'VALIDE' ? (
-                    <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    <Check className="w-3.5 h-3.5" strokeWidth={1.25} />
                   ) : (
                     stade.numero
                   )}

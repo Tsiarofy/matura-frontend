@@ -56,11 +56,10 @@ function StadeCard({
   const inner = (
     <div
       className={cn(
-        "bg-white border rounded-[18px] p-4 transition-all duration-200",
+        "bg-white border rounded-[18px] p-5 transition-all duration-300",
         statut === "VERROUILLE"
-          ? "border-[var(--color-border)] bg-[var(--color-surface-soft)]/50 opacity-60"
-          : "border-[var(--color-border)]",
-        !isVerrouille && "hover:border-zinc-300 hover:shadow-sm cursor-pointer"
+          ? "border-zinc-100/80 bg-zinc-50/50 opacity-60"
+          : "border-zinc-100 hover:border-zinc-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.02)] cursor-pointer"
       )}
     >
       <div className="flex items-center gap-4">
@@ -83,7 +82,7 @@ function StadeCard({
         {/* Infos */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-[14px] font-bold text-zinc-900">
+            <span className="font-heading text-[14px] font-semibold text-zinc-900">
               {numero}. {label}
             </span>
             <StatutBadge statut={statut} />
@@ -190,9 +189,9 @@ export default function ProjetDetailPage() {
   const scoreGlobal = projet.score?.score_global ?? null;
 
   return (
-    <div className="page-shell max-w-3xl mx-auto w-full">
+    <div className="w-full max-w-3xl mx-auto space-y-6 pb-12">
       {/* ── En-tête ── */}
-      <div className="panel-flat flex items-start justify-between gap-4 p-5">
+      <div className="border border-zinc-100 bg-white rounded-[22px] flex items-start justify-between gap-4 p-6">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <div className="icon-chip h-9 w-9 shrink-0">
@@ -201,10 +200,10 @@ export default function ProjetDetailPage() {
             <BRLBadge brl={projet.brl_actuel} />
             <StatutBadge statut={projet.statut} />
           </div>
-          <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.04em] text-[var(--color-text-primary)]">
+          <h1 className="font-heading text-[24px] font-semibold leading-tight tracking-[-0.03em] text-[var(--color-text-primary)]">
             {projet.titre}
           </h1>
-          <p className="mt-2 line-clamp-2 text-[13px] text-[var(--color-text-muted)]">
+          <p className="mt-2 line-clamp-2 text-[13px] text-[var(--color-text-muted)] text-thin">
             {projet.description}
           </p>
         </div>
@@ -228,8 +227,8 @@ export default function ProjetDetailPage() {
           { label: "Région", value: projet.region },
           { label: "Cible", value: projet.type_cible },
         ].map((item) => (
-          <div key={item.label} className="panel-flat p-3.5">
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
+          <div key={item.label} className="border border-zinc-100 bg-white rounded-[22px] p-4.5">
+            <p className="text-[9.5px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
               {item.label}
             </p>
             <p className="mt-1 text-[13px] font-semibold text-[var(--color-text-primary)]">
@@ -241,7 +240,7 @@ export default function ProjetDetailPage() {
 
       {/* ── Intervenants (Mentor / Entrepreneur) ── */}
       {isMentor && projet.proprietaire ? (
-        <div className="panel-flat flex items-center gap-3 p-4">
+        <div className="border border-zinc-100 bg-white rounded-[22px] flex items-center gap-3.5 p-5">
           <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
             <span className="text-blue-700 text-[13px] font-bold">
               {projet.proprietaire.prenom.charAt(0).toUpperCase()}
@@ -249,7 +248,7 @@ export default function ProjetDetailPage() {
             </span>
           </div>
           <div>
-            <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">
+            <p className="text-[9.5px] text-zinc-400 uppercase tracking-wider font-bold">
               Porteur du projet
             </p>
             <p className="text-[14px] text-zinc-800 font-medium">
@@ -258,7 +257,7 @@ export default function ProjetDetailPage() {
           </div>
         </div>
       ) : projet.mentor ? (
-        <div className="panel-flat flex items-center gap-3 p-4">
+        <div className="border border-zinc-100 bg-white rounded-[22px] flex items-center gap-3.5 p-5">
           <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0 overflow-hidden border border-green-200">
             {(projet.mentor as any).url_avatar ? (
               <img
@@ -274,7 +273,7 @@ export default function ProjetDetailPage() {
             )}
           </div>
           <div>
-            <p className="text-[10px] text-zinc-400 uppercase tracking-wider font-medium">
+            <p className="text-[9.5px] text-zinc-400 uppercase tracking-wider font-bold">
               Mentor assigné
             </p>
             <p className="text-[14px] text-zinc-800 font-medium">
@@ -285,7 +284,7 @@ export default function ProjetDetailPage() {
       ) : null}
 
       {/* ── Stepper horizontal ── */}
-      <div className="panel-flat px-4 py-3">
+      <div className="border border-zinc-100 bg-white rounded-[22px] px-5 py-4">
         <StadeStepperH
           stades={projet.stades.map((s) => ({
             type: s.type,
@@ -311,7 +310,7 @@ export default function ProjetDetailPage() {
           to="/projets/$projetId/stades/$numStade"
           params={{ projetId, numStade: String(stadeActif.numero) }}
           className={cn(
-            "flex items-center justify-between rounded-[26px] px-6 py-5 shadow-sm",
+            "flex items-center justify-between rounded-[22px] px-6 py-5 shadow-[0_8px_30px_rgba(25,180,91,0.12)]",
             "border border-[var(--color-success-border)] bg-[var(--color-success)]",
             "transition-[filter,transform] duration-200 hover:brightness-[0.98] active:scale-[0.995]",
           )}
@@ -333,8 +332,8 @@ export default function ProjetDetailPage() {
         </Link>
       )}
 
-      <div>
-        <p className="mb-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+      <div className="pt-4">
+        <p className="mb-5 text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
           Parcours de maturation
         </p>
         <div className="space-y-3">
@@ -346,8 +345,8 @@ export default function ProjetDetailPage() {
 
       {/* ── Score détail ── */}
       {projet.score && scoreGlobal !== null && scoreGlobal > 0 && (
-        <div className="panel-flat p-5">
-          <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+        <div className="border border-zinc-100 bg-white rounded-[22px] p-6">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
             Scores MCDA
           </p>
           <div className="grid grid-cols-2 gap-2">

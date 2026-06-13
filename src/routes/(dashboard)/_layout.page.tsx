@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { SideBar } from "@/components/sideBar/sideBar";
-import { TopBar } from "@/components/shared/TopBar";
+import { NotificationBell, UserMenu } from "@/components/shared/TopBar";
 import { authStore } from "@/stores/authStore";
 import { useProjetCourant } from "@/hooks/useStades";
 import { apiClient } from "@/lib/apiClient";
@@ -44,15 +44,20 @@ export default function DashboardLayout() {
           userInitials={initiales}
         />
 
-        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-          <TopBar
-            userName={nomComplet}
-            userInitials={initiales}
-            userRole={roleLabel}
-            onDeconnexion={onDeconnexion}
-          />
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden relative">
+          {/* Floating Top Actions */}
+          <div className="absolute top-4 right-8 z-50 flex items-center gap-2">
+            <NotificationBell />
+            <div className="w-px h-6 bg-[var(--color-border)] mx-1 hidden sm:block" />
+            <UserMenu
+              userName={nomComplet}
+              userInitials={initiales}
+              userRole={roleLabel}
+              onDeconnexion={onDeconnexion}
+            />
+          </div>
 
-          <main className="hide-scrollbar flex-1 overflow-y-auto px-8 py-7">
+          <main className="hide-scrollbar flex-1 overflow-y-auto px-8 pt-16 pb-8">
             <Outlet />
           </main>
         </div>

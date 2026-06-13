@@ -47,7 +47,7 @@ export function ProfilCard({ user, className }: ProfilCardProps) {
           </div>
 
           {/* Chevron */}
-          <ChevronRight className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" strokeWidth={2} />
+          <ChevronRight className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" strokeWidth={1.25} />
         </div>
       </Card>
     </Link>

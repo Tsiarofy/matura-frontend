@@ -51,7 +51,7 @@ export default function ProjetsAFinancerPage() {
                 key={p.id}
                 to="/projets-a-financer/$projetId"
                 params={{ projetId: p.id }}
-                className="panel-flat p-5 flex items-center gap-4 group hover:border-zinc-300 hover:shadow-sm transition-all duration-200 block"
+                className="w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 flex items-center gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 group block"
               >
                 {/* Score bubble */}
                 <div className={cn(

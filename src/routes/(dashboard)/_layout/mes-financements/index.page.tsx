@@ -4,7 +4,7 @@ import { useMesOffres } from '@/hooks/useInvestisseur'
 import { useMesCandidatures } from '@/hooks/useFinancements'
 import {authStore} from '@/stores/authStore'
 import { StatutOffre, StatutCandidature, TypeFinancement } from '@matura/shared'
-import { Loader2, Plus, ChevronRight, Layers, ArrowRight, BarChart3, Clock, Factory, Folder } from 'lucide-react'
+import { Loader2, Plus, ChevronRight, Layers, ArrowRight, BarChart3, Clock, Factory, Folder, BadgeDollarSign } from 'lucide-react'
 import { OffreFinancementForm } from '@/components/financement/OffreFinancementForm'
 import { cn } from '@/lib/utils'
 
@@ -131,63 +131,69 @@ function VueInvestisseur() {
                 to: '/mes-financements/$offreId/candidatures',
                 params: { offreId: offre.id },
               })}
-              className="panel-flat p-6 space-y-4 cursor-pointer hover:border-zinc-300 hover:shadow-sm transition-all duration-200 group"
+              className="w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 group"
             >
-              {/* Top row: badges + candidature counter */}
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
-                  <span className={cn(
-                    'text-[10px] px-2.5 py-0.5 rounded-full border font-semibold shrink-0',
-                    STATUT_OFFRE_COLORS[offre.statut as StatutOffre],
-                  )}>
-                    {STATUT_OFFRE_LABELS[offre.statut as StatutOffre]}
-                  </span>
-                  <span className="text-[10px] px-2.5 py-0.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)] font-semibold shrink-0">
-                    {TYPE_LABELS[offre.typeFinancement as TypeFinancement] ?? offre.typeFinancement}
-                  </span>
-                </div>
-
-                {/* Candidature count badge */}
-                <div className={cn(
-                  'flex flex-col items-center px-3 py-1.5 rounded-[12px] border shrink-0',
-                  offre._count.candidatures > 0
-                    ? 'bg-[var(--color-success-bg)] border-[var(--color-success-border)]'
-                    : 'bg-[var(--color-surface-soft)] border-[var(--color-border)]',
-                )}>
-                  <span className={cn(
-                    'text-[16px] font-semibold leading-none',
-                    offre._count.candidatures > 0 ? 'text-[var(--color-success-text)]' : 'text-[var(--color-text-muted)]',
-                  )}>
-                    {offre._count.candidatures}
-                  </span>
-                  <span className="text-[9px] text-[var(--color-text-disabled)] mt-0.5 font-medium">
-                    candidature{offre._count.candidatures !== 1 ? 's' : ''}
-                  </span>
-                </div>
-              </div>
-
-              {/* Title & description */}
               <div>
-                <p className="text-[14px] font-semibold text-[var(--color-text-primary)] group-hover:text-green-600 transition-colors">
-                  {offre.titre}
-                </p>
-                <p className="text-[11px] text-[var(--color-text-muted)] mt-1 line-clamp-2">{offre.description}</p>
+                {/* Header: Icon + Title + Statut */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+                    <BadgeDollarSign className="w-4.5 h-4.5" strokeWidth={1.25} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-heading font-semibold text-[15px] text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+                      {offre.titre}
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span className={cn(
+                      'text-[9px] px-2.5 py-0.5 rounded-full border font-bold uppercase tracking-[0.12em] shrink-0',
+                      STATUT_OFFRE_COLORS[offre.statut as StatutOffre],
+                    )}>
+                      {STATUT_OFFRE_LABELS[offre.statut as StatutOffre]}
+                    </span>
+                    <span className="text-[9px] px-2.5 py-0.5 rounded-full border border-zinc-200 bg-zinc-50 text-zinc-500 font-bold uppercase tracking-[0.12em] shrink-0">
+                      {TYPE_LABELS[offre.typeFinancement as TypeFinancement] ?? offre.typeFinancement}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content block: description and meta, indented */}
+                <div className="pl-12 space-y-3">
+                  <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 text-thin">
+                    {offre.description || "Aucune description fournie pour cette offre."}
+                  </p>
+
+                  <div className="flex flex-wrap gap-4 text-[11px] text-zinc-400 font-medium pt-1">
+                    <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5 text-zinc-300" /> BRL ≥ {offre.stadeCible}</span>
+                    {offre.dateCloture && <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-zinc-300" /> Clôture {formatDate(offre.dateCloture)}</span>}
+                    {offre.secteurs && offre.secteurs.length > 0 && <span className="flex items-center gap-1.5"><Factory className="w-3.5 h-3.5 text-zinc-300" /> {offre.secteurs.slice(0, 2).join(', ')}</span>}
+                  </div>
+                </div>
               </div>
 
-              {/* Meta info */}
-              <div className="flex flex-wrap gap-4 text-[11px] text-[var(--color-text-muted)]">
-                <span className="flex items-center gap-1.5"><BarChart3 className="w-3.5 h-3.5" /> BRL ≥ {offre.stadeCible}</span>
-                {offre.dateCloture && <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Clôture {formatDate(offre.dateCloture)}</span>}
-                {offre.secteurs?.length > 0 && <span className="flex items-center gap-1.5"><Factory className="w-3.5 h-3.5" /> {offre.secteurs.slice(0, 2).join(', ')}</span>}
-              </div>
-
-              <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-3">
-                <p className="text-[11px] font-semibold text-green-600 group-hover:text-green-700 transition-colors">
-                  {offre._count.candidatures > 0
-                    ? `Voir les ${offre._count.candidatures} candidat${offre._count.candidatures > 1 ? 's' : ''}`
-                    : 'Voir les candidatures'}
-                </p>
-                <ChevronRight className="w-4 h-4 text-[var(--color-text-disabled)] group-hover:text-green-600 transition-colors" />
+              {/* Footer row */}
+              <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1">
+                <div className="flex items-center gap-2">
+                  <div className={cn(
+                    'flex items-center gap-1.5 px-2.5 py-1 rounded-full border shrink-0',
+                    offre._count.candidatures > 0
+                      ? 'bg-green-50 border-green-200 text-green-700'
+                      : 'bg-zinc-50 border-zinc-200 text-zinc-500',
+                  )}>
+                    <span className="text-[12px] font-bold">
+                      {offre._count.candidatures}
+                    </span>
+                    <span className="text-[10px] font-semibold text-zinc-450">
+                      candidature{offre._count.candidatures !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  {offre._count.candidatures > 0 && (
+                    <span className="text-[11px] font-semibold text-green-600 group-hover:underline transition-colors pl-1">
+                      Voir les candidatures
+                    </span>
+                  )}
+                </div>
+                <ChevronRight className="w-4.5 h-4.5 text-zinc-350 group-hover:text-green-600 transition-colors" strokeWidth={1.25} />
               </div>
             </article>
           ))}
@@ -244,44 +250,58 @@ function VueEntrepreneur() {
       ) : (
         <div className="space-y-3">
           {candidatures.map((c) => (
-            <div key={c.id} className="panel-flat p-6 space-y-3 group hover:border-zinc-300 hover:shadow-sm transition-all duration-200">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <button
-                    className="text-[14px] font-semibold text-[var(--color-text-primary)] hover:text-[var(--color-success-text)] transition-colors text-left"
-                    onClick={() => navigate({
-                      to: '/financements/$financementId',
-                      params: { financementId: c.offreId },
-                    })}
-                  >
-                    {c.offre?.titre}
-                  </button>
+            <div
+              key={c.id}
+              className="w-full relative rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 group"
+            >
+              <div>
+                {/* Title row */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+                    <BadgeDollarSign className="w-4.5 h-4.5" strokeWidth={1.25} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <button
+                      className="text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors text-left truncate w-full"
+                      onClick={() => navigate({
+                        to: '/financements/$financementId',
+                        params: { financementId: c.offreId },
+                      })}
+                    >
+                      {c.offre?.titre}
+                    </button>
+                  </div>
+                  <span className={cn(
+                    'text-[9px] px-2.5 py-0.5 rounded-full border shrink-0 font-bold uppercase tracking-[0.12em]',
+                    STATUT_CAND_COLORS[c.statut as StatutCandidature],
+                  )}>
+                    {STATUT_CAND_LABELS[c.statut as StatutCandidature]}
+                  </span>
+                </div>
+
+                {/* Content info indented */}
+                <div className="pl-12 space-y-3">
                   {c.offre?.investisseur && (
-                    <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
-                      {c.offre.investisseur.prenom} {c.offre.investisseur.nom}
+                    <p className="text-[12px] text-zinc-500 font-semibold">
+                      Proposé par {c.offre.investisseur.prenom} {c.offre.investisseur.nom}
                     </p>
                   )}
+
+                  <div className="flex items-center gap-2 text-[11.5px] text-zinc-400 font-medium">
+                    <Folder className="w-3.5 h-3.5 text-zinc-300" />
+                    <span>{c.projet?.titre}</span>
+                    {c.projet?.brl_actuel !== undefined && (
+                      <span className="text-[9px] px-2 py-0.5 bg-green-50 text-green-700 border border-green-200 rounded-full font-bold uppercase tracking-[0.12em]">
+                        BRL {c.projet.brl_actuel}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <span className={cn(
-                  'text-[10px] px-2.5 py-0.5 rounded-full border shrink-0 font-semibold',
-                  STATUT_CAND_COLORS[c.statut as StatutCandidature],
-                )}>
-                  {STATUT_CAND_LABELS[c.statut as StatutCandidature]}
-                </span>
               </div>
 
-              <div className="flex items-center gap-2 text-[11px] text-[var(--color-text-muted)]">
-                <Folder className="w-3.5 h-3.5" />
-                <span>{c.projet?.titre}</span>
-                {c.projet?.brl_actuel !== undefined && (
-                  <span className="text-[10px] px-2 py-0.5 bg-[var(--color-success-bg)] text-[var(--color-success-text)] border border-[var(--color-success-border)] rounded-full font-semibold">
-                    BRL {c.projet.brl_actuel}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between border-t border-[var(--color-border)] pt-3">
-                <p className="text-[10px] text-[var(--color-text-disabled)]">
+              {/* Footer */}
+              <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1">
+                <p className="text-[11px] text-zinc-450 font-semibold">
                   Postulé le{' '}
                   {c.createdAt ? new Date(c.createdAt).toLocaleDateString('fr-FR') : '–'}
                 </p>
@@ -290,9 +310,9 @@ function VueEntrepreneur() {
                     to: '/financements/$financementId',
                     params: { financementId: c.offreId },
                   })}
-                  className="flex items-center gap-1 text-[11px] font-semibold text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+                  className="flex items-center gap-1 text-[11px] font-semibold text-zinc-500 hover:text-green-700 transition-colors"
                 >
-                  Voir l'offre <ArrowRight className="w-3 h-3" />
+                  Voir l'offre <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
                 </button>
               </div>
             </div>

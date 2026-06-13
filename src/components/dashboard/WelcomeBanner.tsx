@@ -54,7 +54,7 @@ export function WelcomeBanner({
             iconBgClass,
           )}
         >
-          <Icon className={cn('h-5 w-5', colorClass)} strokeWidth={1.75} />
+          <Icon className={cn('h-5 w-5', colorClass)} strokeWidth={1.25} />
         </div>
 
         {/* Texte */}

@@ -62,7 +62,7 @@ export default function Step4({data}:{data:TypeCharte[]}) {
       }}
     >
       <CartesianGrid stroke="#aaa" strokeDasharray="5 5" />
-      <Line type="monotone" dataKey="uv" stroke="purple" strokeWidth={1} name="My data series name" />
+      <Line type="monotone" dataKey="uv" stroke="purple" strokeWidth={1.25} name="My data series name" />
       <XAxis dataKey="name" />
       <YAxis width="auto" label={{ value: 'UV   ', position: 'insideLeft', angle: -90 }}/>
       <Legend align="right" />
