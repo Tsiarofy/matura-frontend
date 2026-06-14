@@ -1,4 +1,4 @@
-import { LiveKitRoom, VideoConference, RoomAudioRenderer } from '@livekit/components-react'
+import { LiveKitRoom, VideoConference } from '@livekit/components-react'
 import '@livekit/components-styles'
 
 interface Props {
@@ -19,7 +19,6 @@ export function MaturaLiveKitRoom({ token, wsUrl, onLeave }: Props) {
       style={{ height: '100vh' }}
     >
       <VideoConference />
-      <RoomAudioRenderer />
     </LiveKitRoom>
   )
 }

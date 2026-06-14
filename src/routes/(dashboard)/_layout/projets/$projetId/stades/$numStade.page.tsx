@@ -275,11 +275,11 @@ export default function StadeNumPage() {
               <p className="text-sm text-zinc-500 mb-4">Vous pouvez planifier un appel ou démarrer un appel instantané pour discuter de l'avancement de ce stade.</p>
               <BoutonContacter participantId={projet.mentor.id} projetId={projetId} type="SUIVI" />
             </div>
-          ) : (projet && isMentor && projet.utilisateur_id) ? (
+          ) : (projet && isMentor && projet.proprietaire?.id) ? (
             <div className="flex flex-col items-center justify-center py-12 gap-4">
               <h3 className="text-lg font-semibold text-zinc-800">Organiser une réunion avec l'entrepreneur</h3>
               <p className="text-sm text-zinc-500 mb-4">Vous pouvez planifier un appel ou démarrer un appel instantané pour discuter de l'avancement de ce stade.</p>
-              <BoutonContacter participantId={projet.utilisateur_id} projetId={projetId} type="SUIVI" />
+              <BoutonContacter participantId={projet.proprietaire.id} projetId={projetId} type="SUIVI" />
             </div>
           ) : undefined,
         }}

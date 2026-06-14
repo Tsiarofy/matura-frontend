@@ -55,6 +55,9 @@ const dashboardLayoutMesFormationsCreerLazyRouteImport = createFileRoute(
 const dashboardLayoutFinancementsFinancementIdLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/financements/$financementId',
 )()
+const dashboardLayoutReunionsReunionIdIndexLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/reunions/$reunionId/',
+)()
 const dashboardLayoutProjetsProjetIdIndexLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/projets/$projetId/',
 )()
@@ -284,6 +287,18 @@ const dashboardLayoutProjetsAFinancerProjetIdRoute =
         (d) => d.Route,
       ),
     )
+const dashboardLayoutReunionsReunionIdIndexLazyRoute =
+  dashboardLayoutReunionsReunionIdIndexLazyRouteImport
+    .update({
+      id: '/reunions/$reunionId/',
+      path: '/reunions/$reunionId/',
+      getParentRoute: () => dashboardLayoutRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/reunions/$reunionId/index.lazy').then(
+        (d) => d.Route,
+      ),
+    )
 const dashboardLayoutProjetsProjetIdIndexLazyRoute =
   dashboardLayoutProjetsProjetIdIndexLazyRouteImport
     .update({
@@ -460,6 +475,7 @@ export interface FileRoutesByFullPath {
   '/formations/$formationId/': typeof dashboardLayoutFormationsFormationIdIndexLazyRoute
   '/mes-formations/$formationId/': typeof dashboardLayoutMesFormationsFormationIdIndexLazyRoute
   '/projets/$projetId/': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  '/reunions/$reunionId/': typeof dashboardLayoutReunionsReunionIdIndexLazyRoute
   '/mes-formations/$formationId/lessons/creer': typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   '/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   '/formations/$formationId/lessons/': typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
@@ -492,6 +508,7 @@ export interface FileRoutesByTo {
   '/formations/$formationId': typeof dashboardLayoutFormationsFormationIdIndexLazyRoute
   '/mes-formations/$formationId': typeof dashboardLayoutMesFormationsFormationIdIndexLazyRoute
   '/projets/$projetId': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  '/reunions/$reunionId': typeof dashboardLayoutReunionsReunionIdIndexLazyRoute
   '/mes-formations/$formationId/lessons/creer': typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   '/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   '/formations/$formationId/lessons': typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
@@ -526,6 +543,7 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/formations/$formationId/': typeof dashboardLayoutFormationsFormationIdIndexLazyRoute
   '/(dashboard)/_layout/mes-formations/$formationId/': typeof dashboardLayoutMesFormationsFormationIdIndexLazyRoute
   '/(dashboard)/_layout/projets/$projetId/': typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  '/(dashboard)/_layout/reunions/$reunionId/': typeof dashboardLayoutReunionsReunionIdIndexLazyRoute
   '/(dashboard)/_layout/mes-formations/$formationId/lessons/creer': typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   '/(dashboard)/_layout/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   '/(dashboard)/_layout/formations/$formationId/lessons/': typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
@@ -560,6 +578,7 @@ export interface FileRouteTypes {
     | '/formations/$formationId/'
     | '/mes-formations/$formationId/'
     | '/projets/$projetId/'
+    | '/reunions/$reunionId/'
     | '/mes-formations/$formationId/lessons/creer'
     | '/projets/$projetId/stades/$numStade'
     | '/formations/$formationId/lessons/'
@@ -592,6 +611,7 @@ export interface FileRouteTypes {
     | '/formations/$formationId'
     | '/mes-formations/$formationId'
     | '/projets/$projetId'
+    | '/reunions/$reunionId'
     | '/mes-formations/$formationId/lessons/creer'
     | '/projets/$projetId/stades/$numStade'
     | '/formations/$formationId/lessons'
@@ -625,6 +645,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/formations/$formationId/'
     | '/(dashboard)/_layout/mes-formations/$formationId/'
     | '/(dashboard)/_layout/projets/$projetId/'
+    | '/(dashboard)/_layout/reunions/$reunionId/'
     | '/(dashboard)/_layout/mes-formations/$formationId/lessons/creer'
     | '/(dashboard)/_layout/projets/$projetId/stades/$numStade'
     | '/(dashboard)/_layout/formations/$formationId/lessons/'
@@ -769,6 +790,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutProjetsAFinancerProjetIdRouteImport
       parentRoute: typeof dashboardLayoutRoute
     }
+    '/(dashboard)/_layout/reunions/$reunionId/': {
+      id: '/(dashboard)/_layout/reunions/$reunionId/'
+      path: '/reunions/$reunionId'
+      fullPath: '/reunions/$reunionId/'
+      preLoaderRoute: typeof dashboardLayoutReunionsReunionIdIndexLazyRouteImport
+      parentRoute: typeof dashboardLayoutRoute
+    }
     '/(dashboard)/_layout/projets/$projetId/': {
       id: '/(dashboard)/_layout/projets/$projetId/'
       path: '/projets/$projetId'
@@ -902,6 +930,7 @@ interface dashboardLayoutRouteChildren {
   dashboardLayoutFormationsFormationIdIndexLazyRoute: typeof dashboardLayoutFormationsFormationIdIndexLazyRoute
   dashboardLayoutMesFormationsFormationIdIndexLazyRoute: typeof dashboardLayoutMesFormationsFormationIdIndexLazyRoute
   dashboardLayoutProjetsProjetIdIndexLazyRoute: typeof dashboardLayoutProjetsProjetIdIndexLazyRoute
+  dashboardLayoutReunionsReunionIdIndexLazyRoute: typeof dashboardLayoutReunionsReunionIdIndexLazyRoute
   dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute: typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute: typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
@@ -944,6 +973,8 @@ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
     dashboardLayoutMesFormationsFormationIdIndexLazyRoute,
   dashboardLayoutProjetsProjetIdIndexLazyRoute:
     dashboardLayoutProjetsProjetIdIndexLazyRoute,
+  dashboardLayoutReunionsReunionIdIndexLazyRoute:
+    dashboardLayoutReunionsReunionIdIndexLazyRoute,
   dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute:
     dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute,
   dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute:

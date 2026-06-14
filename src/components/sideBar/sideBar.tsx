@@ -19,14 +19,14 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: "HandCoins", lien: "/financements", label: "Financements" },
     { icon: "UsersRound", lien: "/mentors", label: "Mentors" },
     { icon: "BookOpenText", lien: "/formations", label: "Formations" },
-    { icon: "CircleUserRound", lien: "/profil", label: "Profil" },
+    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   MENTOR: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
     { icon: "FolderOpen", lien: "/projets-suivis", label: "Projets suivis" },
     { icon: "BellDot", lien: "/demandes", label: "Demandes" },
     { icon: "BookOpenText", lien: "/mes-formations", label: "Mes Formations" },
-    { icon: "CircleUserRound", lien: "/profil", label: "Profil" },
+    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   INVESTISSEUR: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
@@ -40,7 +40,7 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
       lien: "/projets-a-financer",
       label: "À financer",
     },
-    { icon: "CircleUserRound", lien: "/profil", label: "Profil" },
+    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   ADMIN: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
@@ -51,7 +51,7 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
       label: "Investisseurs",
     },
     { icon: "Rocket", lien: "/admin/entrepreneurs", label: "Entrepreneurs" },
-    { icon: "CircleUserRound", lien: "/profil", label: "Profil" },
+    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
 };
 

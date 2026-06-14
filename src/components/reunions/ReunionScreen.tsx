@@ -1,8 +1,10 @@
 import { useMesReunions } from '@/hooks/useReunions';
 import { ReunionCard } from './ReunionCard';
 import { Video } from 'lucide-react';
+import { useParams } from '@tanstack/react-router';
 
 export function ReunionScreen() {
+  const { reunionId } = useParams({ strict: false });
   const { data: reunions, isLoading } = useMesReunions();
 
   if (isLoading) {
@@ -37,7 +39,7 @@ export function ReunionScreen() {
             En attente de confirmation ({enAttente.length})
           </h2>
           <div className="space-y-3">
-            {enAttente.map(r => <ReunionCard key={r.id} reunion={r} />)}
+            {enAttente.map(r => <ReunionCard key={r.id} reunion={r} isHighlighted={r.id === reunionId} />)}
           </div>
         </section>
       )}
@@ -49,7 +51,7 @@ export function ReunionScreen() {
             À venir & En cours ({aVenir.length})
           </h2>
           <div className="space-y-3">
-            {aVenir.map(r => <ReunionCard key={r.id} reunion={r} />)}
+            {aVenir.map(r => <ReunionCard key={r.id} reunion={r} isHighlighted={r.id === reunionId} />)}
           </div>
         </section>
       )}
@@ -61,10 +63,11 @@ export function ReunionScreen() {
             Historique
           </h2>
           <div className="space-y-3 opacity-75">
-            {historique.map(r => <ReunionCard key={r.id} reunion={r} />)}
+            {historique.map(r => <ReunionCard key={r.id} reunion={r} isHighlighted={r.id === reunionId} />)}
           </div>
         </section>
       )}
     </div>
   );
 }
+

@@ -3,7 +3,7 @@ import { useRejoindreReunion } from '@/hooks/useReunions';
 import { MaturaLiveKitRoom } from '@/components/reunions/LiveKitRoom';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { Clock, Video, AlertCircle } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 export default function RejoindrePage() {
   const { reunionId } = useParams({ strict: false });
@@ -25,7 +25,9 @@ export default function RejoindrePage() {
             });
           } else {
             toast.error(err.response?.data?.message || 'Erreur lors de l\'accès à la réunion');
-            navigate({ to: '/reunions' });
+            setTimeout(() => {
+              navigate({ to: '/reunions' });
+            }, 100);
           }
         }
       });
@@ -73,7 +75,11 @@ export default function RejoindrePage() {
       <MaturaLiveKitRoom 
         token={rejoindre.data.token} 
         wsUrl={rejoindre.data.ws_url} 
-        onLeave={() => navigate({ to: '/reunions' })}
+        onLeave={() => {
+          setTimeout(() => {
+            navigate({ to: '/reunions' });
+          }, 150);
+        }}
       />
     </div>
   );

@@ -1,22 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { ReunionSession } from '@matura/shared';
 import { useConfirmerReunion, useRefuserReunion } from '@/hooks/useReunions';
 import { useNavigate } from '@tanstack/react-router';
 import { authStore } from '@/stores/authStore';
 import { toast } from 'sonner';
 import { Video, Calendar, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Props {
   reunion: ReunionSession;
+  isHighlighted?: boolean;
 }
 
-export function ReunionCard({ reunion }: Props) {
+export function ReunionCard({ reunion, isHighlighted }: Props) {
   const user = authStore((s) => s.utilisateur);
   const navigate = useNavigate();
   const confirmer = useConfirmerReunion();
   const refuser = useRefuserReunion();
+  const cardRef = useRef<HTMLDivElement>(null);
   
   const [countdown, setCountdown] = useState<string>('');
+
+  useEffect(() => {
+    if (isHighlighted && cardRef.current) {
+      const timer = setTimeout(() => {
+        cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isHighlighted]);
+
   
   const isParticipant = user?.id === reunion.participant_id;
   const isInitiator = user?.id === reunion.initiateur_id;
@@ -60,7 +73,15 @@ export function ReunionCard({ reunion }: Props) {
   };
 
   return (
-    <div className="border border-zinc-200 rounded-xl p-4 bg-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div 
+      ref={cardRef} 
+      className={cn(
+        "border rounded-xl p-4 bg-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300",
+        isHighlighted 
+          ? "border-green-500 ring-2 ring-green-500/20 bg-green-50/5 shadow-md scale-[1.01]" 
+          : "border-zinc-200"
+      )}
+    >
       <div>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700">

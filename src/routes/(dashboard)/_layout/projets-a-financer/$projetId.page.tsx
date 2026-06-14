@@ -160,13 +160,13 @@ export default function ProjetAFinancerDetailPage() {
         )}
 
         {/* ── Bouton Contacter ── */}
-        {projetData?.utilisateur_id && (
+        {projetData?.proprietaire?.id && (
           <div className="mt-6 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
             <div>
               <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">Discuter avec l'entrepreneur</p>
               <p className="text-[12px] text-[var(--color-text-muted)]">Planifiez un entretien ou lancez un appel instantané.</p>
             </div>
-            <BoutonContacter participantId={projetData.utilisateur_id} projetId={projetId} type="ENTRETIEN" />
+            <BoutonContacter participantId={projetData.proprietaire.id} projetId={projetId} type="ENTRETIEN" />
           </div>
         )}
       </div>

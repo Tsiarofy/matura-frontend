@@ -3,7 +3,7 @@ import { useAppelInstantane } from '@/hooks/useReunions';
 import { DemandeReunionModal } from './DemandeReunionModal';
 import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import { Phone, Calendar } from 'lucide-react';
+import { Phone, Calendar, CalendarDays } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Props {
@@ -40,6 +40,10 @@ export function BoutonContacter({ participantId, projetId, type }: Props) {
       <Button size="sm" onClick={handleInstantane} disabled={appelInstantane.isPending}>
         <Phone className="w-4 h-4 mr-2" />
         Appeler
+      </Button>
+      <Button variant="ghost" size="sm" onClick={() => navigate({ to: '/reunions' })} className="text-zinc-600 hover:text-zinc-900">
+        <CalendarDays className="w-4 h-4 mr-2" />
+        Gérer les réunions
       </Button>
       
       {isModalOpen && (
