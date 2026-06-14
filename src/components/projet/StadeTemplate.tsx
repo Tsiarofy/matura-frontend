@@ -3,7 +3,7 @@ import {type  StadeDetail } from '@matura/shared'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { FileText, LineChart, UserCheck, HelpCircle, Target, AlertCircle } from 'lucide-react'
+import { FileText, LineChart, UserCheck, HelpCircle, Target, AlertCircle, Video } from 'lucide-react'
 import { authStore } from '@/stores/authStore'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 
@@ -15,6 +15,7 @@ interface StadeTemplateProps {
     metriques: ReactNode
     aide?: ReactNode // Optionnel — contenu d'aide pour le stade
     evaluation?: ReactNode // Optionnel — visible uniquement si stade SOUMIS/VALIDE/EN_REVISION
+    reunion?: ReactNode    // Optionnel — si absent, l'onglet n'apparaît pas
   }
   className?: string
 }
@@ -25,6 +26,7 @@ const TABS_CONFIG = [
   { value: 'aide', label: 'Aide', icon: HelpCircle },
   { value: 'metriques', label: 'Métriques', icon: LineChart },
   { value: 'evaluation', label: 'Évaluation', icon: UserCheck },
+  { value: 'reunion', label: 'Réunion', icon: Video },
 ]
 
 export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplateProps) {
@@ -72,6 +74,8 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
               if (tab.value === 'aide' && isMentor) return null
 
               if (tab.value === 'missions' && !ongletsContent.missions) return null
+
+              if (tab.value === 'reunion' && !ongletsContent.reunion) return null
 
               const Icon = tab.icon
               
@@ -141,6 +145,14 @@ export function StadeTemplate({ stade, ongletsContent, className }: StadeTemplat
                   En attente d'évaluation par votre mentor
                 </div>
               )}
+            </Card>
+          </TabsContent>
+        )}
+
+        {ongletsContent.reunion && (
+          <TabsContent value="reunion" className="mt-0">
+            <Card className="mx-auto w-full max-w-3xl min-h-[60vh] p-6 lg:p-8 rounded-[22px] border border-zinc-100 bg-white shadow-none">
+              {ongletsContent.reunion}
             </Card>
           </TabsContent>
         )}

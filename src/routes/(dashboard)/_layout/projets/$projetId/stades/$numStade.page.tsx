@@ -37,6 +37,7 @@ import { AideStade5 } from "@/components/stades/AideStade5";
 import { AideStade6 } from "@/components/stades/AideStade6";
 import { AideStade7 } from "@/components/stades/AideStade7";
 import { MissionsStade } from "@/components/stades/MissionsStade";
+import { BoutonContacter } from "@/components/reunions/BoutonContacter";
 
 // Map des composants d'aide
 const AIDES: Record<number, React.ReactNode> = {
@@ -268,6 +269,19 @@ export default function StadeNumPage() {
               numStade={numStade}
             />
           ),
+          reunion: (projet?.mentor && !isMentor) ? (
+            <div className="flex flex-col items-center justify-center py-12 gap-4">
+              <h3 className="text-lg font-semibold text-zinc-800">Organiser une réunion avec votre mentor</h3>
+              <p className="text-sm text-zinc-500 mb-4">Vous pouvez planifier un appel ou démarrer un appel instantané pour discuter de l'avancement de ce stade.</p>
+              <BoutonContacter participantId={projet.mentor.id} projetId={projetId} type="SUIVI" />
+            </div>
+          ) : (projet && isMentor && projet.utilisateur_id) ? (
+            <div className="flex flex-col items-center justify-center py-12 gap-4">
+              <h3 className="text-lg font-semibold text-zinc-800">Organiser une réunion avec l'entrepreneur</h3>
+              <p className="text-sm text-zinc-500 mb-4">Vous pouvez planifier un appel ou démarrer un appel instantané pour discuter de l'avancement de ce stade.</p>
+              <BoutonContacter participantId={projet.utilisateur_id} projetId={projetId} type="SUIVI" />
+            </div>
+          ) : undefined,
         }}
       />
     </div>

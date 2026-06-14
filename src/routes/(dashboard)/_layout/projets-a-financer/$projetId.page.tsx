@@ -4,6 +4,8 @@ import {
   Loader2, ArrowLeft, BarChart2, MapPin, Calendar, CheckCircle2, XCircle,
 } from 'lucide-react'
 import { FicheProjetInvestisseur } from '@/components/financement/FicheProjetInvestisseur'
+import { useProjetDetail } from '@/hooks/useStades'
+import { BoutonContacter } from '@/components/reunions/BoutonContacter'
 import { cn } from '@/lib/utils'
 
 // ── Section wrapper ────────────────────────────────────────────────────────────
@@ -58,6 +60,7 @@ export default function ProjetAFinancerDetailPage() {
   const navigate = useNavigate()
   const { candidatureId, offreId } = useSearch({ from: '/(dashboard)/_layout/projets-a-financer/$projetId' })
   const { data: fiche, isLoading, isError } = useFicheInvestisseur(projetId)
+  const { data: projetData } = useProjetDetail(projetId)
 
   const { data: candidatures } = useCandidaturesOffre(offreId ?? '', !!offreId)
   const candidature = candidatures?.find((c) => c.id === candidatureId)
@@ -154,6 +157,17 @@ export default function ProjetAFinancerDetailPage() {
           <p className="mt-4 text-[13px] text-[var(--color-text-secondary)] leading-relaxed border-t border-[var(--color-border)] pt-4">
             {identite.resume_executif}
           </p>
+        )}
+
+        {/* ── Bouton Contacter ── */}
+        {projetData?.utilisateur_id && (
+          <div className="mt-6 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
+            <div>
+              <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">Discuter avec l'entrepreneur</p>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Planifiez un entretien ou lancez un appel instantané.</p>
+            </div>
+            <BoutonContacter participantId={projetData.utilisateur_id} projetId={projetId} type="ENTRETIEN" />
+          </div>
         )}
       </div>
 
