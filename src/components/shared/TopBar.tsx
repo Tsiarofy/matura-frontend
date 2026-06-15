@@ -176,6 +176,26 @@ export function UserMenu({
 
 // ─── NOTIFICATION BELL ────────────────────────────────────────────────────────
 
+// Helper pour formater les dates dans le corps des notifications dynamiquement selon la timezone locale
+function formatNotificationCorps(corps: string): string {
+  const dateRegex = /\[DATE:([^\]]+)\]/g;
+  return corps.replace(dateRegex, (_, isoString) => {
+    try {
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return isoString;
+      return d.toLocaleString('fr-FR', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return isoString;
+    }
+  });
+}
+
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -278,7 +298,7 @@ export function NotificationBell() {
                     )}
                   </div>
                   <p className="text-[11px] text-zinc-500 mt-1 leading-normal">
-                    {n.corps}
+                    {formatNotificationCorps(n.corps)}
                   </p>
                   <p className="text-[9px] text-zinc-400 mt-1.5">
                     {new Date(n.cree_le).toLocaleDateString('fr-FR', {

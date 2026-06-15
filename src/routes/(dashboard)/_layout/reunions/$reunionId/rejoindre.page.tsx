@@ -71,7 +71,7 @@ export default function RejoindrePage() {
   }
 
   return (
-    <div className="w-full h-full min-h-screen bg-zinc-950 -m-4 sm:-m-6 lg:-m-8">
+    <div className="fixed inset-0 z-[9999] w-screen h-screen bg-zinc-950 overflow-hidden flex flex-col">
       <MaturaLiveKitRoom 
         token={rejoindre.data.token} 
         wsUrl={rejoindre.data.ws_url} 
