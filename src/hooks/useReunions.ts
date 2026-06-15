@@ -85,3 +85,16 @@ export function useRejoindreReunion() {
     },
   })
 }
+
+// ── Modifier la date ─────────────────────────────────────────────
+
+export function useModifierDateReunion() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, date_planifiee }: { id: string; date_planifiee: string }) => {
+      const { data } = await apiClient.patch(`/reunions/${id}/modifier-date`, { date_planifiee })
+      return data as ReunionSession
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: reunionKeys.list() }),
+  })
+}

@@ -6,6 +6,7 @@ import { authStore } from '@/stores/authStore';
 import { toast } from 'sonner';
 import { Video, Calendar, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ModifierDateModal } from './ModifierDateModal';
 
 interface Props {
   reunion: ReunionSession;
@@ -20,6 +21,7 @@ export function ReunionCard({ reunion, isHighlighted }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   
   const [countdown, setCountdown] = useState<string>('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (isHighlighted && cardRef.current) {
@@ -126,11 +128,19 @@ export function ReunionCard({ reunion, isHighlighted }: Props) {
             <button onClick={handleRefuser} disabled={refuser.isPending} className="flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-700 rounded-md hover:bg-red-100 text-sm font-medium">
               <XCircle className="w-4 h-4" /> Refuser
             </button>
+            <button onClick={() => setIsEditModalOpen(true)} className="flex items-center gap-1 px-3 py-1.5 bg-zinc-50 text-zinc-700 rounded-md hover:bg-zinc-100 text-sm font-medium border border-zinc-200">
+              <Calendar className="w-4 h-4" /> Reporter
+            </button>
           </div>
         )}
         
         {reunion.statut === 'EN_ATTENTE' && isInitiator && (
-          <p className="text-sm text-zinc-500 italic">En attente de confirmation</p>
+          <div className="flex flex-col items-end gap-1.5">
+            <p className="text-sm text-zinc-500 italic">En attente de confirmation</p>
+            <button onClick={() => setIsEditModalOpen(true)} className="flex items-center gap-1 px-3 py-1.5 bg-zinc-50 text-zinc-700 rounded-md hover:bg-zinc-100 text-sm font-medium border border-zinc-200">
+              <Calendar className="w-4 h-4" /> Reporter
+            </button>
+          </div>
         )}
 
         {(reunion.statut === 'CONFIRME' || reunion.statut === 'EN_COURS') && (
@@ -143,9 +153,24 @@ export function ReunionCard({ reunion, isHighlighted }: Props) {
               Rejoindre
             </button>
             {countdown && <span className="text-xs text-blue-600 font-medium flex items-center gap-1"><Clock className="w-3 h-3"/> {countdown}</span>}
+            
+            {reunion.date_planifiee && reunion.statut === 'CONFIRME' && (
+              <button onClick={() => setIsEditModalOpen(true)} className="text-xs text-zinc-500 hover:text-zinc-800 underline mt-1.5">
+                Reporter la réunion
+              </button>
+            )}
           </div>
         )}
       </div>
+
+      {isEditModalOpen && (
+        <ModifierDateModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          reunionId={reunion.id}
+          currentDate={reunion.date_planifiee}
+        />
+      )}
     </div>
   );
 }

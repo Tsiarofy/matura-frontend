@@ -1,33 +1,41 @@
 import { useState } from 'react';
-import { useDemanderReunion, useAppelInstantane } from '@/hooks/useReunions';
-import type { DemandeReunionDto } from '@matura/shared';
+import { useModifierDateReunion } from '@/hooks/useReunions';
 import { toast } from 'sonner';
-import { useNavigate } from '@tanstack/react-router';
 import { X, AlertCircle } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  participantId: string;
-  projetId: string;
-  type: 'SUIVI' | 'ENTRETIEN';
+  reunionId: string;
+  currentDate?: string | null;
 }
 
-export function DemandeReunionModal({ isOpen, onClose, participantId, projetId, type }: Props) {
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [message, setMessage] = useState('');
+export function ModifierDateModal({ isOpen, onClose, reunionId, currentDate }: Props) {
+  const [date, setDate] = useState(() => {
+    if (currentDate) {
+      return new Date(currentDate).toISOString().split('T')[0];
+    }
+    return '';
+  });
+  const [time, setTime] = useState(() => {
+    if (currentDate) {
+      const d = new Date(currentDate);
+      const h = d.getHours().toString().padStart(2, '0');
+      const m = d.getMinutes().toString().padStart(2, '0');
+      return `${h}:${m}`;
+    }
+    return '';
+  });
+  
   const [dateError, setDateError] = useState('');
   
-  const demanderReunion = useDemanderReunion();
-  const appelInstantane = useAppelInstantane();
-  const navigate = useNavigate();
+  const modifierDate = useModifierDateReunion();
 
   const validateDateTime = (selectedDate: string, selectedTime: string) => {
     if (selectedDate && selectedTime) {
       const parsed = new Date(`${selectedDate}T${selectedTime}:00`);
       if (parsed.getTime() <= Date.now()) {
-        setDateError("La date et l'heure de la réunion doivent être dans le futur.");
+        setDateError("La date et l'heure doivent être dans le futur.");
       } else {
         setDateError('');
       }
@@ -45,55 +53,31 @@ export function DemandeReunionModal({ isOpen, onClose, participantId, projetId, 
       return;
     }
     
-    // Create ISO string
     const parsedDate = new Date(`${date}T${time}:00`);
     if (parsedDate.getTime() <= Date.now()) {
-      setDateError("La date et l'heure de la réunion doivent être dans le futur.");
+      setDateError("La date et l'heure doivent être dans le futur.");
       toast.error('La date et l\'heure de la réunion doivent être dans le futur.');
       return;
     }
-    
-    const datePlanifiee = parsedDate.toISOString();
-    
-    const payload: DemandeReunionDto = {
-      participant_id: participantId,
-      projet_id: projetId,
-      type,
-      date_planifiee: datePlanifiee,
-      message: message || undefined,
-    };
 
-    demanderReunion.mutate(payload, {
+    const datePlanifiee = parsedDate.toISOString();
+
+    modifierDate.mutate({ id: reunionId, date_planifiee: datePlanifiee }, {
       onSuccess: () => {
-        toast.success('Demande de réunion envoyée avec succès');
+        toast.success('Proposition de nouvelle date envoyée');
         onClose();
       },
       onError: (err: any) => {
-        toast.error(err.response?.data?.message || 'Erreur lors de la demande');
+        toast.error(err.response?.data?.message || 'Erreur lors de la modification');
       }
     });
-  };
-
-  const handleInstantane = () => {
-    appelInstantane.mutate(
-      { participant_id: participantId, projet_id: projetId, type },
-      {
-        onSuccess: (data) => {
-          navigate({ to: '/reunions/$reunionId/rejoindre', params: { reunionId: data.id } });
-          onClose();
-        },
-        onError: (err: any) => {
-          toast.error(err.response?.data?.message || 'Erreur lors de l\'appel');
-        }
-      }
-    );
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Planifier une réunion</h2>
+          <h2 className="text-lg font-semibold">Proposer une autre date</h2>
           <button onClick={onClose} className="p-1 hover:bg-zinc-100 rounded-full">
             <X className="w-5 h-5 text-zinc-500" />
           </button>
@@ -146,39 +130,20 @@ export function DemandeReunionModal({ isOpen, onClose, participantId, projetId, 
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-1">Message (optionnel)</label>
-            <textarea 
-              rows={3}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Sujet de la réunion..."
-              className="w-full px-3 py-2 border rounded-md resize-none"
-            />
-          </div>
-
-          <div className="flex flex-col gap-3 pt-4">
+          <div className="flex gap-3 pt-4">
+            <button 
+              type="button"
+              onClick={onClose}
+              className="w-1/2 border py-2 rounded-md hover:bg-zinc-50 text-sm font-medium cursor-pointer"
+            >
+              Annuler
+            </button>
             <button 
               type="submit" 
-              disabled={demanderReunion.isPending || !!dateError}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:cursor-not-allowed font-medium transition-colors cursor-pointer"
+              disabled={modifierDate.isPending || !!dateError}
+              className="w-1/2 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer"
             >
-              {demanderReunion.isPending ? 'Envoi...' : 'Envoyer la demande'}
-            </button>
-            
-            <div className="relative flex items-center py-2">
-              <div className="flex-grow border-t border-zinc-200"></div>
-              <span className="flex-shrink-0 mx-4 text-zinc-400 text-sm">OU</span>
-              <div className="flex-grow border-t border-zinc-200"></div>
-            </div>
-
-            <button 
-              type="button" 
-              onClick={handleInstantane}
-              disabled={appelInstantane.isPending}
-              className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
-            >
-              Démarrer un appel instantané
+              {modifierDate.isPending ? 'Envoi...' : 'Valider'}
             </button>
           </div>
         </form>
