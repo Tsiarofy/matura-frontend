@@ -1,10 +1,9 @@
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router'
 import { useFicheInvestisseur, useChangerStatutCandidature, useCandidaturesOffre } from '@/hooks/useInvestisseur'
 import {
-  Loader2, ArrowLeft, BarChart2, MapPin, Calendar, CheckCircle2, XCircle,
+  Loader2, ArrowLeft, BarChart2, MapPin, Calendar, CheckCircle2, XCircle, AlertCircle, Clock
 } from 'lucide-react'
 import { FicheProjetInvestisseur } from '@/components/financement/FicheProjetInvestisseur'
-import { useProjetDetail } from '@/hooks/useStades'
 import { BoutonContacter } from '@/components/reunions/BoutonContacter'
 import { cn } from '@/lib/utils'
 
@@ -60,7 +59,6 @@ export default function ProjetAFinancerDetailPage() {
   const navigate = useNavigate()
   const { candidatureId, offreId } = useSearch({ from: '/(dashboard)/_layout/projets-a-financer/$projetId' })
   const { data: fiche, isLoading, isError } = useFicheInvestisseur(projetId)
-  const { data: projetData } = useProjetDetail(projetId)
 
   const { data: candidatures } = useCandidaturesOffre(offreId ?? '', !!offreId)
   const candidature = candidatures?.find((c) => c.id === candidatureId)
@@ -78,13 +76,13 @@ export default function ProjetAFinancerDetailPage() {
   if (isError || !fiche) {
     return (
       <div className="flex flex-col items-center py-16 gap-3 text-center">
-        <span className="text-3xl">⚠️</span>
+        <AlertCircle className="w-10 h-10 text-rose-500" />
         <p className="text-[13px] text-[var(--color-text-muted)]">Impossible de charger ce projet.</p>
         <button
           className="text-[12px] font-semibold text-[#6f74f7] hover:text-[#5c61e8] transition-colors"
           onClick={() => navigate({ to: '/projets-a-financer' })}
         >
-          ← Retour aux projets
+          Retour aux projets
         </button>
       </div>
     )
@@ -160,13 +158,13 @@ export default function ProjetAFinancerDetailPage() {
         )}
 
         {/* ── Bouton Contacter ── */}
-        {projetData?.proprietaire?.id && (
+        {identite.proprietaire_id && (
           <div className="mt-6 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
             <div>
               <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">Discuter avec l'entrepreneur</p>
               <p className="text-[12px] text-[var(--color-text-muted)]">Planifiez un entretien ou lancez un appel instantané.</p>
             </div>
-            <BoutonContacter participantId={projetData.proprietaire.id} projetId={projetId} type="ENTRETIEN" />
+            <BoutonContacter participantId={identite.proprietaire_id} projetId={projetId} type="ENTRETIEN" />
           </div>
         )}
       </div>
@@ -193,18 +191,31 @@ export default function ProjetAFinancerDetailPage() {
 
       {/* ── Decision Investisseur ── */}
       {candidature && (
-        <div className="border border-zinc-100 bg-white rounded-[22px] p-6">
-          <div className="flex gap-4 items-center flex-wrap">
-            <div className="flex-1 min-w-[200px]">
-              <p className="text-[14px] font-semibold text-[var(--color-text-primary)]">
+        <div className="border border-zinc-150 bg-zinc-50/50 rounded-[22px] p-6 sm:p-7 mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="inline-flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full">
+                Évaluation & Décision
+              </span>
+              <h3 className="text-[15px] font-bold text-zinc-900 font-heading mt-1">
                 Décision de financement
-              </p>
-              <p className="text-[12px] text-[var(--color-text-muted)] mt-0.5">
-                Statut actuel :{' '}
-                <span className="font-semibold text-[var(--color-text-secondary)]">{candidature.statut}</span>
+              </h3>
+              <p className="text-[12.5px] text-zinc-500">
+                Statut actuel de la candidature :{' '}
+                <span className={cn(
+                  'font-bold px-2.5 py-0.5 rounded-full text-[10.5px] border ml-1',
+                  candidature.statut === 'ACCEPTEE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50' :
+                  candidature.statut === 'REJETEE' ? 'bg-rose-50 text-rose-700 border-rose-200/50' :
+                  candidature.statut === 'EN_REVUE' ? 'bg-blue-50 text-blue-700 border-blue-200/50' : 'bg-amber-50 text-amber-700 border-amber-200/50'
+                )}>
+                  {candidature.statut === 'ACCEPTEE' ? 'Acceptée' :
+                   candidature.statut === 'REJETEE' ? 'Rejetée' :
+                   candidature.statut === 'EN_REVUE' ? 'En revue' : 'En attente'}
+                </span>
               </p>
             </div>
-            <div className="flex gap-2 shrink-0">
+
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
               {(candidature.statut === 'EN_ATTENTE' || candidature.statut === 'EN_REVUE') && (
                 <>
                   <button
@@ -221,9 +232,9 @@ export default function ProjetAFinancerDetailPage() {
                         }
                       )
                     }
-                    className="flex items-center gap-1.5 px-4 py-2 bg-[var(--color-success)] hover:brightness-95 text-white rounded-[12px] text-[12px] font-semibold transition-all disabled:opacity-50 cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" /> Accepter
+                    <CheckCircle2 className="w-4 h-4" /> Accepter le projet
                   </button>
                   <button
                     disabled={changerStatut.isPending}
@@ -239,9 +250,9 @@ export default function ProjetAFinancerDetailPage() {
                         }
                       )
                     }
-                    className="flex items-center gap-1.5 px-4 py-2 border border-[var(--color-error-border)] text-[var(--color-error)] rounded-[12px] hover:bg-[var(--color-error-bg)] text-[12px] font-semibold transition-all disabled:opacity-50 cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-rose-200 text-rose-700 hover:bg-rose-50/50 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <XCircle className="w-3.5 h-3.5" /> Rejeter
+                    <XCircle className="w-4 h-4" /> Rejeter
                   </button>
                 </>
               )}
@@ -255,9 +266,9 @@ export default function ProjetAFinancerDetailPage() {
                       offreId: offreId!,
                     })
                   }
-                  className="px-4 py-2 border border-[var(--color-border)] text-[var(--color-text-secondary)] rounded-[12px] hover:bg-[var(--color-surface-soft)] text-[12px] font-semibold transition-all disabled:opacity-50 cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-zinc-200 text-zinc-650 hover:bg-zinc-100 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
                 >
-                  ↩ Remettre en revue
+                  <Clock className="w-4 h-4" /> Remettre en revue
                 </button>
               )}
             </div>
