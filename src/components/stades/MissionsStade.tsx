@@ -61,9 +61,10 @@ interface MissionsStadeProps {
   projetId: string;
   numStade: number;
   isMentor: boolean;
+  statutStade?: string;
 }
 
-export function MissionsStade({ projetId, numStade, isMentor }: MissionsStadeProps) {
+export function MissionsStade({ projetId, numStade, isMentor, statutStade }: MissionsStadeProps) {
   const { data: missions, isLoading } = useMissions(projetId, numStade);
 
   if (isLoading) return <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-green-600" /></div>;
@@ -78,7 +79,7 @@ export function MissionsStade({ projetId, numStade, isMentor }: MissionsStadePro
         <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center"><Target className="w-5 h-5 text-zinc-400" /></div>
         <div className="text-center">
           <p className="text-[13px] text-zinc-500">{isMentor ? "Aucune mission définie pour ce stade." : "Votre mentor n'a pas encore défini de missions pour ce stade."}</p>
-          {isMentor && (
+          {isMentor && statutStade !== "VALIDE" && (
             <Link to="/projets/$projetId/stades/$numStade/definir-missions" params={{ projetId, numStade: String(numStade) }} className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[12px] font-medium transition-colors shadow-sm">
               <Target className="w-3.5 h-3.5" />
               Définir des missions
@@ -96,7 +97,7 @@ export function MissionsStade({ projetId, numStade, isMentor }: MissionsStadePro
           <div className="bg-white px-3 py-1.5 rounded-lg border border-zinc-200 shadow-sm">
             <p className="text-[13px] text-zinc-600"><span className="font-semibold text-zinc-900">{validees}</span> / {total} validées</p>
           </div>
-          {isMentor && (
+          {isMentor && statutStade !== "VALIDE" && (
             <Link to="/projets/$projetId/stades/$numStade/definir-missions" params={{ projetId, numStade: String(numStade) }} className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 rounded-lg text-[12px] font-medium transition-colors shadow-sm">
               <Settings className="w-3.5 h-3.5" /> Gérer les missions
             </Link>

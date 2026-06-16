@@ -73,10 +73,16 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {pvF.map((f, i) => (
-          <div key={f.id} className="flex gap-2 items-center">
-            <input {...register(`propositions_valeur.${i}.proposition`)} className={cn(inp, 'flex-1')} placeholder="Proposition de valeur" />
-            <input {...register(`propositions_valeur.${i}.pour_segment`)} className={cn(inp, 'w-36')} placeholder="Pour segment" />
-            {pvF.length > 1 && <button type="button" onClick={() => remPv(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+          <div key={f.id} className="grid grid-cols-[4fr_2.5fr_auto] gap-2 items-center">
+            <input {...register(`propositions_valeur.${i}.proposition`)} className={inp} placeholder="Proposition de valeur" />
+            <input {...register(`propositions_valeur.${i}.pour_segment`)} className={inp} placeholder="Pour segment" />
+            {pvF.length > 1 ? (
+              <button type="button" onClick={() => remPv(i)} className="text-red-400 p-1">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <div className="w-5" />
+            )}
           </div>
         ))}
       </div>
@@ -89,10 +95,16 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {segF.map((f, i) => (
-          <div key={f.id} className="flex gap-2 items-center">
-            <input {...register(`segments_clients.${i}.nom`)} className={cn(inp, 'flex-1')} placeholder="Segment" />
-            <input type="number" min={0} {...register(`segments_clients.${i}.taille_estimee`, { valueAsNumber: true })} className={cn(inp, 'w-24')} placeholder="Taille" />
-            {segF.length > 1 && <button type="button" onClick={() => remSeg(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+          <div key={f.id} className="grid grid-cols-[4.5fr_1.8fr_auto] gap-2 items-center">
+            <input {...register(`segments_clients.${i}.nom`)} className={inp} placeholder="Segment" />
+            <input type="number" min={0} {...register(`segments_clients.${i}.taille_estimee`, { valueAsNumber: true })} className={inp} placeholder="Taille" />
+            {segF.length > 1 ? (
+              <button type="button" onClick={() => remSeg(i)} className="text-red-400 p-1">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <div className="w-5" />
+            )}
           </div>
         ))}
       </div>
@@ -105,12 +117,18 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {resF.map((f, i) => (
-          <div key={f.id} className="flex gap-2 items-center">
-            <input {...register(`ressources_cles.${i}.ressource`)} className={cn(inp, 'flex-1')} placeholder="Ressource" />
-            <select {...register(`ressources_cles.${i}.type`)} className={cn(sel, 'w-32')}>
+          <div key={f.id} className="grid grid-cols-[4fr_2fr_auto] gap-2 items-center">
+            <input {...register(`ressources_cles.${i}.ressource`)} className={inp} placeholder="Ressource" />
+            <select {...register(`ressources_cles.${i}.type`)} className={sel}>
               {['HUMAIN','PHYSIQUE','INTELLECTUELLE','FINANCIERE'].map(t => <option key={t} value={t}>{t}</option>)}
             </select>
-            {resF.length > 1 && <button type="button" onClick={() => remRes(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            {resF.length > 1 ? (
+              <button type="button" onClick={() => remRes(i)} className="text-red-400 p-1">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <div className="w-5" />
+            )}
           </div>
         ))}
       </div>
@@ -123,12 +141,18 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {actF.map((f, i) => (
-          <div key={f.id} className="flex gap-2 items-center">
-            <input {...register(`activites_cles.${i}.activite`)} className={cn(inp, 'flex-1')} placeholder="Activité" />
-            <select {...register(`activites_cles.${i}.type`)} className={cn(sel, 'w-32')}>
+          <div key={f.id} className="grid grid-cols-[4fr_2fr_auto] gap-2 items-center">
+            <input {...register(`activites_cles.${i}.activite`)} className={inp} placeholder="Activité" />
+            <select {...register(`activites_cles.${i}.type`)} className={sel}>
               {['PRODUCTION','RESOLUTION_PROBLEME','PLATEFORME','RESEAU'].map(t => <option key={t} value={t}>{t.replace('_',' ')}</option>)}
             </select>
-            {actF.length > 1 && <button type="button" onClick={() => remAct(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            {actF.length > 1 ? (
+              <button type="button" onClick={() => remAct(i)} className="text-red-400 p-1">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <div className="w-5" />
+            )}
           </div>
         ))}
       </div>
@@ -142,9 +166,9 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
         </div>
         {partF.map((f, i) => (
           <div key={f.id} className="bg-zinc-50 rounded-lg p-3 space-y-2">
-            <div className="flex gap-2">
-              <input {...register(`partenaires_cles.${i}.partenaire`)} className={cn(inp, 'flex-1')} placeholder="Partenaire" />
-              <select {...register(`partenaires_cles.${i}.type`)} className={cn(sel, 'w-40')}>
+            <div className="grid grid-cols-[4fr_2fr_auto] gap-2 items-center">
+              <input {...register(`partenaires_cles.${i}.partenaire`)} className={inp} placeholder="Partenaire" />
+              <select {...register(`partenaires_cles.${i}.type`)} className={sel}>
                 {['FOURNISSEUR','ALLIANCE_STRATEGIQUE','CO_ENTREPRISE','ACHETEUR_VENDEUR'].map(t => <option key={t} value={t}>{t.replace('_',' ')}</option>)}
               </select>
               {partF.length > 1 && <button type="button" onClick={() => remPart(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
@@ -197,13 +221,19 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {coutF.map((f, i) => (
-          <div key={f.id} className="flex gap-2 items-center">
-            <select {...register(`structure_couts.${i}.categorie`)} className={cn(sel, 'w-32')}>
+          <div key={f.id} className="grid grid-cols-[1.2fr_2.8fr_1.5fr_auto] gap-2 items-center">
+            <select {...register(`structure_couts.${i}.categorie`)} className={sel}>
               {['PERSONNEL','TECH','MARKETING','LOGISTIQUE','LOYER','AUTRE'].map(c => <option key={c} value={c}>{c}</option>)}
             </select>
-            <input {...register(`structure_couts.${i}.libelle`)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-            <input type="number" min={0} {...register(`structure_couts.${i}.montant_mensuel_ar`, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
-            {coutF.length > 1 && <button type="button" onClick={() => remCout(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            <input {...register(`structure_couts.${i}.libelle`)} className={inp} placeholder="Libellé" />
+            <input type="number" min={0} {...register(`structure_couts.${i}.montant_mensuel_ar`, { valueAsNumber: true })} className={inp} placeholder="Ar/mois" />
+            {coutF.length > 1 ? (
+              <button type="button" onClick={() => remCout(i)} className="text-red-400 p-1">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <div className="w-5" />
+            )}
           </div>
         ))}
       </div>
@@ -358,26 +388,38 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
         <div>
           <div className="flex items-center justify-between mb-1">
             <label className="text-[11px] text-zinc-500">Charges fixes (mensuel)</label>
-            <button type="button" onClick={() => addFix({ libelle: '', montant_mensuel_ar: 0 })} className="text-[11px] text-green-600 flex items-center gap-1"><Plus className="w-3 h-3" />+</button>
+            <button type="button" onClick={() => addFix({ libelle: '', montant_mensuel_ar: 0 })} className="text-[11px] text-green-600 flex items-center gap-1"><Plus className="w-3.5 h-3.5" />+</button>
           </div>
           {fixF.map((f, i) => (
-            <div key={f.id} className="flex gap-2 mb-1">
-              <input {...register(`finances.charges_fixes.${i}.libelle` as never)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-              <input type="number" min={0} {...register(`finances.charges_fixes.${i}.montant_mensuel_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/mois" />
-              {fixF.length > 1 && <button type="button" onClick={() => remFix(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            <div key={f.id} className="grid grid-cols-[3fr_1.8fr_auto] gap-2 mb-1 items-center">
+              <input {...register(`finances.charges_fixes.${i}.libelle` as never)} className={inp} placeholder="Libellé" />
+              <input type="number" min={0} {...register(`finances.charges_fixes.${i}.montant_mensuel_ar` as never, { valueAsNumber: true })} className={inp} placeholder="Ar/mois" />
+              {fixF.length > 1 ? (
+                <button type="button" onClick={() => remFix(i)} className="text-red-400 p-1">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="w-5" />
+              )}
             </div>
           ))}
         </div>
         <div>
           <div className="flex items-center justify-between mb-1">
             <label className="text-[11px] text-zinc-500">Charges variables (par unité)</label>
-            <button type="button" onClick={() => addVar({ libelle: '', montant_par_unite_ar: 0 })} className="text-[11px] text-green-600 flex items-center gap-1"><Plus className="w-3 h-3" />+</button>
+            <button type="button" onClick={() => addVar({ libelle: '', montant_par_unite_ar: 0 })} className="text-[11px] text-green-600 flex items-center gap-1"><Plus className="w-3.5 h-3.5" />+</button>
           </div>
           {varF.map((f, i) => (
-            <div key={f.id} className="flex gap-2 mb-1">
-              <input {...register(`finances.charges_variables.${i}.libelle` as never)} className={cn(inp, 'flex-1')} placeholder="Libellé" />
-              <input type="number" min={0} {...register(`finances.charges_variables.${i}.montant_par_unite_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Ar/unité" />
-              {varF.length > 1 && <button type="button" onClick={() => remVar(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            <div key={f.id} className="grid grid-cols-[3fr_1.8fr_auto] gap-2 mb-1 items-center">
+              <input {...register(`finances.charges_variables.${i}.libelle` as never)} className={inp} placeholder="Libellé" />
+              <input type="number" min={0} {...register(`finances.charges_variables.${i}.montant_par_unite_ar` as never, { valueAsNumber: true })} className={inp} placeholder="Ar/unité" />
+              {varF.length > 1 ? (
+                <button type="button" onClick={() => remVar(i)} className="text-red-400 p-1">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="w-5" />
+              )}
             </div>
           ))}
         </div>
@@ -392,10 +434,16 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
         </div>
         {jalF.map((f, i) => (
           <div key={f.id} className="bg-zinc-50 rounded-lg p-3 space-y-2">
-            <div className="flex gap-2">
-              <input {...register(`jalons.${i}.titre`)} className={cn(inp, 'flex-1')} placeholder="Titre jalon" />
-              <input type="date" {...register(`jalons.${i}.date_cible`)} className={cn(inp, 'w-36')} />
-              {jalF.length > 1 && <button type="button" onClick={() => remJal(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            <div className="grid grid-cols-[4fr_1.8fr_auto] gap-2 items-center">
+              <input {...register(`jalons.${i}.titre`)} className={inp} placeholder="Titre jalon" />
+              <input type="date" {...register(`jalons.${i}.date_cible`)} className={inp} />
+              {jalF.length > 1 ? (
+                <button type="button" onClick={() => remJal(i)} className="text-red-400 p-1">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="w-5" />
+              )}
             </div>
             <div className="grid grid-cols-2 gap-2">
               <input {...register(`jalons.${i}.responsable`)} className={inp} placeholder="Responsable" />
@@ -492,13 +540,19 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
         </div>
         {retF.map((f, i) => (
           <div key={f.id} className="bg-zinc-50 rounded-lg p-3 space-y-2">
-            <div className="flex gap-2">
-              <input type="date" {...register(`retours_clients.${i}.date`)} className={cn(inp, 'w-36')} />
-              <input {...register(`retours_clients.${i}.profil`)} className={cn(inp, 'flex-1')} placeholder="Profil client" />
-              <select {...register(`retours_clients.${i}.sentiment`)} className={cn(sel, 'w-32')}>
+            <div className="grid grid-cols-[1.3fr_3.5fr_1.5fr_auto] gap-2 items-center">
+              <input type="date" {...register(`retours_clients.${i}.date`)} className={inp} />
+              <input {...register(`retours_clients.${i}.profil`)} className={inp} placeholder="Profil client" />
+              <select {...register(`retours_clients.${i}.sentiment`)} className={sel}>
                 {['POSITIF','NEGATIF','NEUTRE','MIXTE'].map(s => <option key={s} value={s}>{s}</option>)}
               </select>
-              {retF.length > 1 && <button type="button" onClick={() => remRet(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+              {retF.length > 1 ? (
+                <button type="button" onClick={() => remRet(i)} className="text-red-400 p-1">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="w-5" />
+              )}
             </div>
             <input {...register(`retours_clients.${i}.verbatim`)} className={inp} placeholder="Verbatim du retour" />
             <input {...register(`retours_clients.${i}.action_prise`)} className={inp} placeholder="Action prise suite à ce retour *" />
@@ -515,10 +569,16 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
         </div>
         {iterF.map((f, i) => (
           <div key={f.id} className="bg-zinc-50 rounded-lg p-3 space-y-2">
-            <div className="flex gap-2">
-              <input {...register(`iterations.${i}.version`)} className={cn(inp, 'w-24')} placeholder="v1.0" />
-              <input type="date" {...register(`iterations.${i}.date`)} className={cn(inp, 'w-36')} />
-              {iterF.length > 1 && <button type="button" onClick={() => remIter(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+            <div className="grid grid-cols-[2.5fr_2fr_auto] gap-2 items-center">
+              <input {...register(`iterations.${i}.version`)} className={inp} placeholder="v1.0" />
+              <input type="date" {...register(`iterations.${i}.date`)} className={inp} />
+              {iterF.length > 1 ? (
+                <button type="button" onClick={() => remIter(i)} className="text-red-400 p-1">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="w-5" />
+              )}
             </div>
             <input {...register(`iterations.${i}.declencheur`)} className={inp} placeholder="Déclencheur" />
             <input {...register(`iterations.${i}.changement`)} className={inp} placeholder="Changement effectué" />
@@ -608,16 +668,22 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
           <div className="flex items-center justify-between mb-1">
             <label className="text-[11px] text-zinc-500">Utilisation des fonds</label>
             <button type="button" onClick={() => addUtil({ categorie: 'MARKETING', montant_ar: 0, justification: '', delai_mois: 6 } as never)}
-              className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3 h-3" />+</button>
+              className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" />+</button>
           </div>
           {utilF.map((f, i) => (
-            <div key={f.id} className="flex gap-2 items-center mb-1">
-              <select {...register(`demande_financement.utilisation.${i}.categorie` as never)} className={cn(sel, 'w-36')}>
+            <div key={f.id} className="grid grid-cols-[1.2fr_1.3fr_2.8fr_auto] gap-2 items-center mb-1">
+              <select {...register(`demande_financement.utilisation.${i}.categorie` as never)} className={sel}>
                 {['DEV_PRODUIT','MARKETING','EQUIPE','INFRASTRUCTURE','FONDS_ROULEMENT','AUTRE'].map(c => <option key={c} value={c}>{c.replace('_',' ')}</option>)}
               </select>
-              <input type="number" min={0} {...register(`demande_financement.utilisation.${i}.montant_ar` as never, { valueAsNumber: true })} className={cn(inp, 'w-32')} placeholder="Montant Ar" />
+              <input type="number" min={0} {...register(`demande_financement.utilisation.${i}.montant_ar` as never, { valueAsNumber: true })} className={inp} placeholder="Montant Ar" />
               <input {...register(`demande_financement.utilisation.${i}.justification` as never)} className={cn(inp, 'flex-1')} placeholder="Justification" />
-              {utilF.length > 1 && <button type="button" onClick={() => remUtil(i)} className="text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>}
+              {utilF.length > 1 ? (
+                <button type="button" onClick={() => remUtil(i)} className="text-red-400 p-1">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <div className="w-5" />
+              )}
             </div>
           ))}
         </div>

@@ -4,7 +4,7 @@ import { useMesOffres } from '@/hooks/useInvestisseur'
 import { useMesCandidatures } from '@/hooks/useFinancements'
 import {authStore} from '@/stores/authStore'
 import { StatutOffre, StatutCandidature, TypeFinancement } from '@matura/shared'
-import { Loader2, Plus, ChevronRight, Layers, ArrowRight, BarChart3, Clock, Factory, Folder, BadgeDollarSign } from 'lucide-react'
+import { Loader2, Plus, ChevronRight, Layers, ArrowRight, BarChart3, Clock, Folder, BadgeDollarSign } from 'lucide-react'
 import { OffreFinancementForm } from '@/components/financement/OffreFinancementForm'
 import { cn } from '@/lib/utils'
 

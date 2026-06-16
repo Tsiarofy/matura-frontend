@@ -37,6 +37,7 @@ export interface FicheInvestisseur {
   identite: {
     id: string; titre: string; domaine: string; region: string
     brl_actuel: number; date_creation: string | null; resume_executif: string | null
+    proprietaire_id?: string
   }
   equipe: {
     fondateur: { prenom_nom: string; avatar_url: string | null; bio: string | null }

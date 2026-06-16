@@ -214,6 +214,7 @@ export default function StadeNumPage() {
               projetId={projetId}
               numStade={numStade}
               isMentor={isMentor}
+              statutStade={stade.statut}
             />
           ),
           saisie: FormComponent ? (

@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react'
+import { Component } from 'react'
+import type { ErrorInfo, ReactNode } from 'react'
 import { LiveKitRoom, VideoConference, useParticipants } from '@livekit/components-react'
 import '@livekit/components-styles'
 import { Users, AlertCircle, RefreshCw } from 'lucide-react'

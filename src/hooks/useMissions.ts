@@ -6,6 +6,7 @@ import { apiClient } from '@/lib/apiClient'
 export type { FichierRequis }
 
 export interface FichierRequisItemDto {
+  id?: string
   type: 'PDF' | 'EXCEL' | 'IMAGE' | 'VIDEO'
   description: string
   ordre?: number
@@ -72,9 +73,11 @@ export function useCreerMissions(projetId: string, numStade: number) {
       qc.invalidateQueries({ queryKey: ['stade', projetId, numStade] })
       toast.success('Missions enregistrées')
     },
-    onError: (err: Error & { response?: { data?: { message?: string } } }) => {
+    onError: (err: Error & { response?: { data?: { message?: string | string[] } } }) => {
+      const msg = err.response?.data?.message
+      const desc = Array.isArray(msg) ? msg.join(', ') : (msg ?? err.message)
       toast.error('Erreur', {
-        description: err.response?.data?.message ?? err.message,
+        description: desc,
       })
     },
   })
