@@ -27,25 +27,30 @@ const STADE_LABELS: Record<number, string> = {
 
 function getStadeCircleClasses(stade: StadeInfo, isCurrent: boolean): string {
   if (stade.statut === 'VALIDE') {
-    return 'bg-green-600 text-white border-green-600'
+    return 'bg-[#41A677] text-white border-transparent'
   }
   if (isCurrent) {
-    return 'bg-white text-green-600 border-green-500 border-[1.5px]'
+    return 'bg-[#3A8FC4] text-white border-transparent shadow-[0_0_0_3px_#EBF5FC]'
   }
-  if (stade.statut === 'EN_REVISION') {
-    return 'bg-amber-50 text-amber-700 border-amber-400 border-[1.5px]'
-  }
-  if (stade.statut === 'VERROUILLE') {
-    return 'bg-zinc-100 text-zinc-400 border-zinc-200'
-  }
-  return 'bg-white text-zinc-600 border-zinc-200'
+  return 'bg-[#f6f6f4] text-[#b6b6b6] border-[#e5e5e1] border-[1.5px]'
 }
 
-function getConnectorClasses(prevStade?: StadeInfo): string {
-  if (prevStade?.statut === 'VALIDE') {
-    return 'bg-green-200'
+function getConnectorStyle(leftStade: StadeInfo, rightStade: StadeInfo, currentStade: number): string {
+  const leftDone = leftStade.statut === 'VALIDE';
+  const rightDone = rightStade.statut === 'VALIDE';
+  const leftActive = leftStade.numero === currentStade;
+  const rightActive = rightStade.numero === currentStade;
+
+  if (leftDone && rightDone) {
+    return 'bg-[#41A677] h-[1.5px]';
   }
-  return 'bg-zinc-200'
+  if (leftDone && rightActive) {
+    return 'bg-gradient-to-r from-[#41A677] to-[#3A8FC4] h-[1.5px]';
+  }
+  if (leftActive && rightDone) {
+    return 'bg-gradient-to-r from-[#3A8FC4] to-[#41A677] h-[1.5px]';
+  }
+  return 'bg-[#e5e5e1] h-[1.5px]';
 }
 
 export function StadeStepperH({ stades, currentStade, onStadeClick, className }: StadeStepperHProps) {
@@ -55,30 +60,29 @@ export function StadeStepperH({ stades, currentStade, onStadeClick, className }:
         {stades.map((stade, index) => {
           const isCurrent = stade.numero === currentStade
           const isClickable = stade.statut !== 'VERROUILLE' && onStadeClick
-          const prevStade = index > 0 ? stades[index - 1] : undefined
 
           return (
             <div key={stade.numero} className="flex items-center flex-1">
               {/* Connecteur gauche (sauf pour le premier) */}
               {index > 0 && (
-                <div className={cn('h-px flex-1', getConnectorClasses(prevStade))} />
+                <div className={cn('flex-1', getConnectorStyle(stades[index - 1], stade, currentStade))} />
               )}
 
               {/* Cercle stade */}
-              <div className="flex flex-col items-center gap-1 px-2">
+              <div className="flex flex-col items-center gap-1.5 px-2">
                 <button
                   onClick={() => isClickable && onStadeClick(stade.numero)}
                   disabled={!isClickable}
                   className={cn(
-                    'w-6 h-6 rounded-full flex items-center justify-center',
-                    'text-[11px] font-medium transition-all',
+                    'w-[26px] h-[26px] rounded-full flex items-center justify-center',
+                    'text-[11px] font-semibold transition-all',
                     getStadeCircleClasses(stade, isCurrent),
                     isClickable && 'hover:scale-110 cursor-pointer',
                     !isClickable && 'cursor-not-allowed'
                   )}
                 >
                   {stade.statut === 'VALIDE' ? (
-                    <Check className="w-3.5 h-3.5" strokeWidth={1.25} />
+                    <Check className="w-3.5 h-3.5" strokeWidth={2} />
                   ) : (
                     stade.numero
                   )}
@@ -87,8 +91,9 @@ export function StadeStepperH({ stades, currentStade, onStadeClick, className }:
                 {/* Label */}
                 <span
                   className={cn(
-                    'text-[9px] font-normal text-center whitespace-nowrap',
-                    isCurrent ? 'text-green-600 font-medium' : 'text-zinc-400'
+                    'text-[9px] text-center whitespace-nowrap transition-colors',
+                    stade.statut === 'VALIDE' ? 'text-[#318055] font-medium' :
+                    isCurrent ? 'text-[#1C5F8C] font-semibold' : 'text-[#b6b6b6]'
                   )}
                 >
                   {STADE_LABELS[stade.numero]}
@@ -97,7 +102,7 @@ export function StadeStepperH({ stades, currentStade, onStadeClick, className }:
 
               {/* Connecteur droit (sauf pour le dernier) */}
               {index < stades.length - 1 && (
-                <div className={cn('h-px flex-1', getConnectorClasses(stade))} />
+                <div className={cn('flex-1', getConnectorStyle(stade, stades[index + 1], currentStade))} />
               )}
             </div>
           )

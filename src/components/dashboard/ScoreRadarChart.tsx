@@ -16,11 +16,11 @@ interface ScoreRadarChartProps {
 // ─── Palette de couleurs (Design System 1.4 / 1.5) ───────────────────────────
 
 const DIMENSIONS = [
-  { key: "score_innovation", label: "Innovation", color: "#6AD972" },
-  { key: "score_marche", label: "Marché", color: "#87CFB4" },
-  { key: "score_equipe", label: "Équipe", color: "#C8F2CB" },
-  { key: "score_finance", label: "Finance", color: "#3D3D3D" },
-  { key: "score_execution", label: "Exécution", color: "#E5E5E5" },
+  { key: "score_innovation", label: "Innovation", color: "#41A677" },
+  { key: "score_equipe", label: "Équipe", color: "#1BA8A0" },
+  { key: "score_marche", label: "Marché", color: "#3A8FC4" },
+  { key: "score_execution", label: "Exécution", color: "#f3b63f" },
+  { key: "score_finance", label: "Finance", color: "#6f74f7" },
 ];
 
 function CustomTooltip({ active, payload }: any) {

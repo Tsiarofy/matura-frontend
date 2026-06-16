@@ -615,7 +615,7 @@ export function DefinirMissionsForm({
             type="button"
             onClick={handlePasser}
             disabled={creer.isPending}
-            className="flex items-center justify-center gap-2 px-5 py-2.5 border border-zinc-200 text-zinc-600 rounded-xl text-[13px] hover:bg-zinc-50 transition-colors font-medium"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 border border-teal-200 text-teal-750 bg-teal-50/30 rounded-xl text-[13px] hover:bg-teal-50 transition-colors font-semibold cursor-pointer"
           >
             <SkipForward className="w-4 h-4" />
             Passer cette étape

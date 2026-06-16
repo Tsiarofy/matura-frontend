@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { FicheProjetInvestisseur } from '@/components/financement/FicheProjetInvestisseur'
 import { BoutonContacter } from '@/components/reunions/BoutonContacter'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 // ── Section wrapper ────────────────────────────────────────────────────────────
@@ -76,10 +77,10 @@ export default function ProjetAFinancerDetailPage() {
   if (isError || !fiche) {
     return (
       <div className="flex flex-col items-center py-16 gap-3 text-center">
-        <AlertCircle className="w-10 h-10 text-rose-500" />
+        <AlertCircle className="w-10 h-10 text-[var(--color-error)]" />
         <p className="text-[13px] text-[var(--color-text-muted)]">Impossible de charger ce projet.</p>
         <button
-          className="text-[12px] font-semibold text-[#6f74f7] hover:text-[#5c61e8] transition-colors"
+          className="text-[12px] font-semibold text-[#1BA8A0] hover:text-[#0D7A75] transition-colors cursor-pointer"
           onClick={() => navigate({ to: '/projets-a-financer' })}
         >
           Retour aux projets
@@ -194,7 +195,7 @@ export default function ProjetAFinancerDetailPage() {
         <div className="border border-zinc-150 bg-zinc-50/50 rounded-[22px] p-6 sm:p-7 mt-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="inline-flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1.5 text-[9.5px] font-bold uppercase tracking-wider text-[#318055] bg-[#eafdf3] border border-[#c5f3d8] px-2.5 py-0.5 rounded-full">
                 Évaluation & Décision
               </span>
               <h3 className="text-[15px] font-bold text-zinc-900 font-heading mt-1">
@@ -204,9 +205,9 @@ export default function ProjetAFinancerDetailPage() {
                 Statut actuel de la candidature :{' '}
                 <span className={cn(
                   'font-bold px-2.5 py-0.5 rounded-full text-[10.5px] border ml-1',
-                  candidature.statut === 'ACCEPTEE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50' :
-                  candidature.statut === 'REJETEE' ? 'bg-rose-50 text-rose-700 border-rose-200/50' :
-                  candidature.statut === 'EN_REVUE' ? 'bg-blue-50 text-blue-700 border-blue-200/50' : 'bg-amber-50 text-amber-700 border-amber-200/50'
+                  candidature.statut === 'ACCEPTEE' ? 'bg-[#eafdf3] text-[#318055] border-[#c5f3d8]' :
+                  candidature.statut === 'REJETEE' ? 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]' :
+                  candidature.statut === 'EN_REVUE' ? 'bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]' : 'bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]'
                 )}>
                   {candidature.statut === 'ACCEPTEE' ? 'Acceptée' :
                    candidature.statut === 'REJETEE' ? 'Rejetée' :
@@ -215,49 +216,41 @@ export default function ProjetAFinancerDetailPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-              {(candidature.statut === 'EN_ATTENTE' || candidature.statut === 'EN_REVUE') && (
+            <div className="flex flex-wrap gap-2.5">
+              {candidature.statut === 'EN_REVUE' && (
                 <>
-                  <button
+                  <Button
                     disabled={changerStatut.isPending}
                     onClick={() =>
-                      changerStatut.mutate(
-                        { candidatureId: candidatureId!, statut: 'ACCEPTEE' as any, offreId: offreId! },
-                        {
-                          onSuccess: () =>
-                            navigate({
-                              to: '/mes-financements/$offreId/candidatures',
-                              params: { offreId: offreId! },
-                            }),
-                        }
-                      )
+                      changerStatut.mutate({
+                        candidatureId: candidatureId!,
+                        statut: 'ACCEPTEE' as any,
+                        offreId: offreId!,
+                      })
                     }
-                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
+                    variant="default"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <CheckCircle2 className="w-4 h-4" /> Accepter le projet
-                  </button>
-                  <button
+                    <CheckCircle2 className="w-4 h-4" /> Accepter
+                  </Button>
+                  <Button
                     disabled={changerStatut.isPending}
                     onClick={() =>
-                      changerStatut.mutate(
-                        { candidatureId: candidatureId!, statut: 'REJETEE' as any, offreId: offreId! },
-                        {
-                          onSuccess: () =>
-                            navigate({
-                              to: '/mes-financements/$offreId/candidatures',
-                              params: { offreId: offreId! },
-                            }),
-                        }
-                      )
+                      changerStatut.mutate({
+                        candidatureId: candidatureId!,
+                        statut: 'REJETEE' as any,
+                        offreId: offreId!,
+                      })
                     }
-                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-rose-200 text-rose-700 hover:bg-rose-50/50 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
+                    variant="destructive"
+                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
                   >
                     <XCircle className="w-4 h-4" /> Rejeter
-                  </button>
+                  </Button>
                 </>
               )}
               {(candidature.statut === 'ACCEPTEE' || candidature.statut === 'REJETEE') && (
-                <button
+                <Button
                   disabled={changerStatut.isPending}
                   onClick={() =>
                     changerStatut.mutate({
@@ -266,10 +259,11 @@ export default function ProjetAFinancerDetailPage() {
                       offreId: offreId!,
                     })
                   }
-                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-zinc-200 text-zinc-650 hover:bg-zinc-100 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
+                  variant="orange"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all cursor-pointer disabled:opacity-50"
                 >
                   <Clock className="w-4 h-4" /> Remettre en revue
-                </button>
+                </Button>
               )}
             </div>
           </div>

@@ -40,13 +40,13 @@ function ProjetListCard({ projet }: { projet: ProjetResume }) {
     <Link
       to="/projets/$projetId"
       params={{ projetId: projet.id }}
-      className="group flex items-center gap-4 rounded-[22px] border border-[var(--color-border)] bg-white p-4 shadow-sm transition-all hover:bg-[var(--color-surface-soft)]/45"
+      className="group flex items-center gap-4 rounded-[22px] border border-[var(--color-border)] bg-white p-4 shadow-sm"
     >
       {/* Thumbnail Minimaliste */}
       <div
         className={cn(
           "flex h-12 w-12 shrink-0 items-center justify-center rounded-[16px] text-lg font-semibold text-white",
-          "bg-[var(--color-text-primary)]",
+          "bg-[#41A677]",
         )}
       >
         {projet.titre.charAt(0)}
@@ -55,7 +55,7 @@ function ProjetListCard({ projet }: { projet: ProjetResume }) {
       {/* Info Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-[15px] font-semibold text-[var(--color-text-primary)] transition-colors group-hover:text-[var(--color-success-text)]">
+          <p className="truncate text-[15px] font-semibold text-[var(--color-text-primary)]">
             {projet.titre}
           </p>
           <p className="shrink-0 text-[14px] font-semibold text-[var(--color-text-primary)]">
@@ -78,7 +78,7 @@ function ProjetListCard({ projet }: { projet: ProjetResume }) {
         </div>
       </div>
 
-      <div className="shrink-0 text-[var(--color-text-disabled)] group-hover:text-[var(--color-text-primary)] transition-colors">
+      <div className="shrink-0 text-[var(--color-text-disabled)]">
         <ArrowRight size={18} strokeWidth={1.25} />
       </div>
     </Link>
@@ -166,7 +166,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
             </div>
             <Button
               asChild
-              className="bg-green-600 hover:bg-green-700 text-white mt-2"
+              className="bg-[#41A677] hover:bg-[#358E64] text-white mt-2 cursor-pointer border-none shadow-none"
             >
               <Link to="/projets">
                 Créer un projet
@@ -192,8 +192,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
           </p>
         </div>
         <Button
-          variant="success"
-          className="h-10 px-4 text-[12px] font-semibold"
+          className="h-10 px-4 text-[12px] font-semibold bg-[#41A677] hover:bg-[#358E64] text-white border-none shadow-none cursor-pointer"
         >
           <FolderPlus className="mr-1.5 h-4 w-4" />
           Nouveau projet
@@ -237,7 +236,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Colonne Gauche */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-none">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)]">
                 Progression Maturation
@@ -275,7 +274,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
 
         {/* Colonne Droite */}
         <div className="space-y-6">
-          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-none">
             <div className="flex items-center gap-2 mb-6">
               <div className="flex h-8 w-8 items-center justify-center rounded-[12px] border border-[#F8E6B9] bg-[#FFF8E8]">
                 <ShieldCheck size={16} className="text-[#F59E0B]" />
@@ -289,7 +288,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
             </div>
           </Card>
 
-          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-none">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)]">
                 Activité

@@ -120,20 +120,38 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
   const selectCls = cn(inputCls, "appearance-none");
   const textareaCls = "flat-input min-h-[90px] px-4 py-2.5 text-[13px] rounded-[16px] resize-none";
 
+  const getSectionLetterClass = (letter: string) => {
+    const upper = letter.toUpperCase();
+    const index = (upper.charCodeAt(0) - 65) % 6;
+    const safeIndex = index >= 0 && index < 6 ? index : 0;
+    const styles = [
+      { bg: "bg-[#eafdf3]", text: "text-[#318055]" }, // A
+      { bg: "bg-[#E2F7F6]", text: "text-[#0D7A75]" }, // B
+      { bg: "bg-[#EBF5FC]", text: "text-[#1C5F8C]" }, // C
+      { bg: "bg-[#eef0ff]", text: "text-[#3840C0]" }, // D
+      { bg: "bg-[#fff8e8]", text: "text-[#c47d00]" }, // E
+      { bg: "bg-[#f6f6f4]", text: "text-[#757575]" }, // F
+    ];
+    return styles[safeIndex];
+  };
+
   const SectionHeader = ({
     letter,
     title,
   }: {
     letter: string;
     title: string;
-  }) => (
-    <p className="text-[12px] font-semibold text-[var(--color-text-secondary)] flex items-center gap-2">
-      <span className="w-5 h-5 rounded-full bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] text-[10px] flex items-center justify-center border border-[var(--color-border)]">
-        {letter}
-      </span>
-      {title}
-    </p>
-  );
+  }) => {
+    const sStyle = getSectionLetterClass(letter);
+    return (
+      <p className="text-[12px] font-semibold text-[var(--color-text-secondary)] flex items-center gap-2">
+        <span className={cn("w-[22px] h-[22px] rounded-[6px] text-[11px] font-semibold flex items-center justify-center flex-shrink-0", sStyle.bg, sStyle.text)}>
+          {letter}
+        </span>
+        {title}
+      </p>
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

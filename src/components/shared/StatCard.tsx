@@ -12,18 +12,34 @@ interface StatCardProps {
   }
   icon?: LucideIcon
   className?: string
+  slot?: 1 | 2 | 3 | 4
 }
 
-export function StatCard({ label, value, delta, icon: Icon, className }: StatCardProps) {
-  let accentColor = 'text-[#19B45B] bg-[#EFFBF3] border-[#CFEEDA]'
-  if (label.toLowerCase().includes('projet')) accentColor = 'text-[#6F74F7] bg-[#EEF0FF] border-[#DCE0FF]'
-  if (label.toLowerCase().includes('attente')) accentColor = 'text-[#D99816] bg-[#FFF8E8] border-[#F8E6B9]'
-  if (label.toLowerCase().includes('accept')) accentColor = 'text-[#19B45B] bg-[#EFFBF3] border-[#CFEEDA]'
+export function StatCard({ label, value, delta, icon: Icon, className, slot }: StatCardProps) {
+  let accentColor = 'text-[var(--color-kpi-green-icon)] bg-[var(--color-kpi-green-icon-bg)] border-[var(--color-tsisy-green-border)]'
+  let cardBg = 'bg-[#ffffff] border-[#eeeeea]'
+
+  const actualSlot = slot ?? ((): 1 | 2 | 3 | 4 => {
+    const cleanLabel = label.toLowerCase()
+    if (cleanLabel.includes('candidature') || cleanLabel.includes('évaluation') || cleanLabel.includes('evaluation')) return 2
+    if (cleanLabel.includes('taux') || cleanLabel.includes('demande')) return 3
+    if (cleanLabel.includes('attente') || cleanLabel.includes('financ')) return 4
+    return 1
+  })()
+
+  if (actualSlot === 2) {
+    accentColor = 'text-[var(--color-kpi-teal-icon)] bg-[var(--color-kpi-teal-icon-bg)] border-[var(--color-tsisy-teal-border)]'
+  } else if (actualSlot === 3) {
+    accentColor = 'text-[var(--color-kpi-green-icon)] bg-[var(--color-kpi-green-icon-bg)] border-[var(--color-tsisy-green-border)]'
+  } else if (actualSlot === 4) {
+    accentColor = 'text-[var(--color-kpi-amber-icon)] bg-[var(--color-kpi-amber-icon-bg)] border-[var(--color-tsisy-amber-border)]'
+  }
 
   return (
     <Card
       className={cn(
-        'rounded-[22px] border border-[var(--color-border)] bg-white p-4 transition-all duration-300 group shadow-sm hover:bg-[var(--color-surface-soft)]/45',
+        'rounded-[22px] border p-4 transition-all duration-300 group shadow-none',
+        cardBg,
         className
       )}
     >
@@ -47,8 +63,8 @@ export function StatCard({ label, value, delta, icon: Icon, className }: StatCar
               <div className={cn(
                 'flex items-center gap-0.5 rounded-full border px-2 py-1 text-[10px] font-semibold',
                 delta.isPositive 
-                  ? 'bg-[#EFFBF3] text-[#157347] border-[#CFEEDA]' 
-                  : 'bg-[#FFF1F4] text-[#BE3456] border-[#FFD9E1]'
+                  ? 'bg-[var(--color-success-bg)] text-[var(--color-success-text)] border-[var(--color-success-border)]' 
+                  : 'bg-[var(--color-error-bg)] text-[var(--color-error)] border-[var(--color-error-border)]'
               )}>
                 {delta.isPositive ? <ArrowUpRight size={10} strokeWidth={1.25} /> : <ArrowDownRight size={10} strokeWidth={1.25} />}
                 {delta.value}%

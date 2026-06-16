@@ -64,10 +64,10 @@ export default function ProjetsAFinancerPage() {
                   <p className="text-[9px] font-semibold mt-0.5 opacity-70 uppercase tracking-wider">score</p>
                 </div>
 
-                {/* Content */}
+                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <p className="text-[14px] font-semibold text-[var(--color-text-primary)] group-hover:text-[#5c61e8] transition-colors truncate">
+                    <p className="text-[14px] font-semibold text-[var(--color-text-primary)] truncate">
                       {p.titre}
                     </p>
                     <BRLBadge brl={p.brl_actuel} />
@@ -87,7 +87,7 @@ export default function ProjetsAFinancerPage() {
                   )}
                 </div>
 
-                <ChevronRight className="w-5 h-5 text-[var(--color-text-disabled)] group-hover:text-[#6f74f7] shrink-0 transition-colors" />
+                <ChevronRight className="w-5 h-5 text-[var(--color-text-disabled)] shrink-0 transition-colors" />
               </Link>
             )
           })}

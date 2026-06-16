@@ -6,6 +6,7 @@ import { authStore } from '@/stores/authStore';
 import { toast } from 'sonner';
 import { Video, Calendar, Clock, CheckCircle2, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { StatutBadge } from '@/components/shared/StatutBadge';
 import { ModifierDateModal } from './ModifierDateModal';
 
 interface Props {
@@ -86,18 +87,21 @@ export function ReunionCard({ reunion, isHighlighted }: Props) {
     >
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-            {reunion.type}
-          </span>
-          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-            reunion.statut === 'EN_ATTENTE' ? 'bg-amber-100 text-amber-700' :
-            reunion.statut === 'CONFIRME' ? 'bg-green-100 text-green-700' :
-            reunion.statut === 'REFUSE' ? 'bg-red-100 text-red-700' :
-            reunion.statut === 'EN_COURS' ? 'bg-purple-100 text-purple-700' :
-            'bg-zinc-100 text-zinc-700'
-          }`}>
-            {reunion.statut}
-          </span>
+          {(() => {
+            const isSuivi = reunion.type === 'SUIVI';
+            const isInstant = (reunion.type as string) === 'INSTANTANE' || (reunion.type as string) === 'INSTANTANÉ';
+            return (
+              <span className={cn(
+                "text-[10px] font-semibold px-[10px] py-[3px] rounded-[20px] border-[0.5px]",
+                isSuivi && "bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]",
+                isInstant && "bg-[#EBF5FC] text-[#1C5F8C] border-[#B8D8F0]",
+                !isSuivi && !isInstant && "bg-blue-100 text-blue-700 border-transparent"
+              )}>
+                {reunion.type}
+              </span>
+            );
+          })()}
+          <StatutBadge statut={reunion.statut} />
         </div>
         
         <h4 className="font-medium text-zinc-900">
@@ -111,8 +115,8 @@ export function ReunionCard({ reunion, isHighlighted }: Props) {
               {new Date(reunion.date_planifiee).toLocaleString('fr-FR')}
             </div>
           ) : (
-            <div className="flex items-center gap-1 text-green-600 font-medium">
-              <Video className="w-4 h-4" />
+            <div className="flex items-center gap-1 text-[#3A8FC4] font-medium hover:text-[#1C5F8C] transition-colors cursor-pointer group/instant">
+              <Video className="w-4 h-4 text-[#3A8FC4] group-hover/instant:text-[#1C5F8C] transition-colors" />
               Appel instantané
             </div>
           )}

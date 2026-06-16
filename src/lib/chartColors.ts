@@ -1,27 +1,27 @@
 export const CHART_COLORS = {
-  innovation: "#19B45B",
-  marche: "#87CFB4",
-  equipe: "#6366F1",
-  finance: "#141414",
-  execution: "#a4a4a4",
+  innovation: "#41A677",
+  equipe: "#1BA8A0",
+  marche: "#f3b63f",
+  execution: "#A6E3E1",
+  finance: "#333333",
 } as const;
 
 export const PIPELINE_COLORS = {
   EN_ATTENTE: "#f3b63f",
-  EN_ANALYSE: "#6366F1",
-  ACCEPTE: "#19B45B",
-  REFUSE: "#ef5b78",
+  EN_ANALYSE: "#1BA8A0",
+  ACCEPTE: "#41A677",
+  REFUSE: "#DC2626",
 } as const;
 
 export const STADE_BAR_COLOR = (statut: string): string => {
   const map: Record<string, string> = {
-    VALIDE: "#19B45B",
-    EN_COURS: "#6366F1",
-    SOUMIS: "#8183F4",
+    VALIDE: "#41A677",
+    EN_COURS: "#1BA8A0",
+    SOUMIS: "#6f74f7",
     BLOQUE: "#f3b63f",
-    REJETE: "#ef5b78",
+    REJETE: "#DC2626",
     BROUILLON: "#a4a4a4",
-    DEBLOQUE: "#6366F1",
+    DEBLOQUE: "#1BA8A0",
     EN_REVISION: "#f3b63f",
   };
 

@@ -4,6 +4,7 @@ import type { DemandeReunionDto } from '@matura/shared';
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
 import { X, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   isOpen: boolean;
@@ -158,13 +159,14 @@ export function DemandeReunionModal({ isOpen, onClose, participantId, projetId, 
           </div>
 
           <div className="flex flex-col gap-3 pt-4">
-            <button 
+            <Button 
               type="submit" 
               disabled={demanderReunion.isPending || !!dateError}
-              className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:cursor-not-allowed font-medium transition-colors cursor-pointer"
+              variant="default"
+              className="w-full py-2 font-medium cursor-pointer"
             >
               {demanderReunion.isPending ? 'Envoi...' : 'Envoyer la demande'}
-            </button>
+            </Button>
             
             <div className="relative flex items-center py-2">
               <div className="flex-grow border-t border-zinc-200"></div>
@@ -172,14 +174,15 @@ export function DemandeReunionModal({ isOpen, onClose, participantId, projetId, 
               <div className="flex-grow border-t border-zinc-200"></div>
             </div>
 
-            <button 
+            <Button 
               type="button" 
               onClick={handleInstantane}
               disabled={appelInstantane.isPending}
-              className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 disabled:opacity-50"
+              variant="secondary"
+              className="w-full py-2 cursor-pointer"
             >
               Démarrer un appel instantané
-            </button>
+            </Button>
           </div>
         </form>
       </div>

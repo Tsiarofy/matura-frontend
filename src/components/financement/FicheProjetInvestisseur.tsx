@@ -130,7 +130,7 @@ export function FicheProjetInvestisseur({ fiche }: Props) {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {cards.map((card) => (
-          <div key={card.numero} className="bg-white border border-zinc-100 rounded-[22px] overflow-hidden shadow-sm flex flex-col h-full transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          <div key={card.numero} className="bg-white border border-zinc-100 rounded-[22px] overflow-hidden flex flex-col h-full transition-all hover:border-zinc-200">
             <div className="bg-white border-b border-zinc-100 px-6 py-5">
               <div className="flex items-center gap-3">
                 <span className="flex-shrink-0 w-9 h-9 rounded-[12px] bg-green-50 text-green-700 flex items-center justify-center text-[13px] font-bold">

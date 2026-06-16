@@ -45,42 +45,43 @@ const validVideoUrl = (() => {
         <div className="flex items-center gap-2">
           <Link
             to="/mes-formations"
-            className="flex items-center gap-1 text-[12px] text-zinc-400 hover:text-zinc-700 transition-colors"
+            className="flex items-center gap-1 text-[12px] text-[#757575] hover:text-[#318055] transition-colors"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-3.5 h-3.5 text-[#b6b6b6]" />
             Mes Formations
           </Link>
-          <span className="text-zinc-300 text-[12px]">/</span>
+          <span className="text-[#b6b6b6] text-[12px]">/</span>
           <Link
             to="/mes-formations/$formationId"
             params={{ formationId }}
-            className="text-[12px] text-zinc-400 hover:text-zinc-700 transition-colors truncate"
+            className="text-[12px] text-[#757575] hover:text-[#318055] transition-colors truncate"
           >
             {formation.titre}
           </Link>
+          <span className="text-[#b6b6b6] text-[12px]">/</span>
+          <span className="text-[12px] text-[#41A677] font-medium truncate">{lesson.titre}</span>
         </div>
 
         {/* Titre de la leçon */}
         <h1 className="text-[18px] text-zinc-900 font-medium">{lesson.titre}</h1>
 
         {/* Lecteur vidéo */}
-{/* Lecteur vidéo */}
-<div className="rounded-xl overflow-hidden bg-black aspect-video">
-  {validVideoUrl ? (
-    <video
-      key={validVideoUrl}
-      src={validVideoUrl}
-      width="100%"
-      height="100%"
-      controls
-      style={{ display: 'block', width: '100%', height: '100%' }}
-    />
-  ) : (
-    <div className="flex items-center justify-center h-full text-zinc-400 text-sm">
-      Chargement...
-    </div>
-  )}
-</div>
+        <div className="rounded-xl overflow-hidden bg-black aspect-video border border-zinc-200">
+          {validVideoUrl ? (
+            <video
+              key={validVideoUrl}
+              src={validVideoUrl}
+              width="100%"
+              height="100%"
+              controls
+              style={{ display: 'block', width: '100%', height: '100%' }}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-zinc-400 text-sm">
+              Chargement...
+            </div>
+          )}
+        </div>
 
         {/* Contenu texte (Markdown) */}
         <div className="prose prose-sm prose-zinc max-w-none
@@ -101,9 +102,9 @@ const validVideoUrl = (() => {
             <Link
               to="/mes-formations/$formationId/lessons/$lessonId"
               params={{ formationId, lessonId: lessonPrecedente.id }}
-              className="text-[13px] text-zinc-500 hover:text-zinc-800 flex items-center gap-1"
+              className="text-[13px] text-teal-650 hover:text-teal-800 flex items-center gap-1 font-medium bg-teal-50 border border-teal-200/50 px-3.5 py-1.5 rounded-lg transition-colors"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 text-teal-600" />
               {lessonPrecedente.titre}
             </Link>
           ) : <div />}
@@ -112,10 +113,10 @@ const validVideoUrl = (() => {
             <Link
               to="/mes-formations/$formationId/lessons/$lessonId"
               params={{ formationId, lessonId: lessonSuivante.id }}
-              className="text-[13px] text-green-600 hover:text-green-700 flex items-center gap-1 font-medium"
+              className="text-[13px] text-green-700 hover:text-green-800 flex items-center gap-1 font-medium bg-green-50 border border-green-200/50 px-3.5 py-1.5 rounded-lg transition-colors"
             >
               {lessonSuivante.titre}
-              <ChevronLeft className="w-4 h-4 rotate-180" />
+              <ChevronLeft className="w-4 h-4 rotate-180 text-green-600" />
             </Link>
           )}
         </div>
@@ -123,8 +124,8 @@ const validVideoUrl = (() => {
 
       {/* ─── SIDEBAR LEÇONS ────────────────────────────────────────────── */}
       <aside className="w-64 shrink-0">
-        <div className="sticky top-4 bg-white border border-zinc-200 rounded-xl p-3">
-          <p className="text-[11px] uppercase tracking-wider text-zinc-400 font-medium mb-2 px-1">
+        <div className="sticky top-4 bg-white border border-teal-100 rounded-xl p-3">
+          <p className="text-[11px] uppercase tracking-wider text-teal-600 font-semibold mb-2 px-1">
             Leçons de la formation
           </p>
           <div className="space-y-0.5">
@@ -138,12 +139,12 @@ const validVideoUrl = (() => {
                   className={`flex items-center gap-2 px-2 py-1.5 rounded-lg text-[12px] transition-colors ${
                     isActive
                       ? 'bg-green-50 text-green-700 font-medium'
-                      : 'text-zinc-600 hover:bg-zinc-100'
+                      : 'text-zinc-650 hover:bg-zinc-50 hover:text-zinc-900'
                   }`}
                 >
                   {isActive
                     ? <PlayCircle className="w-3.5 h-3.5 shrink-0 text-green-600" />
-                    : <span className="w-3.5 h-3.5 shrink-0 text-[10px] text-zinc-400 text-center">{idx + 1}</span>
+                    : <span className="w-3.5 h-3.5 shrink-0 text-[10px] text-[#d96b43]/70 font-semibold text-center">{idx + 1}</span>
                   }
                   <span className="truncate">{l.titre}</span>
                 </Link>

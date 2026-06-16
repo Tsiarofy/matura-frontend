@@ -42,13 +42,13 @@ const videoUrl = lesson?.url_video ? (lesson.url_video.startsWith('https') ? les
         <div className="flex items-center gap-2">
           <Link
             to="/formations"
-            className="flex items-center gap-1 text-[12px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+            className="flex items-center gap-1 text-[12px] text-[#757575] hover:text-[#318055] transition-colors"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-3.5 h-3.5 text-[#b6b6b6]" />
             Formations
           </Link>
-          <span className="text-[var(--color-text-disabled)] text-[12px]">/</span>
-          <span className="text-[12px] text-[var(--color-text-secondary)] truncate">{formation.titre}</span>
+          <span className="text-[#b6b6b6] text-[12px]">/</span>
+          <span className="text-[12px] text-[#41A677] font-medium truncate">{formation.titre}</span>
         </div>
 
         {/* Titre de la leçon */}
@@ -70,7 +70,7 @@ const videoUrl = lesson?.url_video ? (lesson.url_video.startsWith('https') ? les
 
         {/* Contenu texte (Markdown) */}
         <div className="prose prose-sm prose-zinc max-w-none
-          prose-headings:font-semibold prose-headings:text-[var(--color-text-primary)]
+          prose-headings:font-semibold prose-headings:text-[#6f74f7]
           prose-p:text-[var(--color-text-secondary)] prose-p:leading-relaxed
           prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:underline
           prose-code:bg-zinc-100 prose-code:text-zinc-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.85em]

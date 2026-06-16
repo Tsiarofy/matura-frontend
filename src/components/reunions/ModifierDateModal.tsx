@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useModifierDateReunion } from '@/hooks/useReunions';
 import { toast } from 'sonner';
 import { X, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   isOpen: boolean;
@@ -131,20 +132,22 @@ export function ModifierDateModal({ isOpen, onClose, reunionId, currentDate }: P
           </div>
 
           <div className="flex gap-3 pt-4">
-            <button 
+            <Button 
               type="button"
               onClick={onClose}
-              className="w-1/2 border py-2 rounded-md hover:bg-zinc-50 text-sm font-medium cursor-pointer"
+              variant="neutral"
+              className="w-1/2 py-2 text-sm font-medium cursor-pointer border border-[#eeeeea]"
             >
               Annuler
-            </button>
-            <button 
+            </Button>
+            <Button 
               type="submit" 
               disabled={modifierDate.isPending || !!dateError}
-              className="w-1/2 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:cursor-not-allowed text-sm font-medium transition-colors cursor-pointer"
+              variant="default"
+              className="w-1/2 py-2 text-sm font-medium cursor-pointer"
             >
               {modifierDate.isPending ? 'Envoi...' : 'Valider'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

@@ -4,7 +4,7 @@ import {
   StatutOffre,
 } from "@matura/shared";
 import { BadgeDollarSign, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getAvatarStyle } from "@/lib/utils";
 
 const TYPE_LABELS: Record<TypeFinancement, string> = {
   [TypeFinancement.SUBVENTION]: "Subvention",
@@ -15,12 +15,11 @@ const TYPE_LABELS: Record<TypeFinancement, string> = {
 };
 
 const TYPE_COLORS: Record<TypeFinancement, string> = {
-  [TypeFinancement.SUBVENTION]: "bg-green-50 text-green-700 border-green-200",
-  [TypeFinancement.PRET]: "bg-blue-50 text-blue-700 border-blue-200",
-  [TypeFinancement.EQUITY]: "bg-purple-50 text-purple-700 border-purple-200",
-  [TypeFinancement.OBLIGATION]:
-    "bg-orange-50 text-orange-700 border-orange-200",
-  [TypeFinancement.DON]: "bg-teal-50 text-teal-700 border-teal-200",
+  [TypeFinancement.SUBVENTION]: "bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]",
+  [TypeFinancement.PRET]: "bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]",
+  [TypeFinancement.DON]: "bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]",
+  [TypeFinancement.EQUITY]: "bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]",
+  [TypeFinancement.OBLIGATION]: "bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]",
 };
 
 const STATUT_LABELS: Record<StatutOffre, string> = {
@@ -91,10 +90,10 @@ export function FinancementCard({ offre, onClick }: Props) {
         <div className="pl-12 space-y-3">
           {offre.investisseur && (
             <div className="flex items-center gap-2 text-[12px] text-zinc-400">
-              <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[9px] font-bold text-white shadow-sm">
+              <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shadow-sm", getAvatarStyle(offre.investisseur.prenom).bg, getAvatarStyle(offre.investisseur.prenom).text)}>
                 {offre.investisseur.prenom.charAt(0)}
               </div>
-              <span className="font-semibold text-zinc-500">
+              <span className="font-semibold text-zinc-550">
                 {offre.investisseur.prenom} {offre.investisseur.nom}
               </span>
               <span>·</span>

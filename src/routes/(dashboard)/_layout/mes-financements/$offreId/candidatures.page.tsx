@@ -144,8 +144,8 @@ export default function CandidaturesOffrePage() {
           <Loader2 className="w-6 h-6 animate-spin text-zinc-550" />
         </div>
       ) : isError ? (
-        <div className="text-center py-16 border border-rose-100 bg-rose-50/20 rounded-[24px] p-6">
-          <p className="text-[13px] text-rose-700 font-medium">Erreur : Impossible de charger les candidatures.</p>
+        <div className="text-center py-16 border border-[var(--color-error-border)] bg-[var(--color-error-bg)] rounded-[24px] p-6">
+          <p className="text-[13px] text-[var(--color-error)] font-medium">Erreur : Impossible de charger les candidatures.</p>
         </div>
       ) : !candidatures || candidatures.length === 0 ? (
         <div className="flex flex-col items-center py-16 gap-3 text-center border border-zinc-200/50 bg-white rounded-[24px] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.01)]">

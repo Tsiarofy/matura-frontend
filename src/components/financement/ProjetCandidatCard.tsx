@@ -1,6 +1,7 @@
 import { type CandidatureAvecProjet } from '@/hooks/useInvestisseur'
 import { Link } from '@tanstack/react-router'
 import { StatutCandidature } from '@matura/shared'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Briefcase, User, MapPin, Users, Eye, FileText, Check, X, RotateCcw } from 'lucide-react'
 
@@ -13,11 +14,11 @@ const STATUT_LABELS: Record<StatutCandidature, string> = {
 }
 
 const STATUT_COLORS: Record<StatutCandidature, string> = {
-  [StatutCandidature.EN_ATTENTE]: 'bg-amber-50 text-amber-705 border-amber-250/70',
-  [StatutCandidature.EN_REVUE]:   'bg-blue-50 text-blue-705 border-blue-200/70',
-  [StatutCandidature.ACCEPTEE]:   'bg-emerald-50 text-emerald-705 border-emerald-200/70',
-  [StatutCandidature.REJETEE]:    'bg-rose-50 text-rose-750 border-rose-200/70',
-  [StatutCandidature.RETIREE]:    'bg-zinc-50 text-zinc-500 border-zinc-200/60',
+  [StatutCandidature.EN_ATTENTE]: 'bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]',
+  [StatutCandidature.EN_REVUE]:   'bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]',
+  [StatutCandidature.ACCEPTEE]:   'bg-[#eafdf3] text-[#318055] border-[#c5f3d8]',
+  [StatutCandidature.REJETEE]:    'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]',
+  [StatutCandidature.RETIREE]:    'bg-[#f6f6f4] text-[#757575] border-[#eeeeea]',
 }
 
 // BRL labels — correspond aux TypeStade Prisma
@@ -45,27 +46,25 @@ export function ProjetCandidatCard({
   const { projet, statut, createdAt, messageMotivation } = candidature
   const brl = projet.brl_actuel   // champ réel Prisma Projet
 
-  return (
+   return (
     <div className={cn(
-      'bg-white/70 backdrop-blur-sm border rounded-[24px] p-6 space-y-5 transition-all duration-300 hover:shadow-[0_12px_24px_rgba(0,0,0,0.02)] hover:border-zinc-350 hover:bg-white',
-      statut === StatutCandidature.ACCEPTEE ? 'border-emerald-200/40' :
-      statut === StatutCandidature.REJETEE  ? 'border-rose-200/40' :
-      statut === StatutCandidature.EN_REVUE ? 'border-blue-200/40' : 'border-zinc-200/50',
+      'group w-full relative rounded-[22px] border bg-white p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 flex flex-col justify-between gap-5',
+      statut === StatutCandidature.ACCEPTEE ? 'border-[#c5f3d8] bg-[#eafdf3]/30' :
+      statut === StatutCandidature.REJETEE  ? 'border-[#FECACA] bg-[#FEF2F2]/30' :
+      statut === StatutCandidature.EN_REVUE ? 'border-[#A6E3E1] bg-[#E2F7F6]/30' : 'border-zinc-100',
     )}>
 
       {/* Header: Icon + Title + Status Badges */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-200/35">
-        <div className="flex items-center gap-3.5 min-w-0">
-          <div className="w-10 h-10 shrink-0 rounded-[14px] bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-500">
-            <Briefcase className="w-4.5 h-4.5" strokeWidth={1.5} />
-          </div>
-          <div className="min-w-0">
-            <h3 className="font-heading font-semibold text-[15.5px] text-zinc-850 group-hover:text-zinc-900 truncate">
-              {projet.titre}
-            </h3>
-          </div>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 transition-colors">
+          <Briefcase className="w-4.5 h-4.5" strokeWidth={1.25} />
         </div>
-        <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-heading font-semibold text-[15px] text-zinc-900 transition-colors truncate">
+            {projet.titre}
+          </h3>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
           <div className="bg-emerald-50 border border-emerald-200/50 rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-emerald-700">
             BRL {brl}
           </div>
@@ -83,10 +82,10 @@ export function ProjetCandidatCard({
         </div>
       </div>
 
-      {/* Content block */}
-      <div className="space-y-4">
+      {/* Content block indented */}
+      <div className="pl-12 space-y-4">
         {/* Meta Info */}
-        <div className="flex flex-wrap gap-4 text-[11.5px] text-zinc-500 font-medium">
+        <div className="flex flex-wrap gap-4 text-[11.5px] text-zinc-550 font-medium">
           {projet.proprietaire && (
             <span className="flex items-center gap-1.5">
               <User className="w-4 h-4 text-zinc-400" />
@@ -107,7 +106,7 @@ export function ProjetCandidatCard({
           )}
           {projet.equipe && (
             <span className="flex items-center gap-1.5">
-              <Users className="w-4 h-4 text-zinc-400" />
+              <Users className="w-4 h-4 text-zinc-450" />
               {projet.equipe.length} membre{projet.equipe.length > 1 ? 's' : ''}
             </span>
           )}
@@ -148,12 +147,12 @@ export function ProjetCandidatCard({
           <div className="bg-zinc-50/40 border border-zinc-200/40 rounded-[20px] px-4.5 py-3.5 relative overflow-hidden">
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-500 rounded-l-[20px]" />
             <p className="text-[9.5px] font-bold uppercase tracking-wider text-zinc-400 mb-1">Message de motivation</p>
-            <p className="text-[12.5px] text-zinc-600 italic leading-relaxed">"{messageMotivation}"</p>
+            <p className="text-[12.5px] text-zinc-650 italic leading-relaxed">"{messageMotivation}"</p>
           </div>
         )}
 
         {/* Actions investisseur */}
-        <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-zinc-100/80">
+        <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-zinc-100/85">
           {statut === StatutCandidature.EN_ATTENTE && (
             <button
               disabled={isUpdating}
@@ -175,20 +174,22 @@ export function ProjetCandidatCard({
           )}
           {(statut === StatutCandidature.EN_ATTENTE || statut === StatutCandidature.EN_REVUE) && (
             <>
-              <button
+              <Button
                 disabled={isUpdating}
                 onClick={() => onChangerStatut(StatutCandidature.ACCEPTEE)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl shadow-sm hover:shadow transition-colors font-semibold disabled:opacity-50 cursor-pointer"
+                variant="default"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-semibold shadow-none cursor-pointer"
               >
                 <Check className="w-3.5 h-3.5" /> Accepter
-              </button>
-              <button
+              </Button>
+              <Button
                 disabled={isUpdating}
                 onClick={() => onChangerStatut(StatutCandidature.REJETEE)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-rose-200/70 text-rose-700 hover:bg-rose-50/50 transition-colors font-semibold disabled:opacity-50 cursor-pointer"
+                variant="destructive"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold shadow-none cursor-pointer"
               >
                 <X className="w-3.5 h-3.5" /> Rejeter
-              </button>
+              </Button>
             </>
           )}
           {(statut === StatutCandidature.ACCEPTEE || statut === StatutCandidature.REJETEE) && (
@@ -201,13 +202,14 @@ export function ProjetCandidatCard({
               >
                 <FileText className="w-3.5 h-3.5" /> Fiche projet
               </Link>
-              <button
+              <Button
                 disabled={isUpdating}
                 onClick={() => onChangerStatut(StatutCandidature.EN_REVUE)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 border border-zinc-200 text-zinc-600 rounded-xl hover:bg-zinc-50 transition-colors font-semibold disabled:opacity-50 cursor-pointer"
+                variant="orange"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl font-semibold shadow-none cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" /> Remettre en revue
-              </button>
+              </Button>
             </>
           )}
         </div>

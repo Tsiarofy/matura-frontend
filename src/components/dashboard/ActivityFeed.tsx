@@ -40,83 +40,75 @@ export function ActivityFeed({ activities, className }: ActivityFeedProps) {
   }
 
   return (
-    <div className={cn('space-y-0', className)}>
-      {activities.map((act) => {
-        let iconBg = 'bg-[var(--color-surface-icon-bg)]'
-        let iconColor = 'text-[var(--color-text-muted)]'
+    <div className={cn('relative', className)}>
+      {/* Ligne verticale de la timeline */}
+      <div className="absolute left-[20px] top-6 bottom-6 w-[1px] bg-[#eeeeea]" />
 
-        switch (act.type) {
-          case 'STADE_VALIDE':
-            iconBg = 'bg-[var(--color-success-bg)]'
-            iconColor = 'text-[var(--color-success-text)]'
-            break
-          case 'STADE_SOUMIS':
-            iconBg = 'bg-amber-50'
-            iconColor = 'text-amber-600'
-            break
-          case 'EVALUATION':
-            iconBg = 'bg-purple-50'
-            iconColor = 'text-purple-600'
-            break
-          case 'MISSION_SOUMISE':
-            iconBg = 'bg-blue-50'
-            iconColor = 'text-blue-600'
-            break
-          case 'CANDIDATURE_RECUE':
-            iconBg = 'bg-indigo-50'
-            iconColor = 'text-indigo-600'
-            break
-          case 'MISSION_VALIDEE':
-            iconBg = 'bg-emerald-50'
-            iconColor = 'text-emerald-600'
-            break
-          case 'MISSION_REJETEE':
-            iconBg = 'bg-red-50'
-            iconColor = 'text-red-600'
-            break
-          case 'DEMANDE_ACCEPTEE':
-            iconBg = 'bg-blue-50'
-            iconColor = 'text-blue-700'
-            break
-          case 'DEMANDE_REFUSEE':
-            iconBg = 'bg-orange-50'
-            iconColor = 'text-orange-600'
-            break
-          case 'CANDIDATURE':
-            iconBg = 'bg-indigo-50'
-            iconColor = 'text-indigo-600'
-            break
-          case 'MENTOR':
-            iconBg = 'bg-teal-50'
-            iconColor = 'text-teal-600'
-            break
-        }
+      <div className="space-y-4 relative">
+        {activities.map((act) => {
+          const ageInDays = (Date.now() - new Date(act.date).getTime()) / (1000 * 60 * 60 * 24);
+          const isRecent = ageInDays < 7;
+          const isAncien = ageInDays >= 30;
 
-        return (
-          <div key={act.id} className="flex gap-4 py-4 border-b border-[var(--color-bg-shell)] last:border-0 group">
-            {/* Avatar Minimaliste */}
-            <div className={cn(
-              "w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-[12px] font-bold",
-              iconBg,
-              iconColor
-            )}>
-              {act.label.charAt(0)}
-            </div>
+          let dotStyle = '';
+          let dotTextColor = 'text-white';
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-[13px] text-[var(--color-text-secondary)] leading-tight font-medium">
-                  <strong className="text-[var(--color-text-primary)] font-bold">{act.label.split(' ')[0]}</strong>
-                  {' '}{act.label.split(' ').slice(1).join(' ')}
+          const typeLower = act.type.toLowerCase();
+          if (typeLower.includes('reunion') || typeLower.includes('appel') || typeLower.includes('rdv') || typeLower.includes('entretien') || typeLower.includes('meeting')) {
+            // Réunion / appel
+            dotStyle = 'bg-[#3A8FC4] shadow-[0_0_0_2px_#fff,0_0_0_4px_#B8D8F0]';
+          } else if (isRecent) {
+            // Événement récent / important
+            dotStyle = 'bg-[#41A677] shadow-[0_0_0_2px_#fff,0_0_0_4px_#c5f3d8]';
+          } else if (isAncien) {
+            // Ancien / très passé
+            dotStyle = 'bg-[#e5e5e1]';
+            dotTextColor = 'text-[#b6b6b6]';
+          } else {
+            // Action passée (neutre)
+            dotStyle = 'bg-[#A6E3E1]';
+            dotTextColor = 'text-[#0D7A75]';
+          }
+
+          let labelColorClass = 'text-[#757575]';
+          let boldColorClass = 'text-[#141414]';
+          let labelFontWeight = 'font-normal';
+
+          if (isRecent) {
+            labelColorClass = 'text-[#141414]';
+            boldColorClass = 'text-black font-semibold';
+            labelFontWeight = 'font-medium';
+          } else if (isAncien) {
+            labelColorClass = 'text-[#b6b6b6]';
+            boldColorClass = 'text-[#757575]';
+          }
+
+          return (
+            <div key={act.id} className="flex gap-4 py-3 relative group">
+              {/* Avatar Minimaliste */}
+              <div className={cn(
+                "w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-[12px] font-bold transition-all relative z-10",
+                dotStyle,
+                dotTextColor
+              )}>
+                {act.label.charAt(0)}
+              </div>
+
+              <div className="flex-1 min-w-0 pt-1">
+                <div className="flex items-center justify-between gap-2">
+                  <p className={cn("text-[13px] leading-tight", labelColorClass, labelFontWeight)}>
+                    <strong className={cn(boldColorClass)}>{act.label.split(' ')[0]}</strong>
+                    {' '}{act.label.split(' ').slice(1).join(' ')}
+                  </p>
+                </div>
+                <p className="text-[10px] text-[#b6b6b6] mt-1 font-bold uppercase tracking-wider">
+                  {formatRelativeTime(act.date)}
                 </p>
               </div>
-              <p className="text-[11px] text-[var(--color-text-disabled)] mt-1 font-bold uppercase tracking-wider">
-                {formatRelativeTime(act.date)}
-              </p>
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
     </div>
   )
 }

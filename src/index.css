@@ -75,11 +75,11 @@
 :root {
   --color-bg-app: #F1F0F0;
   --color-bg-shell: #fcfcfb;
-  --color-sidebar-surface: #efefed;
+  --color-sidebar-surface: #EFF3F0;
   --color-surface-card: #ffffff;
   --color-surface-soft: #f6f6f4;
   --color-surface-input: #f3f3f1;
-  --color-surface-icon-bg: #ecece9;
+  --color-surface-icon-bg: #EAF0EB;
 
   --color-text-primary: #141414;
   --color-text-secondary: #333333;
@@ -87,18 +87,56 @@
   --color-text-disabled: #a4a4a4;
   --color-text-placeholder: #b6b6b6;
 
-  --color-tsisy-green: #19b45b;
-  --color-tsisy-green-bg: #effbf3;
-  --color-tsisy-green-border: #cfeeda;
+  --color-tsisy-green: #41A677;
+  --color-tsisy-green-bg: #eafdf3;
+  --color-tsisy-green-border: #c5f3d8;
+
+  /* ── Teal — nouvelle couleur analogique (remplace le rose) ── */
+  --color-tsisy-teal:          #1BA8A0;
+  --color-tsisy-teal-bg:       #E2F7F6;
+  --color-tsisy-teal-border:   #A6E3E1;
+  --color-tsisy-teal-text:     #0D7A75;
+
+  /* ── Extensions vert ── */
+  --color-tsisy-green-dark:    #318055;
 
   --color-tsisy-amber: #f3b63f;
   --color-tsisy-amber-bg: #fff8e8;
+  /* ── Extensions ambre ── */
+  --color-tsisy-amber-border:  #f9d98a;
+  --color-tsisy-amber-text:    #c47d00;
+
+  /* ── Accents KPI (dashboard — fond card reste blanc) ── */
+  --color-kpi-green-icon:      #41A677;
+  --color-kpi-green-icon-bg:   #eafdf3;
+  --color-kpi-teal-icon:       #1BA8A0;
+  --color-kpi-teal-icon-bg:    #E2F7F6;
+  --color-kpi-amber-icon:      #f3b63f;
+  --color-kpi-amber-icon-bg:   #fff8e8;
 
   --color-tsisy-indigo: #6f74f7;
   --color-tsisy-indigo-bg: #eef0ff;
+  --color-tsisy-indigo-border:   #C2C5FA;
+  --color-tsisy-indigo-text:     #3840C0;
 
-  --color-tsisy-rose: #ef5b78;
-  --color-tsisy-rose-bg: #fff1f4;
+  /* ── Bleu info (nouvelle famille) — en cours, actif, réunions ── */
+  --color-tsisy-blue:            #3A8FC4;
+  --color-tsisy-blue-bg:         #EBF5FC;
+  --color-tsisy-blue-border:     #B8D8F0;
+  --color-tsisy-blue-text:       #1C5F8C;
+
+  /* ── Micro-surfaces (tints ultra-légers pour alternances subtiles) ── */
+  --color-surface-green-micro:   #F5FDF8;
+  --color-surface-teal-micro:    #F3FBFB;
+  --color-surface-blue-micro:    #F2F8FD;
+  --color-surface-amber-micro:   #FEFBF3;
+
+  /* ── Graphiques — ordre canonique ── */
+  --color-chart-1: #41A677;
+  --color-chart-2: #1BA8A0;
+  --color-chart-3: #3A8FC4;
+  --color-chart-4: #f3b63f;
+  --color-chart-5: #6f74f7;
 
   --color-secondary-orange: #F97316;
   --color-secondary-orange-bg: #FFF7ED;
@@ -107,11 +145,11 @@
   --color-success: var(--color-tsisy-green);
   --color-success-bg: var(--color-tsisy-green-bg);
   --color-success-border: var(--color-tsisy-green-border);
-  --color-success-text: #157347;
+  --color-success-text: #257a4e;
 
-  --color-error: var(--color-tsisy-rose);
-  --color-error-bg: var(--color-tsisy-rose-bg);
-  --color-error-border: #ffd9e1;
+  --color-error:    #DC2626;
+  --color-error-bg: #FEF2F2;
+  --color-error-border: #FECACA;
 
   --color-accent: #181818;
   --color-accent-bg: #f1f1ef;
@@ -209,6 +247,12 @@
   }
   .flat-action {
     @apply inline-flex items-center gap-1.5 rounded-[999px] border border-[var(--color-border)] bg-white px-3 py-1.5 text-[11px] font-semibold text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-text-primary)];
+  }
+  .separator-std {
+    border-top: 1px solid #eeeeea;
+  }
+  .separator-acc {
+    border-top: 1px solid #eafdf3;
   }
   .hide-scrollbar {
     -ms-overflow-style: none;

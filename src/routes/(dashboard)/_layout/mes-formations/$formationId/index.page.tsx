@@ -85,7 +85,7 @@ export default function MesFormationsDetailPage() {
             {formation.lessons.map((lesson) => (
               <div key={lesson.id} className="flex items-center justify-between bg-white border border-zinc-200 rounded-xl p-4 shadow-sm hover:shadow transition-shadow">
                 <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-500 text-[12px] font-medium">
+                  <div className="w-8 h-8 rounded-[6px] bg-[#eef0ff] flex items-center justify-center text-[#3840C0] text-[12px] font-semibold shrink-0">
                     {lesson.ordre}
                   </div>
                   <div>

@@ -212,7 +212,7 @@ function ProjetCourantSection({ projet }: { projet: ProjetResume }) {
       <Link
         to="/projets/$projetId"
         params={{ projetId: projet.id }}
-        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-[999px] border border-[var(--color-accent)] bg-[var(--color-accent)] py-2 text-[11px] font-semibold text-white transition-opacity hover:opacity-92"
+        className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-[999px] border border-[#41A677] bg-[#41A677] py-2 text-[11px] font-semibold text-white transition-all hover:bg-[#358E64] active:scale-[0.985] cursor-pointer"
       >
         Ouvrir
         <Icon.ArrowUpRight size={12} />

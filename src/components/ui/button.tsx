@@ -10,22 +10,24 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "border-[var(--color-accent)] bg-[var(--color-accent)] text-[var(--color-accent-text)] shadow-sm hover:opacity-92",
+          "border-transparent bg-[#41A677] text-white shadow-sm hover:bg-[#318055] cursor-pointer",
         outline:
-          "border-[var(--color-border)] bg-white text-[var(--color-text-primary)] shadow-sm hover:bg-[var(--color-surface-soft)]",
+          "border-[#41A677] border-[1.5px] bg-transparent text-[#41A677] shadow-sm hover:bg-[#eafdf3] cursor-pointer",
         secondary:
-          "border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-text-primary)] hover:bg-[#ecece8]",
+          "border-transparent bg-[#1BA8A0] text-white shadow-sm hover:bg-[#0D7A75] cursor-pointer",
         ghost:
-          "border-transparent bg-transparent text-[var(--color-text-muted)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-text-primary)]",
+          "border-transparent bg-transparent text-[#41A677] hover:bg-[#eafdf3] cursor-pointer",
         destructive:
-          "border-[var(--color-error-border)] bg-[var(--color-error)] text-white hover:opacity-90",
-        link: "border-transparent px-0 text-[var(--color-text-primary)] underline-offset-4 hover:underline",
+          "border-transparent bg-[#DC2626] text-white hover:bg-[#b91c1c] cursor-pointer",
+        link: "border-transparent px-0 text-[#41A677] underline-offset-4 hover:underline",
         accent:
-          "border-[var(--color-border)] bg-[var(--color-accent-bg)] text-[var(--color-text-primary)] hover:bg-[#e9e9e6]",
+          "border-transparent bg-[#1BA8A0] text-white hover:bg-[#0D7A75] cursor-pointer",
         success:
-          "border-[var(--color-success-border)] bg-[var(--color-success)] text-white shadow-sm hover:brightness-[0.98]",
+          "border-transparent bg-[#41A677] text-white shadow-sm hover:bg-[#318055] cursor-pointer",
         orange:
-          "border-secondary-orange-border bg-secondary-orange text-white shadow-sm hover:brightness-[0.98]",
+          "border-transparent bg-[#f3b63f] text-white shadow-sm hover:bg-[#c47d00] cursor-pointer",
+        neutral:
+          "border-[#eeeeea] bg-[#f6f6f4] text-[#333333] hover:bg-[#eeeeea] cursor-pointer",
       },
       size: {
         default: "h-10 px-4 text-[12px] gap-2",

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import * as Icon from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getAvatarStyle } from "@/lib/utils";
 import { useNotifications, useNonLues, useMarquerToutesLues, useMarquerLue } from "@/hooks/useNotifications";
 
 // ─── BREADCRUMB ───────────────────────────────────────────────────────────────
@@ -61,8 +61,8 @@ export function UserMenu({
         aria-expanded={open}
         aria-haspopup="menu"
       >
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white bg-[var(--color-surface-icon-bg)]">
-          <span className="select-none text-[12px] font-semibold leading-none text-[var(--color-text-primary)]">
+        <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white", getAvatarStyle(userName || '').bg)}>
+          <span className={cn("select-none text-[12px] font-semibold leading-none", getAvatarStyle(userName || '').text)}>
             {userInitials ?? "?"}
           </span>
         </div>

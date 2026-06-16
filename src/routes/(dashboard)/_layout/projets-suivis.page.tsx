@@ -16,16 +16,16 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
     <Link
       to="/projets/$projetId"
       params={{ projetId: projet.id }}
-      className="w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-5 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 block group"
+      className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-5 flex flex-col justify-between gap-4 transition-all duration-300 hover:border-zinc-200 hover:shadow-none block"
     >
       <div>
         {/* Header: Avatar + Title + Badge */}
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 text-[12px] font-bold text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+          <div className="w-9 h-9 rounded-[12px] bg-[#eafdf3] border border-[#c5f3d8] flex items-center justify-center shrink-0 text-[12px] font-bold text-[#257a4e]">
             {projet.titre.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-heading text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+            <h3 className="font-heading text-[15px] font-semibold text-zinc-900 truncate">
               {projet.titre}
             </h3>
           </div>
@@ -45,11 +45,11 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
               'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.10em] border',
               needsEval
                 ? 'bg-amber-50 text-amber-700 border-amber-200'
-                : 'bg-zinc-50 text-zinc-500 border-zinc-200',
+                : 'bg-[#eafdf3] text-[#257a4e] border border-[#c5f3d8]',
             )}>
               {needsEval
                 ? <AlertCircle className="w-3 h-3" />
-                : <Clock className="w-3 h-3" />
+                : <Clock className="w-3 h-3 text-[#257a4e]" />
               }
               Stade {stade.numero} — {label}
               {needsEval && ' · À évaluer'}

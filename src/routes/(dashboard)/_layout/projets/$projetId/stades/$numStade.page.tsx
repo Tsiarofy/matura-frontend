@@ -135,13 +135,13 @@ export default function StadeNumPage() {
         <Link
           to="/projets/$projetId"
           params={{ projetId }}
-          className="flex items-center gap-1 text-[12px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+          className="flex items-center gap-1 text-[12px] text-[#757575] hover:text-[#318055] transition-colors"
         >
-          <ChevronLeft className="w-3.5 h-3.5" />
+          <ChevronLeft className="w-3.5 h-3.5 text-[#b6b6b6]" />
           Retour au projet
         </Link>
-        <span className="text-[var(--color-text-disabled)] text-[12px]">/</span>
-        <span className="text-[12px] text-[var(--color-text-secondary)] font-semibold">
+        <span className="text-[#b6b6b6] text-[12px]">/</span>
+        <span className="text-[12px] text-[#41A677] font-medium">
           {titre}
         </span>
       </div>

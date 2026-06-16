@@ -39,11 +39,11 @@ const STATUT_CAND_LABELS: Record<StatutCandidature, string> = {
 }
 
 const STATUT_CAND_COLORS: Record<StatutCandidature, string> = {
-  [StatutCandidature.EN_ATTENTE]: 'bg-amber-50 text-amber-700 border-amber-200',
-  [StatutCandidature.EN_REVUE]:   'bg-blue-50 text-blue-700 border-blue-200',
-  [StatutCandidature.ACCEPTEE]:   'bg-emerald-50 text-emerald-700 border-emerald-200/50',
-  [StatutCandidature.REJETEE]:    'bg-rose-50 text-rose-700 border-rose-200/50',
-  [StatutCandidature.RETIREE]:    'bg-zinc-550/10 text-zinc-500 border-zinc-200/50',
+  [StatutCandidature.EN_ATTENTE]: 'bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]',
+  [StatutCandidature.EN_REVUE]:   'bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]',
+  [StatutCandidature.ACCEPTEE]:   'bg-[#eafdf3] text-[#318055] border-[#c5f3d8]',
+  [StatutCandidature.REJETEE]:    'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA]',
+  [StatutCandidature.RETIREE]:    'bg-[#f6f6f4] text-[#757575] border-[#eeeeea]',
 }
 
 function formatDate(dateStr?: string | null) {
@@ -80,7 +80,7 @@ function VueInvestisseur() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4.5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl text-[12.5px] font-semibold shadow-sm transition-all duration-200 cursor-pointer shrink-0"
+          className="flex items-center gap-2 px-4.5 py-2.5 bg-[#41A677] hover:bg-[#318055] text-white rounded-xl text-[12.5px] font-semibold shadow-sm transition-all duration-200 cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" strokeWidth={2.5} /> Nouvelle offre
         </button>
@@ -95,8 +95,8 @@ function VueInvestisseur() {
           <Loader2 className="w-6 h-6 animate-spin text-zinc-550" />
         </div>
       ) : isError ? (
-        <div className="text-center py-16 border border-rose-100 bg-rose-50/20 rounded-[24px] p-6">
-          <p className="text-[13px] text-rose-700 font-medium">Erreur : Impossible de charger vos offres de financement.</p>
+        <div className="text-center py-16 border border-[var(--color-error-border)] bg-[var(--color-error-bg)] rounded-[24px] p-6">
+          <p className="text-[13px] text-[var(--color-error)] font-medium">Erreur : Impossible de charger vos offres de financement.</p>
         </div>
       ) : !offres || offres.length === 0 ? (
         <div className="flex flex-col items-center py-16 gap-4 text-center border border-zinc-200/50 bg-white/70 backdrop-blur-sm rounded-[24px] p-8 shadow-[0_8px_30px_rgba(0,0,0,0.01)]">
@@ -111,7 +111,7 @@ function VueInvestisseur() {
           </div>
           <button
             onClick={() => setShowForm(true)}
-            className="mt-2 text-[12.5px] px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-xl transition-all duration-200 font-semibold cursor-pointer shadow-sm"
+            className="mt-2 text-[12.5px] px-5 py-2.5 bg-[#41A677] hover:bg-[#358E64] text-white rounded-xl transition-all duration-200 font-semibold cursor-pointer shadow-sm"
           >
             Créer une offre de financement
           </button>
@@ -131,13 +131,16 @@ function VueInvestisseur() {
                 to: '/mes-financements/$offreId/candidatures',
                 params: { offreId: offre.id },
               })}
-              className="w-full relative cursor-pointer rounded-[24px] border border-zinc-200/50 bg-white/70 backdrop-blur-sm p-6 flex flex-col justify-between gap-5 transition-all duration-300 hover:border-zinc-350 hover:shadow-[0_12px_24px_rgba(0,0,0,0.02)] hover:bg-white group"
+              className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 flex flex-col justify-between gap-5"
             >
               <div>
-                {/* Header: Title + Statuts */}
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="space-y-1 min-w-0">
-                    <h3 className="font-semibold text-[15.5px] text-zinc-850 group-hover:text-zinc-900 transition-colors truncate">
+                {/* Header/Title Block: Icon and Title on one row */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 transition-colors">
+                    <BadgeDollarSign className="w-4.5 h-4.5" strokeWidth={1.25} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-heading font-semibold text-[15px] text-zinc-900 transition-colors truncate">
                       {offre.titre}
                     </h3>
                   </div>
@@ -154,15 +157,21 @@ function VueInvestisseur() {
                   </div>
                 </div>
 
-                {/* Content description and target BRL */}
-                <div className="space-y-4">
-                  <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 font-normal">
+                {/* Content Block indented to align with the title */}
+                <div className="pl-12 space-y-3">
+                  <p className="text-[12.5px] text-zinc-500 leading-relaxed line-clamp-2 text-thin font-normal">
                     {offre.description || "Aucune description fournie pour cette offre."}
                   </p>
 
                   <div className="flex flex-wrap gap-4 text-[11px] text-zinc-400 font-medium">
-                    <span className="flex items-center gap-1.5 text-zinc-500"><BarChart3 className="w-3.5 h-3.5 text-zinc-300" /> BRL ciblé : <strong className="text-zinc-650">≥ {offre.stadeCible}</strong></span>
-                    {offre.dateCloture && <span className="flex items-center gap-1.5 text-zinc-500"><Clock className="w-3.5 h-3.5 text-zinc-300" /> Clôture le {formatDate(offre.dateCloture)}</span>}
+                    <span className="flex items-center gap-1.5 text-zinc-500">
+                      <BarChart3 className="w-3.5 h-3.5 text-zinc-300" /> BRL ciblé : <strong className="text-zinc-650">≥ {offre.stadeCible}</strong>
+                    </span>
+                    {offre.dateCloture && (
+                      <span className="flex items-center gap-1.5 text-zinc-500">
+                        <Clock className="w-3.5 h-3.5 text-zinc-300" /> Clôture le {formatDate(offre.dateCloture)}
+                      </span>
+                    )}
                   </div>
 
                   {offre.secteurs && offre.secteurs.length > 0 && (
@@ -178,13 +187,13 @@ function VueInvestisseur() {
               </div>
 
               {/* Footer row */}
-              <div className="flex items-center justify-between border-t border-zinc-100/70 pt-3.5 mt-1">
+              <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1 pl-12">
                 <div className="flex items-center gap-2.5">
                   <div className={cn(
                     'flex items-center gap-1.5 px-3 py-1 rounded-full border transition-all duration-200',
                     offre._count.candidatures > 0
-                      ? 'bg-emerald-50/50 border-emerald-200/60 text-emerald-700'
-                      : 'bg-zinc-50 border-zinc-200/50 text-zinc-400',
+                      ? 'bg-emerald-50 border-emerald-250 text-emerald-700'
+                      : 'bg-zinc-50 border-zinc-200 text-zinc-400',
                   )}>
                     <span className="text-[12px] font-bold">
                       {offre._count.candidatures}
@@ -199,7 +208,7 @@ function VueInvestisseur() {
                     </span>
                   )}
                 </div>
-                <div className="w-7 h-7 rounded-full bg-zinc-50 border border-zinc-100/60 flex items-center justify-center text-zinc-400 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 transition-all duration-200 shrink-0">
+                <div className="w-7 h-7 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-400 hover:bg-zinc-100 transition-all duration-200 shrink-0">
                   <ChevronRight className="w-4 h-4" strokeWidth={2} />
                 </div>
               </div>
@@ -260,17 +269,17 @@ function VueEntrepreneur() {
           {candidatures.map((c) => (
             <div
               key={c.id}
-              className="w-full relative rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-4 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 group"
+              className="group w-full relative rounded-[22px] border border-zinc-100 bg-white p-6 flex flex-col justify-between gap-5 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200"
             >
               <div>
-                {/* Title row */}
+                {/* Header/Title Block: Icon and Title on one row */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+                  <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 transition-colors">
                     <BadgeDollarSign className="w-4.5 h-4.5" strokeWidth={1.25} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <button
-                      className="text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors text-left truncate w-full"
+                      className="text-[15px] font-semibold text-zinc-900 transition-colors text-left truncate w-full"
                       onClick={() => navigate({
                         to: '/financements/$financementId',
                         params: { financementId: c.offreId },
@@ -287,7 +296,7 @@ function VueEntrepreneur() {
                   </span>
                 </div>
 
-                {/* Content info indented */}
+                {/* Content block: owner and project info indented */}
                 <div className="pl-12 space-y-3">
                   {c.offre?.investisseur && (
                     <p className="text-[12px] text-zinc-500 font-semibold">
@@ -307,8 +316,8 @@ function VueEntrepreneur() {
                 </div>
               </div>
 
-              {/* Footer */}
-              <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1">
+              {/* Footer row indented */}
+              <div className="flex items-center justify-between border-t border-zinc-100 pt-3.5 mt-1 pl-12">
                 <p className="text-[11px] text-zinc-450 font-semibold">
                   Postulé le{' '}
                   {c.createdAt ? new Date(c.createdAt).toLocaleDateString('fr-FR') : '–'}

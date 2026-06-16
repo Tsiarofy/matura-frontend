@@ -19,35 +19,67 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (err: any) => void;
+}> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token!);
+    }
+  });
+  failedQueue = [];
+};
+
 // 2. Intercepteur de Réponse : Gère le rafraîchissement
 apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
 
-    // Vérifie si c'est une 401 et qu'on n'a pas déjà essayé de rafraîchir
+    // Gère si c'est une 401 et qu'on n'a pas déjà essayé de rafraîchir
     if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        // APPEL AU REFRESH
-        // Note : On utilise axios (l'instance globale) ou on évite l'intercepteur 
-        // pour ne pas boucler si le refresh lui-même renvoie 401
-        const { data } = await axios.post(`${BASE_URL}/api/auth/rafraichir`, {}, { withCredentials: true });
-        console.log(data)
-
-        // Mise à jour du store Zustand
-        authStore.getState().setToken(data.token);
-
-        // Mise à jour de la requête initiale et relance
-        originalRequest.headers.Authorization = `Bearer ${data.token}`;
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        // Si le rafraîchissement échoue (Refresh Token expiré ou invalide)
-        authStore.getState().logout(); // Nettoie le store
-        window.location.href = '/login'; // Redirige l'utilisateur
-        return Promise.reject(refreshError);
+      if (isRefreshing) {
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return apiClient(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
       }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      return new Promise((resolve, reject) => {
+        axios.post(`${BASE_URL}/api/auth/rafraichir`, {}, { withCredentials: true })
+          .then(({ data }) => {
+            authStore.getState().setToken(data.token);
+            originalRequest.headers.Authorization = `Bearer ${data.token}`;
+            processQueue(null, data.token);
+            resolve(apiClient(originalRequest));
+          })
+          .catch((err) => {
+            processQueue(err, null);
+            authStore.getState().logout();
+            if (window.location.pathname !== '/login') {
+              window.location.href = '/login';
+            }
+            reject(err);
+          })
+          .finally(() => {
+            isRefreshing = false;
+          });
+      });
     }
     return Promise.reject(error);
   }

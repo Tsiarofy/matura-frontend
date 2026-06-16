@@ -3,7 +3,7 @@ import {type ProjetResume } from '@matura/shared'
 import { BRLBadge } from '@/components/shared/BRLBadge'
 import { StatutBadge } from '@/components/shared/StatutBadge'
 import { ProgressBar } from '@/components/shared/ProgressBar'
-import { cn } from '@/lib/utils'
+import { cn, getScoreStyle } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { MapPin, User, Briefcase } from 'lucide-react'
 
@@ -76,11 +76,14 @@ export function CarteProjet({ projet, className }: CarteProjetProps) {
               )}
             </div>
 
-            {projet.score_global !== null && (
-              <span className="font-bold text-[11px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
-                Score {Math.round(projet.score_global)}
-              </span>
-            )}
+            {projet.score_global !== null && (() => {
+              const scStyle = getScoreStyle(projet.score_global);
+              return (
+                <span className={cn("font-bold text-[11px] px-2 py-0.5 rounded-full border", scStyle.text, scStyle.bg, scStyle.border)}>
+                  Score {Math.round(projet.score_global)}
+                </span>
+              );
+            })()}
           </div>
         </div>
       </Card>

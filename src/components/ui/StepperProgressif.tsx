@@ -101,10 +101,10 @@ export function StepperProgressif({
                   }
                   className={cn(
                     'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all shrink-0',
-                    completee && 'bg-green-500 text-white',
-                    !completee && active && 'bg-blue-500 text-white ring-2 ring-blue-300',
-                    !completee && !active && accessible && 'bg-zinc-200 text-zinc-600 hover:bg-zinc-300 cursor-pointer',
-                    !accessible && 'bg-zinc-100 text-zinc-300 cursor-not-allowed opacity-60',
+                    completee && 'bg-[#41A677] text-white',
+                    !completee && active && 'bg-[#3A8FC4] text-white shadow-[0_0_0_3px_#EBF5FC]',
+                    !completee && !active && accessible && 'bg-[#f6f6f4] text-[#b6b6b6] border border-[#e5e5e1] hover:bg-[#eeeeea] hover:text-[#757575] cursor-pointer',
+                    !accessible && 'bg-[#f6f6f4] text-[#b6b6b6] border border-[#e5e5e1] cursor-not-allowed opacity-60',
                   )}
                 >
                   {completee ? (
@@ -115,35 +115,35 @@ export function StepperProgressif({
                     index + 1
                   )}
                 </button>
-
+ 
                 {/* Label */}
                 <div className="mt-1.5 text-center px-1 w-full">
                   <p
                     className={cn(
                       'text-[10px] font-medium leading-tight truncate',
-                      active && 'text-blue-600',
-                      completee && 'text-green-600',
-                      !accessible && 'text-zinc-300',
-                      accessible && !active && !completee && 'text-zinc-500',
+                      active && 'text-[#1C5F8C] font-semibold',
+                      completee && 'text-[#318055] font-semibold',
+                      !accessible && 'text-[#b6b6b6]',
+                      accessible && !active && !completee && 'text-[#b6b6b6]',
                     )}
                   >
                     {etape.titre}
                   </p>
                   {/* Mention obligatoire spec Section 4.1 */}
                   {!accessible && (
-                    <p className="text-[9px] text-zinc-300 italic leading-tight">
+                    <p className="text-[9px] text-[#b6b6b6] italic leading-tight">
                       à remplir progressivement
                     </p>
                   )}
                 </div>
               </div>
-
+ 
               {/* Connecteur entre étapes */}
               {index < etapes.length - 1 && (
                 <ChevronRight
                   className={cn(
                     'w-3 h-3 mx-0.5 flex-shrink-0 mb-4',
-                    completee ? 'text-green-400' : 'text-zinc-200',
+                    completee ? 'text-[#41A677]' : 'text-[#e5e5e1]',
                   )}
                 />
               )}
@@ -151,11 +151,11 @@ export function StepperProgressif({
           )
         })}
       </div>
-
+ 
       {/* Barre de progression */}
-      <div className="w-full bg-zinc-100 rounded-full h-1">
+      <div className="w-full bg-[#eeeeea] rounded-full h-1">
         <div
-          className="bg-green-500 h-1 rounded-full transition-all duration-500"
+          className="bg-[#41A677] h-1 rounded-full transition-all duration-500"
           style={{
             width: `${
               etapes.length > 0

@@ -3,7 +3,7 @@ import { useProjetDetail } from "@/hooks/useStades";
 import { BRLBadge } from "@/components/shared/BRLBadge";
 import { StatutBadge } from "@/components/shared/StatutBadge";
 import { StadeStepperH } from "@/components/shared/StadeStepperH";
-import { cn } from "@/lib/utils";
+import { cn, getAvatarStyle } from "@/lib/utils";
 import { STADE_LABELS } from "@/lib/constants";
 import { authStore } from "@/stores/authStore";
 import {
@@ -241,8 +241,8 @@ export default function ProjetDetailPage() {
       {/* ── Intervenants (Mentor / Entrepreneur) ── */}
       {isMentor && projet.proprietaire ? (
         <div className="border border-zinc-100 bg-white rounded-[22px] flex items-center gap-3.5 p-5">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-            <span className="text-blue-700 text-[13px] font-bold">
+          <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0", getAvatarStyle(projet.proprietaire.prenom).bg)}>
+            <span className={cn("text-[13px] font-bold", getAvatarStyle(projet.proprietaire.prenom).text)}>
               {projet.proprietaire.prenom.charAt(0).toUpperCase()}
               {projet.proprietaire.nom.charAt(0).toUpperCase()}
             </span>
@@ -258,7 +258,7 @@ export default function ProjetDetailPage() {
         </div>
       ) : projet.mentor ? (
         <div className="border border-zinc-100 bg-white rounded-[22px] flex items-center gap-3.5 p-5">
-          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0 overflow-hidden border border-green-200">
+          <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0 overflow-hidden border", (projet.mentor as any).url_avatar ? "border-zinc-200" : getAvatarStyle(projet.mentor.prenom).bg.replace('bg-', 'border-').replace('[', '[').replace(']', ']/50'))}>
             {(projet.mentor as any).url_avatar ? (
               <img
                 src={usrAvatarURL}
@@ -266,7 +266,7 @@ export default function ProjetDetailPage() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className="text-green-700 text-[13px] font-bold">
+              <span className={cn("text-[13px] font-bold", getAvatarStyle(projet.mentor.prenom).text)}>
                 {projet.mentor.prenom.charAt(0).toUpperCase()}
                 {projet.mentor.nom.charAt(0).toUpperCase()}
               </span>

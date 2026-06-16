@@ -7,10 +7,10 @@ interface BRLBadgeProps {
 }
 
 const BRL_STYLES: Record<string, string> = {
-  '1-2': 'bg-zinc-100 text-zinc-600 border-zinc-200',
-  '3-4': 'bg-amber-50 text-amber-700 border-amber-200',
-  '5': 'bg-[#fff7ed] text-[#c2410c] border-[#fed7aa]',
-  '6-7': 'bg-green-50 text-green-700 border-green-200',
+  '1-2': 'bg-[#f6f6f4] text-[#757575] border-[#eeeeea]',
+  '3-4': 'bg-[#E2F7F6] text-[#0D7A75] border-[#A6E3E1]',
+  '5': 'bg-[#fff8e8] text-[#c47d00] border-[#f9d98a]',
+  '6-7': 'bg-[#eafdf3] text-[#318055] border-[#c5f3d8]',
 }
 
 function getBRLStyle(brl: number): string {
@@ -37,10 +37,10 @@ export function BRLBadge({ brl, className }: BRLBadgeProps) {
     >
       <span className={cn(
         'w-1 h-1 rounded-full',
-        validBRL >= 6 ? 'bg-green-600' :
-        validBRL === 5 ? 'bg-orange-600' :
-        validBRL >= 3 ? 'bg-amber-400' :
-        'bg-zinc-400'
+        validBRL >= 6 ? 'bg-[#41A677]' :
+        validBRL === 5 ? 'bg-[#f3b63f]' :
+        validBRL >= 3 ? 'bg-[#1BA8A0]' :
+        'bg-[#757575]'
       )} />
       BRL {validBRL}
     </Badge>

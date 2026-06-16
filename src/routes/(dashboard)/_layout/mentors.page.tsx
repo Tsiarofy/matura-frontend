@@ -45,12 +45,12 @@ function CarteMentor({
                 className="w-full h-full object-cover rounded-full"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =
-                    `https://ui-avatars.com/api/?name=${initiales}&background=10B981&color=fff&size=128`;
+                    `https://ui-avatars.com/api/?name=${initiales}&background=41A677&color=fff&size=128`;
                 }}
               />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-heading text-[15px] font-semibold text-zinc-900 group-hover:text-green-700 transition-colors">
+              <p className="font-heading text-[15px] font-semibold text-zinc-900">
                 {mentor.prenom} {mentor.nom}
               </p>
               {profil?.annees_experience !== undefined && (
@@ -245,7 +245,7 @@ function ModalDemande({
 
         {/* Actions */}
         <div className="flex gap-2 px-6 pb-6">
-          <Button onClick={onClose} variant="outline" className="flex-1">
+          <Button onClick={onClose} className="flex-1 bg-[#f5f5f3] text-[#555552] border border-[#e2e2dc] hover:bg-[#ecece9] cursor-pointer font-semibold shadow-none rounded-[16px]">
             Annuler
           </Button>
           <Button
@@ -253,8 +253,7 @@ function ModalDemande({
             disabled={
               !projetId || envoyer.isPending || projetsDisponibles.length === 0
             }
-          variant="orange"
-            className="flex-1"
+            className="flex-1 bg-[#41A677] hover:bg-[#358E64] text-white border-none shadow-none cursor-pointer rounded-[16px]"
           >
             {envoyer.isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />

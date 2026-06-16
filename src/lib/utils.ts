@@ -130,6 +130,27 @@ export function getInitiales(prenom: string, nom: string): string {
 }
 
 /**
+ * Retourne le style (bg + text color) de l'avatar basé sur le prénom
+ * @param prenom - Prénom ou nom
+ */
+export function getAvatarStyle(prenom: string): { bg: string; text: string } {
+  const char = prenom ? prenom.trim().charAt(0).toUpperCase() : 'A'
+  const index = (char.charCodeAt(0) - 65) % 6
+  const safeIndex = index >= 0 && index < 6 ? index : Math.abs(index) % 6
+
+  const sets = [
+    { bg: 'bg-[#eafdf3]', text: 'text-[#318055]' }, // Set 1 : vert
+    { bg: 'bg-[#E2F7F6]', text: 'text-[#0D7A75]' }, // Set 2 : teal
+    { bg: 'bg-[#EBF5FC]', text: 'text-[#1C5F8C]' }, // Set 3 : bleu
+    { bg: 'bg-[#eef0ff]', text: 'text-[#3840C0]' }, // Set 4 : indigo
+    { bg: 'bg-[#fff8e8]', text: 'text-[#c47d00]' }, // Set 5 : ambre
+    { bg: 'bg-[#f6f6f4]', text: 'text-[#757575]' }, // Set 6 : neutre
+  ]
+
+  return sets[safeIndex]
+}
+
+/**
  * Calcule le pourcentage de complétion
  * @param valeurActuelle - Valeur actuelle
  * @param valeurMax - Valeur maximale
@@ -159,4 +180,45 @@ export function sleep(ms: number): Promise<void> {
  */
 export function isEmpty(obj: Record<string, unknown>): boolean {
   return Object.keys(obj).length === 0
+}
+
+/**
+ * Retourne le style (bg, border, text, accent) d'une note/score basé sur les 4 plages chromatiques.
+ * @param score - Note sur 100
+ */
+export function getScoreStyle(score: number): { bg: string; border: string; text: string; accent: string; rawAccent: string } {
+  if (score > 75) {
+    return {
+      bg: 'bg-[#eafdf3]',
+      border: 'border-[#c5f3d8]',
+      text: 'text-[#318055]',
+      accent: 'bg-[#41A677]',
+      rawAccent: '#41A677',
+    }
+  }
+  if (score >= 50) {
+    return {
+      bg: 'bg-[#EBF5FC]',
+      border: 'border-[#B8D8F0]',
+      text: 'text-[#1C5F8C]',
+      accent: 'bg-[#3A8FC4]',
+      rawAccent: '#3A8FC4',
+    }
+  }
+  if (score >= 25) {
+    return {
+      bg: 'bg-[#fff8e8]',
+      border: 'border-[#f9d98a]',
+      text: 'text-[#c47d00]',
+      accent: 'bg-[#f3b63f]',
+      rawAccent: '#f3b63f',
+    }
+  }
+  return {
+    bg: 'bg-[#FEF2F2]',
+    border: 'border-[#FECACA]',
+    text: 'text-[#DC2626]',
+    accent: 'bg-[#DC2626]',
+    rawAccent: '#DC2626',
+  }
 }

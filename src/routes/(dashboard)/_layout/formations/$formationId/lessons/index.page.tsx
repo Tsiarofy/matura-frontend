@@ -89,7 +89,7 @@ export default function FormationLessonPage() {
               className="flex items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 transition-colors hover:bg-[var(--color-surface-soft)]"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-surface-soft)] text-[12px] font-semibold text-[var(--color-text-secondary)]">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-[#eef0ff] text-[12px] font-semibold text-[#3840C0]">
                   {lesson.ordre}
                 </div>
                 <div className="min-w-0">

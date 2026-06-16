@@ -77,10 +77,10 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
   }
 
   const pipelineData = [
-    { name: 'En attente', value: pipeline.EN_ATTENTE, color: '#f59e0b' },
-    { name: 'En analyse', value: pipeline.EN_ANALYSE, color: '#10b981' },
-    { name: 'Acceptées', value: pipeline.ACCEPTE, color: '#19b45b' },
-    { name: 'Refusées', value: pipeline.REFUSE, color: '#ef5b78' },
+    { name: 'En attente', value: pipeline.EN_ATTENTE, color: '#f3b63f' },
+    { name: 'En analyse', value: pipeline.EN_ANALYSE, color: '#1BA8A0' },
+    { name: 'Acceptées', value: pipeline.ACCEPTE, color: '#41A677' },
+    { name: 'Refusées', value: pipeline.REFUSE, color: '#DC2626' },
   ]
 
   return (
@@ -95,7 +95,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
             Bienvenue, {user.prenom}. Gestion de vos offres de financement.
           </p>
         </div>
-        <Button size="sm" asChild variant="success" className="h-10 px-4 text-[12px] font-semibold">
+        <Button className="h-10 px-4 text-[12px] font-semibold bg-[#41A677] hover:bg-[#358E64] text-white border-none shadow-none cursor-pointer">
           <Link to="/mes-financements">
             <Plus className="mr-1.5 h-4 w-4" />
             Nouvelle offre
@@ -130,10 +130,10 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
       {/* ── Section Principale ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Pipeline Chart */}
-        <Card className="lg:col-span-2 rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+        <Card className="lg:col-span-2 rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-none">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-[12px] border border-[var(--color-success-border)] bg-[var(--color-success-bg)]">
+              <div className="flex h-8 w-8 items-center justify-center rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]">
                 <BarChart2 size={16} className="text-[var(--color-success-text)]" />
               </div>
               <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)]">
@@ -173,7 +173,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
         </Card>
 
         {/* Recent Activity */}
-        <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+        <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-none">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)]">
               Activité
@@ -185,7 +185,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
       </div>
 
       {/* ── Offres Section ── */}
-      <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+      <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-none">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)]">
@@ -195,7 +195,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
               Gérez vos offres et les candidatures reçues par offre.
             </p>
           </div>
-          <Button size="sm" asChild variant="outline" className="text-[11px] h-8 border-[var(--color-border)]">
+          <Button size="sm" asChild variant="secondary" className="text-[11px] shadow-none cursor-pointer font-semibold rounded-xl h-8 px-3">
             <Link to="/mes-financements">
               Voir tout <ArrowRight className="ml-1 h-3 w-3" />
             </Link>
@@ -211,7 +211,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
             {offres.slice(0, 3).map((o) => (
               <div
                 key={o.id}
-                className="flex flex-col justify-between gap-4 rounded-[22px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]/40 p-5 transition-all hover:border-zinc-300 hover:shadow-sm"
+                className="flex flex-col justify-between gap-4 rounded-[22px] border border-[var(--color-border)] bg-white p-5 transition-all"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
@@ -230,7 +230,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
                       {o._count.candidatures} reçue{o._count.candidatures !== 1 ? 's' : ''}
                     </span>
                   </div>
-                  <Button variant="ghost" size="sm" asChild className="text-[var(--color-success-text)] hover:text-[var(--color-success)] hover:bg-[var(--color-success-bg)] text-[11px] h-7 px-2.5">
+                  <Button size="sm" asChild variant="outline" className="text-[11px] h-7 px-3.5 shadow-none cursor-pointer font-semibold rounded-xl">
                     <Link to="/mes-financements/$offreId/candidatures" params={{ offreId: o.id }}>
                       Gérer
                       <ArrowRight className="ml-1 h-3 w-3" />

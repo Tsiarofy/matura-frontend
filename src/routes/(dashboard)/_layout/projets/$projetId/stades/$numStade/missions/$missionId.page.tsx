@@ -11,10 +11,10 @@ import type { ReactNode } from 'react'
 
 function BadgeStatutMission({ statut }: { statut: string }) {
   const statuts: Record<string, { label: string; classes: string; icon: ReactNode }> = {
-    INACHEVEE: { label: 'Inachevée', classes: 'bg-zinc-100 text-zinc-600', icon: <Clock className="w-3 h-3" /> },
-    SOUMISE: { label: 'En revue', classes: 'bg-blue-50 text-blue-600', icon: <Clock className="w-3 h-3" /> },
-    VALIDEE: { label: 'Validée', classes: 'bg-green-50 text-green-600', icon: <CheckCircle className="w-3 h-3" /> },
-    REJETEE: { label: 'À refaire', classes: 'bg-red-50 text-red-600', icon: <XCircle className="w-3 h-3" /> },
+    INACHEVEE: { label: 'Inachevée', classes: 'bg-[#f6f6f4] text-[#b6b6b6] border-[#e5e5e1] border-[0.5px]', icon: <Clock className="w-3 h-3" /> },
+    SOUMISE: { label: 'En revue', classes: 'bg-[#EBF5FC] text-[#1C5F8C] border-[#B8D8F0] border-[0.5px]', icon: <Clock className="w-3 h-3" /> },
+    VALIDEE: { label: 'Validée', classes: 'bg-[#eafdf3] text-[#318055] border-[#c5f3d8] border-[0.5px]', icon: <CheckCircle className="w-3 h-3" /> },
+    REJETEE: { label: 'À refaire', classes: 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA] border-[0.5px]', icon: <XCircle className="w-3 h-3" /> },
   }
   const current = statuts[statut] ?? statuts['INACHEVEE']
   return (

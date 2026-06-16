@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useEvaluerStade } from "@/hooks/useStades";
 import { authStore } from "@/stores/authStore";
-import { cn } from "@/lib/utils";
+import { cn, getScoreStyle } from "@/lib/utils";
 import { Star, CheckCircle2, RotateCcw, Loader2 } from "lucide-react";
 import type { StadeData } from "@/hooks/useStades";
 import { useEvaluationsProjet } from "@/hooks/useStades";
@@ -99,19 +99,17 @@ export function EvaluationStade({
           )}>
             {estValide ? "Stade validé" : "Renvoyé en révision"}
           </p>
-          {stade.score_auto !== null && (
-            <p className="text-[13px] text-[var(--color-text-muted)]">
-              Note globale :{" "}
-              <span
-                className={cn(
-                  "font-semibold",
-                  estValide ? "text-green-700" : "text-red-600",
-                )}
-              >
-                {stade.score_auto}/100
-              </span>
-            </p>
-          )}
+          {stade.score_auto !== null && (() => {
+            const scoreStyle = getScoreStyle(stade.score_auto);
+            return (
+              <p className="text-[13px] text-[var(--color-text-muted)]">
+                Note globale :{" "}
+                <span className={cn("font-semibold px-2 py-0.5 rounded border", scoreStyle.text, scoreStyle.bg, scoreStyle.border)}>
+                  {stade.score_auto}/100
+                </span>
+              </p>
+            );
+          })()}
         </div>
 
         {derniereEvaluation && (
@@ -151,27 +149,22 @@ export function EvaluationStade({
                         <span className="text-[11px] font-medium text-[var(--color-text-secondary)]">
                           {CRITERE_LABELS[c] ?? c}
                         </span>
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-20 h-1.5 bg-[var(--color-surface-soft)] rounded-full overflow-hidden">
-                            <div
-                              className={cn(
-                                'h-full rounded-full transition-all',
-                                (score as number) >= 65 ? 'bg-[var(--color-success)]' : (score as number) >= 40 ? 'bg-[var(--color-tsisy-amber)]' : 'bg-zinc-300'
-                              )}
-                              style={{ width: `${score}%` }}
-                            />
-                          </div>
-                          <span className={cn(
-                            'text-[11px] font-semibold px-1.5 py-0.5 rounded-full',
-                            (score as number) >= 65
-                              ? 'text-[var(--color-success-text)] bg-[var(--color-success-bg)]'
-                              : (score as number) >= 40
-                                ? 'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]'
-                                : 'text-zinc-500 bg-zinc-100'
-                          )}>
-                            {score}/100
-                          </span>
-                        </div>
+                          {(() => {
+                            const scStyle = getScoreStyle(score as number);
+                            return (
+                              <>
+                                <div className="w-20 h-1.5 bg-[var(--color-surface-soft)] rounded-full overflow-hidden">
+                                  <div
+                                    className={cn('h-full rounded-full transition-all', scStyle.accent)}
+                                    style={{ width: `${score}%` }}
+                                  />
+                                </div>
+                                <span className={cn('text-[11px] font-semibold px-1.5 py-0.5 rounded-full border', scStyle.text, scStyle.bg, scStyle.border)}>
+                                  {score}/100
+                                </span>
+                              </>
+                            );
+                          })()}
                       </div>
                     ),
                   )}
@@ -259,14 +252,14 @@ export function EvaluationStade({
           <label className="flat-label mb-0">
             Note globale
           </label>
-          <span className={cn(
-            'text-[14px] font-bold px-3 py-1 rounded-full',
-            note >= 65 ? 'text-[var(--color-success-text)] bg-[var(--color-success-bg)]'
-            : note >= 40 ? 'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]'
-            : 'text-[var(--color-error)] bg-[var(--color-error-bg)]'
-          )}>
-            {note}/100
-          </span>
+          {(() => {
+            const scStyle = getScoreStyle(note);
+            return (
+              <span className={cn('text-[14px] font-bold px-3 py-1 rounded-full border', scStyle.text, scStyle.bg, scStyle.border)}>
+                {note}/100
+              </span>
+            );
+          })()}
         </div>
         <input
           type="range"
@@ -298,16 +291,14 @@ export function EvaluationStade({
                 <span className="text-[12px] font-medium text-[var(--color-text-secondary)]">
                   {CRITERE_LABELS[c] ?? c}
                 </span>
-                <span className={cn(
-                  'text-[11px] font-semibold px-2 py-0.5 rounded-full',
-                  (scoresCriteres[c] ?? 70) >= 65
-                    ? 'text-[var(--color-success-text)] bg-[var(--color-success-bg)]'
-                    : (scoresCriteres[c] ?? 70) >= 40
-                      ? 'text-[#a16207] bg-[var(--color-tsisy-amber-bg)]'
-                      : 'text-[var(--color-error)] bg-[var(--color-error-bg)]'
-                )}>
-                  {scoresCriteres[c] ?? 70}/100
-                </span>
+                {(() => {
+                  const scStyle = getScoreStyle(scoresCriteres[c] ?? 70);
+                  return (
+                    <span className={cn('text-[11px] font-semibold px-2 py-0.5 rounded-full border', scStyle.text, scStyle.bg, scStyle.border)}>
+                      {scoresCriteres[c] ?? 70}/100
+                    </span>
+                  );
+                })()}
               </div>
               <input
                 type="range"

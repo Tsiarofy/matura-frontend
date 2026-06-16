@@ -3,6 +3,7 @@ import type { FormationResume } from "@matura/shared";
 import { GraduationCap, PlayCircle } from "lucide-react";
 import { DOMAINE_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { cn, getAvatarStyle } from "@/lib/utils";
 
 interface FormationCardProps {
   formation: FormationResume;
@@ -23,20 +24,20 @@ export function FormationCard({
       <div>
         {/* Header/Title Block: Icon and Title on one row */}
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 group-hover:bg-green-50 group-hover:border-green-100 group-hover:text-green-700 transition-colors">
+          <div className="w-9 h-9 shrink-0 rounded-[12px] bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-550 transition-colors">
             <GraduationCap className="w-4.5 h-4.5" strokeWidth={1.25} />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-heading font-semibold text-[15px] text-zinc-900 group-hover:text-green-700 transition-colors truncate">
+            <h3 className="font-heading font-semibold text-[15px] text-zinc-900 transition-colors truncate">
               {formation.titre}
             </h3>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-zinc-50 text-zinc-500 border-zinc-200">
+            <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-[#eef0ff] text-[#3840C0] border-[#C2C5FA]">
               {DOMAINE_LABELS[formation.domaine] ?? formation.domaine}
             </span>
             {formation.stade_cible && (
-              <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-amber-50 text-amber-700 border-amber-200">
+              <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-[#eafdf3] text-[#318055] border-[#c5f3d8]">
                 BRL ≥ {formation.stade_cible}
               </span>
             )}
@@ -46,7 +47,7 @@ export function FormationCard({
         {/* Content Block indented to align with the title */}
         <div className="pl-12 space-y-3">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center text-[9px] font-bold text-white shadow-sm">
+            <div className={cn("w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold shadow-sm", getAvatarStyle(formation.auteur.prenom).bg, getAvatarStyle(formation.auteur.prenom).text)}>
               {formation.auteur.prenom.charAt(0)}
             </div>
             <p className="text-[11px] font-semibold text-zinc-400">

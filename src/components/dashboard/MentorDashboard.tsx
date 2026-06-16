@@ -107,13 +107,12 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
 
       {/* ── Section Principale ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Projets suivis */}
-        <Card className="lg:col-span-2 rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+        <Card className="lg:col-span-2 rounded-[28px] border border-[#eeeeea] bg-white p-5 shadow-none">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)]">
               Mes projets suivis
             </h2>
-            <Button variant="ghost" size="sm" asChild className="text-[11px] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]">
+            <Button size="sm" asChild variant="secondary" className="text-[11px] shadow-none cursor-pointer font-semibold rounded-xl h-8 px-3">
               <Link to="/projets-suivis">
                 Voir tous ({projetsSuivis.length})
                 <ArrowRight className="ml-1 h-3 w-3" />
@@ -139,7 +138,7 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[var(--color-text-muted)]">
                       <span className="flex items-center gap-1">
                         <User className="h-3.5 w-3.5 text-[var(--color-text-disabled)]" />
-                        {p.proprietaire.prenom} {p.proprietaire.nom}
+                        {p.proprietaire?.prenom} {p.proprietaire?.nom}
                       </span>
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5 text-[var(--color-text-disabled)]" />
@@ -163,14 +162,14 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
                     ) : null}
 
                     {p.stade_actif?.en_attente_evaluation ? (
-                      <Button size="sm" asChild variant="success" className="text-[11px] h-8">
+                      <Button size="sm" asChild variant="outline" className="text-[11px] h-8 shadow-none cursor-pointer font-semibold rounded-xl px-3.5">
                         <Link to="/projets/$projetId" params={{ projetId: p.id }}>
                           Évaluer
                           <ArrowRight className="ml-1 h-3 w-3" />
                         </Link>
                       </Button>
                     ) : (
-                      <Button size="sm" variant="outline" asChild className="text-[11px] h-8 border-[var(--color-border)]">
+                      <Button size="sm" asChild variant="neutral" className="text-[11px] h-8 shadow-none cursor-pointer font-semibold rounded-xl px-3.5 border border-[#eeeeea]">
                         <Link to="/projets/$projetId" params={{ projetId: p.id }}>
                           Consulter
                         </Link>
@@ -186,7 +185,7 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
         {/* Right column */}
         <div className="space-y-6">
           {/* Demandes */}
-          <Card className="rounded-[28px] border border-[var(--color-border)] bg-white p-5">
+          <Card className="rounded-[28px] border border-[#A6E3E1] bg-[#E2F7F6] p-5 shadow-none">
             <h2 className="text-[16px] font-semibold tracking-tight text-[var(--color-text-primary)] mb-1">
               Demandes en attente
             </h2>
@@ -201,7 +200,7 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
                 </div>
               ) : (
                 demandes.map((d) => (
-                  <div key={d.id} className="rounded-[18px] border border-[var(--color-border)] bg-[var(--color-surface-soft)]/60 p-4 space-y-3">
+                  <div key={d.id} className="rounded-[18px] border border-[#A6E3E1] bg-white p-4 space-y-3">
                     <div className="space-y-1">
                       <h4 className="text-[12px] font-semibold text-[var(--color-text-primary)]">{d.projet?.titre}</h4>
                       <p className="text-[10px] text-[var(--color-text-muted)]">
@@ -210,7 +209,7 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
                     </div>
 
                     {d.message && (
-                      <p className="text-[11px] text-[var(--color-text-secondary)] italic bg-white p-2.5 rounded-[14px] border border-[var(--color-border)] line-clamp-3">
+                      <p className="text-[11px] text-[#0D7A75] italic bg-[#E2F7F6] p-2.5 rounded-[14px] border border-[#A6E3E1] line-clamp-3">
                         "{d.message}"
                       </p>
                     )}
@@ -218,10 +217,10 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
                     <div className="flex gap-2 justify-end pt-1">
                       <Button
                         size="sm"
-                        variant="ghost"
                         onClick={() => handleRepondre(d.id, 'REFUSE')}
                         disabled={repondreMutation.isPending}
-                        className="text-[11px] text-[var(--color-error)] hover:text-[var(--color-error)] hover:bg-[var(--color-error-bg)] h-7"
+                        variant="neutral"
+                        className="h-7 text-[11px] px-3.5 rounded-lg shadow-none font-semibold cursor-pointer border border-[#eeeeea]"
                       >
                         Refuser
                       </Button>
@@ -229,7 +228,8 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
                         size="sm"
                         onClick={() => handleRepondre(d.id, 'ACCEPTE')}
                         disabled={repondreMutation.isPending}
-                        className="bg-[var(--color-success)] hover:brightness-95 text-white text-[11px] h-7"
+                        variant="default"
+                        className="h-7 text-[11px] px-3.5 rounded-lg shadow-none font-semibold cursor-pointer border-none"
                       >
                         Accepter
                       </Button>

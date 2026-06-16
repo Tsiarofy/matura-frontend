@@ -1,19 +1,19 @@
 import { Link } from "@tanstack/react-router";
 import type { MissionStade } from "@matura/shared";
-import { AlertCircle, CheckCircle2, Clock, FileText, Loader2, Settings, Target, Eye, XCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, Clock, FileText, Loader2, Settings, Target, XCircle } from "lucide-react";
 import { useMissions } from "@/hooks/useMissions";
 import { cn } from "@/lib/utils";
 
 function BadgeStatutMission({ statut }: { statut: string }) {
   const config: Record<string, { label: string; classes: string; icon: React.ReactNode }> = {
-    INACHEVEE: { label: "À faire", classes: "bg-zinc-100 text-zinc-600", icon: <Clock className="w-3 h-3" /> },
-    SOUMISE: { label: "En revue", classes: "bg-blue-50 text-blue-700 border border-blue-200", icon: <Clock className="w-3 h-3" /> },
-    VALIDEE: { label: "Validée", classes: "bg-green-50 text-green-700 border border-green-200", icon: <CheckCircle2 className="w-3 h-3" /> },
-    REJETEE: { label: "Rejetée", classes: "bg-red-50 text-red-700 border border-red-200", icon: <XCircle className="w-3 h-3" /> },
+    INACHEVEE: { label: "À faire", classes: "bg-[#f6f6f4] text-[#b6b6b6] border-[#e5e5e1] border-[0.5px]", icon: <Clock className="w-3 h-3" /> },
+    SOUMISE: { label: "En revue", classes: "bg-[#EBF5FC] text-[#1C5F8C] border-[#B8D8F0] border-[0.5px]", icon: <Clock className="w-3 h-3" /> },
+    VALIDEE: { label: "Validée", classes: "bg-[#eafdf3] text-[#318055] border-[#c5f3d8] border-[0.5px]", icon: <CheckCircle2 className="w-3 h-3" /> },
+    REJETEE: { label: "Rejetée", classes: "bg-[#FEF2F2] text-[#DC2626] border-[#FECACA] border-[0.5px]", icon: <XCircle className="w-3 h-3" /> },
   };
   const current = config[statut] ?? config.INACHEVEE;
   return (
-    <span className={cn("inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium", current.classes)}>
+    <span className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium", current.classes)}>
       {current.icon}
       {current.label}
     </span>
@@ -21,17 +21,41 @@ function BadgeStatutMission({ statut }: { statut: string }) {
 }
 
 function LigneMissionOverview({ mission, projetId, numStade }: { mission: MissionStade; projetId: string; numStade: number }) {
+  const isDone = mission.statut === "VALIDEE";
+  const isActive = mission.statut === "SOUMISE";
+  const isTodo = mission.statut === "INACHEVEE" || mission.statut === "REJETEE";
+
   return (
     <Link
       to="/projets/$projetId/stades/$numStade/missions/$missionId"
       params={{ projetId, numStade: String(numStade), missionId: mission.id }}
-      className="bg-white border border-zinc-200 rounded-xl overflow-hidden flex flex-col hover:bg-zinc-50 transition-colors shadow-sm"
+      className={cn(
+        "rounded-xl overflow-hidden flex flex-col transition-colors shadow-sm",
+        isDone && "bg-[#F5FDF8] border-[0.5px] border-[#c5f3d8] hover:bg-[#eafdf3]",
+        isActive && "bg-[#F2F8FD] border-[0.5px] border-[#B8D8F0] hover:bg-[#EBF5FC]",
+        isTodo && "bg-white border-[0.5px] border-[#eeeeea] hover:bg-zinc-50"
+      )}
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between px-5 py-4 gap-4">
         <div className="flex items-center gap-4">
-          <BadgeStatutMission statut={mission.statut} />
+          {/* Custom Indicator/Checkbox icon */}
+          {isDone ? (
+            <div className="w-[17px] h-[17px] rounded bg-[#41A677] text-white flex items-center justify-center text-[10px] font-bold shrink-0">✓</div>
+          ) : isActive ? (
+            <div className="w-[17px] h-[17px] rounded bg-[#3A8FC4] text-white flex items-center justify-center text-[8px] font-bold shrink-0">●</div>
+          ) : (
+            <div className="w-[17px] h-[17px] rounded bg-[#f6f6f4] border-[1.5px] border-[#e5e5e1] shrink-0" />
+          )}
+          
           <div>
-            <p className="text-[14px] font-semibold text-zinc-800">{mission.titre}</p>
+            <p className={cn(
+              "text-[14px] font-semibold",
+              isDone && "text-[#333333] line-through opacity-60",
+              isActive && "text-[#141414]",
+              isTodo && "text-[#757575]"
+            )}>
+              {mission.titre}
+            </p>
             <p className="text-[12px] text-zinc-500 mt-1 line-clamp-1">{mission.objectif}</p>
           </div>
         </div>
@@ -46,10 +70,7 @@ function LigneMissionOverview({ mission, projetId, numStade }: { mission: Missio
             <FileText className="w-3.5 h-3.5 text-zinc-400" />
             {mission.fichiers_requis.length} fichier{mission.fichiers_requis.length > 1 ? "s" : ""}
           </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-zinc-300 text-zinc-700 rounded-lg text-[12px] font-medium shadow-sm hover:bg-zinc-50 transition-colors">
-            <Eye className="w-3.5 h-3.5" />
-            Détails
-          </span>
+          <BadgeStatutMission statut={mission.statut} />
         </div>
       </div>
     </Link>
