@@ -15,7 +15,7 @@ export function EvidencePanel({ stadeId, readOnly = false }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedDoc, setSelectedDoc] = useState<DocumentEv | null>(null);
 
-  const BACKEND_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:3000';
+  const BACKEND_URL = import.meta.env.VITE_BASE_URL || window.location.origin;
   const getFullUrl = (url: string) => url.startsWith('http') ? url : `${BACKEND_URL}${url}`;
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
