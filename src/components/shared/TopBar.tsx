@@ -276,40 +276,51 @@ export function NotificationBell() {
           {/* List */}
           <div className="max-h-80 overflow-y-auto divide-y divide-zinc-100">
             {notifs && notifs.length > 0 ? (
-              notifs.map((n) => (
-                <Link
-                  key={n.id}
-                  to={n.lien_relatif ?? '/dashboard'}
-                  onClick={() => {
-                    if (!n.lue) marquerLue.mutate(n.id)
-                    setOpen(false)
-                  }}
-                  className={cn(
-                    "block px-4 py-3 hover:bg-zinc-50 transition-colors text-left",
-                    !n.lue && "bg-green-50/20",
-                  )}
-                >
-                  <div className="flex justify-between items-start gap-2">
-                    <p className={cn("text-[12px] text-zinc-800 leading-snug", !n.lue && "font-semibold")}>
-                      {n.titre}
-                    </p>
-                    {!n.lue && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0 mt-1" />
+              <>
+                {notifs.slice(0, 5).map((n) => (
+                  <Link
+                    key={n.id}
+                    to={n.lien_relatif ?? '/dashboard'}
+                    onClick={() => {
+                      if (!n.lue) marquerLue.mutate(n.id)
+                      setOpen(false)
+                    }}
+                    className={cn(
+                      "block px-4 py-3 hover:bg-zinc-50 transition-colors text-left",
+                      !n.lue && "bg-green-50/20",
                     )}
-                  </div>
-                  <p className="text-[11px] text-zinc-500 mt-1 leading-normal">
-                    {formatNotificationCorps(n.corps)}
-                  </p>
-                  <p className="text-[9px] text-zinc-400 mt-1.5">
-                    {new Date(n.cree_le).toLocaleDateString('fr-FR', {
-                      day: 'numeric',
-                      month: 'short',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </p>
-                </Link>
-              ))
+                  >
+                    <div className="flex justify-between items-start gap-2">
+                      <p className={cn("text-[12px] text-zinc-800 leading-snug", !n.lue && "font-semibold")}>
+                        {n.titre}
+                      </p>
+                      {!n.lue && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-green-500 shrink-0 mt-1" />
+                      )}
+                    </div>
+                    <p className="text-[11px] text-zinc-500 mt-1 leading-normal">
+                      {formatNotificationCorps(n.corps)}
+                    </p>
+                    <p className="text-[9px] text-zinc-400 mt-1.5">
+                      {new Date(n.cree_le).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                  </Link>
+                ))}
+                <div className="p-2 border-t border-zinc-100 bg-zinc-50/50 sticky bottom-0">
+                  <Link
+                    to="/notifications"
+                    onClick={() => setOpen(false)}
+                    className="block w-full text-center text-[11.5px] font-semibold text-green-600 hover:text-green-700 transition-colors py-1.5"
+                  >
+                    Voir toutes les notifications
+                  </Link>
+                </div>
+              </>
             ) : (
               <div className="flex flex-col items-center py-8 text-center px-4">
                 <Icon.BellOff className="w-8 h-8 text-zinc-300 mb-2" />

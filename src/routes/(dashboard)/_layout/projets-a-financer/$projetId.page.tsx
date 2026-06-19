@@ -6,7 +6,7 @@ import {
 import { FicheProjetInvestisseur } from '@/components/financement/FicheProjetInvestisseur'
 import { BoutonContacter } from '@/components/reunions/BoutonContacter'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, formatDecimal } from '@/lib/utils'
 
 // ── Section wrapper ────────────────────────────────────────────────────────────
 
@@ -41,7 +41,7 @@ function ScoreBar({ label, value }: { label: string; value: number | null | unde
         <span className={cn(
           'text-[11px] font-semibold px-2 py-0.5 rounded-full',
           v >= 65 ? 'bg-[var(--color-success-bg)] text-[var(--color-success-text)]' : v >= 40 ? 'bg-[var(--color-tsisy-amber-bg)] text-[#a16207]' : 'bg-zinc-100 text-zinc-500'
-        )}>{v}</span>
+        )}>{formatDecimal(value)}</span>
       </div>
       <div className="h-1.5 bg-[var(--color-surface-soft)] rounded-full overflow-hidden">
         <div
@@ -143,7 +143,7 @@ export default function ProjetAFinancerDetailPage() {
           {score && (
             <div className="flex flex-col items-center px-5 py-4 bg-[var(--color-success-bg)] border border-[var(--color-success-border)] rounded-[18px] shrink-0">
               <span className="text-[28px] font-bold text-[var(--color-success-text)] leading-none">
-                {Math.round(score.score_global)}
+                {formatDecimal(score.score_global)}
               </span>
               <span className="text-[9px] text-[var(--color-success-text)]/70 mt-1 font-semibold uppercase tracking-wider">
                 score global

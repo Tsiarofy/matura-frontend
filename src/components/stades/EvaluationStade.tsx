@@ -389,7 +389,7 @@ export function EvaluationStade({
         disabled={
           evaluerMutation.isPending ||
           commentaire.length < 50 ||
-          (decision === "RENVOYE" && !motifRenvoi)
+          ((decision === "RENVOYE" || note < 40) && !motifRenvoi.trim())
         }
         className="w-full py-3 bg-[var(--color-success)] hover:brightness-95 disabled:opacity-50 text-white rounded-[14px] text-[13px] font-semibold transition-all flex items-center justify-center gap-2"
       >

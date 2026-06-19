@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { authStore } from '@/stores/authStore';
+import { toast } from 'sonner';
 
 export const BASE_URL = import.meta.env.VITE_BASE_URL || window.location.origin;  
 
@@ -41,6 +42,9 @@ const processQueue = (error: any, token: string | null = null) => {
 apiClient.interceptors.response.use(
   (res) => res,
   async (error) => {
+    if (!error.response) {
+      toast.error("Erreur réseau", { description: "Impossible de contacter le serveur. Vérifiez votre connexion." });
+    }
     const originalRequest = error.config;
 
     // Gère si c'est une 401 et qu'on n'a pas déjà essayé de rafraîchir

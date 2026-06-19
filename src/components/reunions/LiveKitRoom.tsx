@@ -16,7 +16,7 @@ export function MaturaLiveKitRoom({ token, wsUrl, onLeave }: Props) {
       token={token}
       serverUrl={wsUrl}
       connect={true}
-      video={true}
+      video={false}
       audio={true}
       onDisconnected={onLeave}
       data-lk-theme="default"

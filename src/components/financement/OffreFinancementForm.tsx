@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useCreerOffre } from '@/hooks/useInvestisseur'
 import { TypeFinancement } from '@matura/shared'
 import { Loader2, X } from 'lucide-react'
+import { toast } from 'sonner'
 
 const TYPES: { value: TypeFinancement; label: string }[] = [
   { value: TypeFinancement.SUBVENTION,  label: 'Subvention' },
@@ -27,6 +28,18 @@ export function OffreFinancementForm({ onClose }: { onClose: () => void }) {
   const cls = 'w-full text-[12px] text-zinc-700 border border-zinc-200 rounded-lg px-3 py-2 outline-none focus:border-green-500 transition-colors'
 
   const handleSubmit = () => {
+    const minVal = form.montantMin ? parseFloat(form.montantMin) : 0;
+    const maxVal = form.montantMax ? parseFloat(form.montantMax) : 0;
+    
+    if (minVal < 0 || maxVal < 0) {
+      toast.error("Valeurs invalides", { description: "Les montants ne peuvent pas être négatifs." });
+      return;
+    }
+    if (form.montantMin && form.montantMax && maxVal < minVal) {
+      toast.error("Erreur de logique financière", { description: "Le montant maximum doit être supérieur ou égal au montant minimum." });
+      return;
+    }
+
     creer.mutate(
       {
         titre:           form.titre,
@@ -37,7 +50,7 @@ export function OffreFinancementForm({ onClose }: { onClose: () => void }) {
         montantMax:      form.montantMax ? parseFloat(form.montantMax) : undefined,
         secteurs:        [],
         regions:         [],
-        dateCloture:     form.dateCloture || undefined,
+        dateCloture:     form.dateCloture ? new Date(form.dateCloture).toISOString() : undefined,
       },
       { onSuccess: onClose },
     )
@@ -79,12 +92,12 @@ export function OffreFinancementForm({ onClose }: { onClose: () => void }) {
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
           <label className="text-[11px] text-zinc-500">Montant min (MGA)</label>
-          <input type="number" value={form.montantMin}
+          <input type="number" min={0} value={form.montantMin}
             onChange={(e) => set('montantMin', e.target.value)} className={cls} />
         </div>
         <div className="space-y-1">
           <label className="text-[11px] text-zinc-500">Montant max (MGA)</label>
-          <input type="number" value={form.montantMax}
+          <input type="number" min={0} value={form.montantMax}
             onChange={(e) => set('montantMax', e.target.value)} className={cls} />
         </div>
       </div>

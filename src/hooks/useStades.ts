@@ -135,9 +135,14 @@ export function useEnregistrerStade(projetId: string, numStade: number) {
         });
       }
     },
-    onError: (err) => {
+    onError: (err: any) => {
+      const serverError = err.response?.data;
+      const description = Array.isArray(serverError?.message)
+        ? serverError.message.join(" · ")
+        : (serverError?.message || err.message);
+
       toast.error("Erreur lors de l'enregistrement", {
-        description: err.message,
+        description: description,
       });
     },
   });
@@ -283,8 +288,9 @@ export function useEvaluerStade(projetId: string, numStade: number) {
       qc.invalidateQueries({ queryKey: ["projets"] });
       toast.success("Évaluation enregistrée");
     },
-    onError: (err) => {
-      toast.error("Erreur lors de l'évaluation", { description: err.message });
+    onError: (err: any) => {
+      const msg = err.response?.data?.message || err.message;
+      toast.error("Erreur lors de l'évaluation", { description: Array.isArray(msg) ? msg.join(" · ") : msg });
     },
   });
 }

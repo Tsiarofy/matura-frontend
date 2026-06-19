@@ -9,6 +9,8 @@
 //   Sections A, B, C : identiques à l'ancienne version
 
 import { useForm, useFieldArray, type Control } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DonneesStade1Schema } from "@matura/shared";
 import { cn } from "@/lib/utils";
 import { Plus, Trash2, Save, Loader2 } from "lucide-react";
 import type { StadeData } from "@/hooks/useStades";
@@ -27,7 +29,8 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
   const geoExistant = (donnees.contexte_geographique ??
     {}) as Partial<ContexteGeographique>;
 
-  const { register, control, handleSubmit, watch } = useForm({
+  const { register, control, handleSubmit, watch, formState: { errors } } = useForm({
+    resolver: zodResolver(DonneesStade1Schema),
     defaultValues: {
       enonce_probleme: (donnees.enonce_probleme as string) ?? "",
 
@@ -170,6 +173,9 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
               className={textareaCls}
               placeholder="Décrivez le problème observé..."
             />
+            {errors.enonce_probleme && (
+              <p className="text-red-500 text-[11px] mt-1">{(errors.enonce_probleme as any).message}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -182,6 +188,9 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
                 className={inputCls}
                 placeholder="Agriculteurs de la région..."
               />
+              {errors.profil_affecte?.description && (
+                <p className="text-red-500 text-[11px] mt-1">{(errors.profil_affecte as any).description.message}</p>
+              )}
             </div>
             <div>
               <label className={labelCls}>Zone d'habitation</label>
@@ -221,6 +230,9 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
                 className={inputCls}
                 placeholder="Estimation..."
               />
+              {errors.profil_affecte?.nombre_estime && (
+                <p className="text-red-500 text-[11px] mt-1">{(errors.profil_affecte as any).nombre_estime.message}</p>
+              )}
             </div>
           </div>
 
@@ -286,6 +298,9 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
                 className={inputCls}
                 placeholder="Minimum 3..."
               />
+              {errors.observations_terrain?.nb_personnes_interrogees && (
+                <p className="text-red-500 text-[11px] mt-1">{(errors.observations_terrain as any).nb_personnes_interrogees.message}</p>
+              )}
             </div>
             <div>
               <label className={labelCls}>

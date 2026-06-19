@@ -3,7 +3,7 @@ import { useProjetDetail } from "@/hooks/useStades";
 import { BRLBadge } from "@/components/shared/BRLBadge";
 import { StatutBadge } from "@/components/shared/StatutBadge";
 import { StadeStepperH } from "@/components/shared/StadeStepperH";
-import { cn, getAvatarStyle } from "@/lib/utils";
+import { cn, getAvatarStyle, formatDecimal } from "@/lib/utils";
 import { STADE_LABELS } from "@/lib/constants";
 import { authStore } from "@/stores/authStore";
 import {
@@ -56,7 +56,7 @@ function StadeCard({
   const inner = (
     <div
       className={cn(
-        "bg-white border rounded-[18px] p-5 transition-all duration-300",
+        "bg-white border rounded-[18px] p-6 transition-all duration-300",
         statut === "VERROUILLE"
           ? "border-zinc-100/80 bg-zinc-50/50 opacity-60"
           : "border-zinc-100 hover:border-zinc-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.02)] cursor-pointer"
@@ -90,7 +90,7 @@ function StadeCard({
 
           {/* Barre completion si actif */}
           {!isVerrouille && statut !== "VALIDE" && (
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-3">
               <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-500 rounded-full transition-all"
@@ -105,7 +105,7 @@ function StadeCard({
 
           {/* Score si évalué */}
           {score_auto !== null && (
-            <div className="flex items-center gap-1.5 mt-2">
+            <div className="flex items-center gap-1.5 mt-3">
               <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
               <span className="text-[12px] font-medium text-zinc-500">
                 Note mentor : {score_auto}/100
@@ -115,7 +115,7 @@ function StadeCard({
 
           {/* Soumis le */}
           {soumis_le && statut === "SOUMIS" && (
-            <p className="text-[10.5px] text-zinc-400 mt-1 font-medium">
+            <p className="text-[10.5px] text-zinc-400 mt-3 font-medium">
               Soumis le {new Date(soumis_le).toLocaleDateString("fr-FR")}
             </p>
           )}
@@ -211,7 +211,7 @@ export default function ProjetDetailPage() {
         {scoreGlobal !== null && scoreGlobal > 0 && (
           <div className="panel-soft shrink-0 px-4 py-3.5 text-center">
             <p className="text-[24px] font-semibold leading-none text-[var(--color-text-primary)]">
-              {Math.round(scoreGlobal)}
+              {formatDecimal(scoreGlobal)}
             </p>
             <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
               Score MCDA
@@ -336,7 +336,7 @@ export default function ProjetDetailPage() {
         <p className="mb-5 text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
           Parcours de maturation
         </p>
-        <div className="space-y-3">
+        <div className="space-y-5">
           {projet.stades.map((s) => (
             <StadeCard key={s.id} {...s} projetId={projetId} />
           ))}
@@ -374,7 +374,7 @@ export default function ProjetDetailPage() {
                         : "text-zinc-400",
                   )}
                 >
-                  {dim.value > 0 ? Math.round(dim.value) : "—"}
+                  {dim.value > 0 ? formatDecimal(dim.value) : "—"}
                 </span>
               </div>
             ))}

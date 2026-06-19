@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import {
   ProfilInvestisseurSchema,
   type ProfilInvestisseur,
@@ -58,11 +59,11 @@ export function ProfilInvestisseurForm() {
     mutationFn: (data: ProfilInvestisseur) =>
       apiClient.patch("/utilisateurs/moi", data),
     onSuccess: () => {
-      alert("Profil mis à jour avec succès");
+      toast.success("Profil mis à jour", { description: "Vos informations ont été enregistrées." });
     },
-    onError: (error) => {
-      console.error("Erreur lors de la mise à jour:", error);
-      alert("Erreur lors de la mise à jour du profil");
+    onError: (error: any) => {
+      const msg = error?.response?.data?.message || "Erreur lors de la mise à jour du profil";
+      toast.error("Erreur", { description: Array.isArray(msg) ? msg.join(" · ") : msg });
     },
   });
 
@@ -81,11 +82,19 @@ export function ProfilInvestisseurForm() {
         url_avatar: urlAvatarResponse,
       });
     },
+    onError: (error: any) => {
+      const msg = error?.response?.data?.message || "Erreur lors de l'upload de l'avatar";
+      toast.error("Erreur d'upload", { description: Array.isArray(msg) ? msg.join(" · ") : msg });
+    },
   });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Fichier trop lourd", { description: "L'avatar ne doit pas dépasser 2 Mo." });
+        return;
+      }
       avatarMutation.mutate(file);
     }
   };

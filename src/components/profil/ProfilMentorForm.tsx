@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { ProfilMentorSchema, type ProfilMentor } from "@matura/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
@@ -62,11 +63,11 @@ export function ProfilMentorForm() {
     mutationFn: (data: ProfilMentor) =>
       apiClient.patch("/utilisateurs/moi", data),
     onSuccess: () => {
-      alert("Profil mis à jour avec succès");
+      toast.success("Profil mis à jour", { description: "Vos informations ont été enregistrées." });
     },
-    onError: (error) => {
-      console.error("Erreur lors de la mise à jour:", error);
-      alert("Erreur lors de la mise à jour du profil");
+    onError: (error: any) => {
+      const msg = error?.response?.data?.message || "Erreur lors de la mise à jour du profil";
+      toast.error("Erreur", { description: Array.isArray(msg) ? msg.join(" · ") : msg });
     },
   });
 
@@ -84,11 +85,19 @@ export function ProfilMentorForm() {
       // ✅ Nettoie la preview — urlAvatar prendra le relais après le prochain fetch
       setPreviewAvatar(undefined);
     },
+    onError: (error: any) => {
+      const msg = error?.response?.data?.message || "Erreur lors de l'upload de l'avatar";
+      toast.error("Erreur d'upload", { description: Array.isArray(msg) ? msg.join(" · ") : msg });
+    },
   });
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Fichier trop lourd", { description: "L'avatar ne doit pas dépasser 2 Mo." });
+      return;
+    }
     // ✅ Preview immédiate locale sans attendre le serveur
     setPreviewAvatar(URL.createObjectURL(file));
     avatarMutation.mutate(file);

@@ -1,5 +1,12 @@
 // ─── STADE 4 — BMC ───────────────────────────────────────────────────────────
 import { useForm, useFieldArray } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  DonneesStade4Schema,
+  DonneesStade5Schema,
+  DonneesStade6Schema,
+  DonneesStade7Schema,
+} from '@matura/shared'
 import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -30,7 +37,8 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
     return isEntrepreneur ? LABELS_STADE4[key].entrepreneur : LABELS_STADE4[key].professionnel
   }
 
-  const { register, control, handleSubmit } = useForm({
+  const { register, control, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(DonneesStade4Schema),
     defaultValues: {
       evolution_lean_canvas: {
         ce_qui_a_change: (g<Record<string,unknown>>('evolution_lean_canvas', {})).ce_qui_a_change as string ?? '',
@@ -62,7 +70,10 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <p className="text-[12px] font-medium text-zinc-700">{getLabel('evolution_lean_canvas')}</p>
         <textarea {...register('evolution_lean_canvas.ce_qui_a_change')} rows={3}
-          className={textareaCls} placeholder="Ce qui a changé depuis S2 (min 20 car.)..." />
+          className={cn(textareaCls, errors.evolution_lean_canvas?.ce_qui_a_change && "border-red-500")} placeholder="Ce qui a changé depuis S2 (min 20 car.)..." />
+        {errors.evolution_lean_canvas?.ce_qui_a_change && (
+          <p className="text-red-500 text-[11px] mt-1">{(errors.evolution_lean_canvas.ce_qui_a_change as any).message}</p>
+        )}
       </div>
 
       {/* Propositions de valeur */}
@@ -255,7 +266,8 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
     return isEntrepreneur ? LABELS_STADE5[key].entrepreneur : LABELS_STADE5[key].professionnel
   }
 
-  const { register, control, handleSubmit, watch } = useForm({
+  const { register, control, handleSubmit, watch, formState: { errors } } = useForm({
+    resolver: zodResolver(DonneesStade5Schema),
     defaultValues: {
       disciplines_requises_projet: g<string[]>('disciplines_requises_projet', []),
       membres_equipe: g<{ prenom_nom: string; role_projet: string; disciplines: string[]; annees_experience: number; engagement: string; est_fondateur: boolean }[]>('membres_equipe', [
@@ -366,7 +378,10 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
         <div className="grid grid-cols-3 gap-2">
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Prix vente (Ar) *</label>
-            <input type="number" min={0} {...register('finances.prix_vente_ar', { valueAsNumber: true })} className={inp} />
+            <input type="number" min={0} {...register('finances.prix_vente_ar', { valueAsNumber: true })} className={cn(inp, errors.finances?.prix_vente_ar && "border-red-500")} />
+            {errors.finances?.prix_vente_ar && (
+              <p className="text-red-500 text-[11px] mt-1">{(errors.finances.prix_vente_ar as any).message}</p>
+            )}
           </div>
           <div>
             <label className="text-[11px] text-zinc-500 block mb-1">Investissement initial (Ar)</label>
@@ -470,7 +485,8 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
     return isEntrepreneur ? LABELS_STADE6[key].entrepreneur : LABELS_STADE6[key].professionnel
   }
 
-  const { register, control, handleSubmit } = useForm({
+  const { register, control, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(DonneesStade6Schema),
     defaultValues: {
       mvp: {
         type: 'SERVICE',
@@ -508,7 +524,10 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
           </select>
           <input {...register('mvp.url')} className={inp} placeholder="URL (optionnel)" />
         </div>
-        <textarea {...register('mvp.description')} rows={3} className={textareaCls} placeholder="Description du MVP (min 20 car.)" />
+        <textarea {...register('mvp.description')} rows={3} className={cn(textareaCls, errors.mvp?.description && "border-red-500")} placeholder="Description du MVP (min 20 car.)" />
+        {errors.mvp?.description && (
+          <p className="text-red-500 text-[11px] mt-1">{(errors.mvp.description as any).message}</p>
+        )}
       </div>
 
       {/* Métriques d'usage */}
@@ -603,7 +622,8 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
     return isEntrepreneur ? LABELS_STADE7[key].entrepreneur : LABELS_STADE7[key].professionnel
   }
 
-  const { register, control, handleSubmit } = useForm({
+  const { register, control, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(DonneesStade7Schema),
     defaultValues: {
       resume_executif: {
         phrase_accroche: '',
@@ -637,7 +657,10 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
       {/* Résumé exécutif */}
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <p className="text-[12px] font-medium text-zinc-700">{getLabel('resume_executif')}</p>
-        <input {...register('resume_executif.phrase_accroche')} className={inp} maxLength={200} placeholder="Phrase d'accroche (max 200 car.) *" />
+        <input {...register('resume_executif.phrase_accroche')} className={cn(inp, errors.resume_executif?.phrase_accroche && "border-red-500")} maxLength={200} placeholder="Phrase d'accroche (max 200 car.) *" />
+        {errors.resume_executif?.phrase_accroche && (
+          <p className="text-red-500 text-[11px] mt-1">{(errors.resume_executif.phrase_accroche as any).message}</p>
+        )}
         <textarea {...register('resume_executif.description_courte')} rows={4} className={textareaCls} placeholder="Description courte (50-1000 car.) *" />
       </div>
 
@@ -663,6 +686,17 @@ export function Stade7Form({ stade, onSave, saving, readOnly = false }: Props) {
               <input type="number" min={0} {...register(`demande_financement.projections_retour.${k}` as never, { valueAsNumber: true })} className={inp} />
             </div>
           ))}
+        </div>
+        <div>
+          <label className="text-[11px] text-zinc-500 block mb-1">
+            Date estimée du point mort * <span className="text-zinc-400 font-normal">(MM/AAAA)</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Ex: 06/2027"
+            {...register('demande_financement.projections_retour.date_point_mort')}
+            className={inp}
+          />
         </div>
         <div>
           <div className="flex items-center justify-between mb-1">

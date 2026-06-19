@@ -7,6 +7,8 @@
 // Les 9 champs CalculsInformatifs sont construits et sauvegardés
 
 import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DonneesStade3Schema } from "@matura/shared";
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { Plus, Trash2, Save, Loader2, MapPin } from "lucide-react";
@@ -134,9 +136,10 @@ export function Stade3Form({
 
   // ── Stepper état ──────────────────────────────────────────────────────────
   const [etapeActive, setEtapeActive] = useState("zone_geographique");
-  const [etapesCompletees, setEtapesCompletees] = useState<Set<string>>(
-    new Set(),
-  );
+  const [etapesCompletees, setEtapesCompletees] = useState<Set<string>>(() => {
+    if (readOnly) return new Set(ETAPES_B2C.map((e) => e.id));
+    return new Set();
+  });
   const [alertesIgnoreesParFormulaire, setAlertesIgnoreesParFormulaire] =
     useState<{
       B2C: string[];
@@ -183,8 +186,9 @@ export function Stade3Form({
   // console.log(contexteGeographiqueStade1)
 
   // ── Formulaire principal ──────────────────────────────────────────────────
-  const { register, control, handleSubmit, watch, getValues, reset } =
+  const { register, control, handleSubmit, watch, getValues, reset, formState: { errors } } =
     useForm<FormValues>({
+      resolver: zodResolver(DonneesStade3Schema) as any,
       defaultValues: {
         type_client: typeProjet,
         pct_utilisateurs: g<number>("pct_utilisateurs", 0),
@@ -742,15 +746,15 @@ export function Stade3Form({
                       </button>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex gap-2 items-center">
                     <input
                       {...register(`concurrents.${i}.nom`)}
-                      className={inp}
+                      className={cn(inp, "flex-1")}
                       placeholder={getLabel("concurrent_nom")}
                     />
                     <select
                       {...register(`concurrents.${i}.type`)}
-                      className={sel}
+                      className={cn(sel, "w-1/3")}
                     >
                       <option value="DIRECT">Direct</option>
                       <option value="INDIRECT">Indirect</option>
@@ -762,7 +766,7 @@ export function Stade3Form({
                     className={inp}
                     placeholder={getLabel("concurrent_differentiation")}
                   />
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="flex gap-2 items-center">
                     <input
                       type="number" min={0}
                       {...register(`concurrents.${i}.part_globale_pct`, {
@@ -836,14 +840,18 @@ export function Stade3Form({
                   </p>
                 </div>
               ) : (
-                <input
-                  type="number" min={0}
-                  {...register("taille_marche.tam_valeur", {
-                    valueAsNumber: true,
-                  })}
-                  className={inp}
-                  placeholder="Nombre d'entreprises"
-                />
+                <>
+                  <input
+                    type="number" min={0}
+                    {...register("taille_marche.tam_valeur", {
+                      valueAsNumber: true,
+                    })}
+                    className={inp}
+                    placeholder="Nombre d'entreprises"
+                  />
+                  {errors.taille_marche?.tam_valeur && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.tam_valeur.message}</p>}
+                  {errors.taille_marche?.message && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.message}</p>}
+                </>
               )}
 
               {etapeActive === "tam" && (
@@ -877,6 +885,8 @@ export function Stade3Form({
                 className={inp}
                 placeholder="Nombre de personnes"
               />
+              {errors.taille_marche?.sam_valeur && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.sam_valeur.message}</p>}
+              {errors.taille_marche?.message && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.message}</p>}
               {calculMarcheQuery.data && (
                 <div className="mt-2 text-[11px] text-zinc-600">
                   Le SAM représente{" "}
@@ -921,6 +931,8 @@ export function Stade3Form({
                 className={inp}
                 placeholder="Nombre de personnes"
               />
+              {errors.taille_marche?.som_valeur && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.som_valeur.message}</p>}
+              {errors.taille_marche?.message && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.message}</p>}
 
               {/* Alertes de réalisme temps réel (spec Section 4.4) */}
               {calculMarcheQuery.data && (
@@ -992,6 +1004,8 @@ export function Stade3Form({
                 className={inp}
                 placeholder="Nombre d'entreprises"
               />
+              {errors.taille_marche?.tam_valeur && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.tam_valeur.message}</p>}
+              {errors.taille_marche?.message && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.message}</p>}
             </div>
             <div className={sec}>
               <p className="text-[12px] font-medium text-zinc-700 mb-2">
@@ -1005,6 +1019,8 @@ export function Stade3Form({
                 className={inp}
                 placeholder="Nombre d'entreprises"
               />
+              {errors.taille_marche?.sam_valeur && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.sam_valeur.message}</p>}
+              {errors.taille_marche?.message && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.message}</p>}
             </div>
             <div className={sec}>
               <p className="text-[12px] font-medium text-zinc-700 mb-2">
@@ -1018,6 +1034,8 @@ export function Stade3Form({
                 className={inp}
                 placeholder="Nombre d'entreprises"
               />
+              {errors.taille_marche?.som_valeur && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.som_valeur.message}</p>}
+              {errors.taille_marche?.message && <p className="text-red-500 text-[11px] mt-1">{errors.taille_marche.message}</p>}
             </div>
             <div className={sec}>
               <div className="flex items-center justify-between mb-2">
@@ -1060,15 +1078,15 @@ export function Stade3Form({
                       </button>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex gap-2 items-center">
                     <input
                       {...register(`concurrents.${i}.nom`)}
-                      className={inp}
+                      className={cn(inp, "flex-1")}
                       placeholder={getLabel("concurrent_nom")}
                     />
                     <select
                       {...register(`concurrents.${i}.type`)}
-                      className={sel}
+                      className={cn(sel, "w-1/3")}
                     >
                       <option value="DIRECT">Direct</option>
                       <option value="INDIRECT">Indirect</option>
@@ -1080,13 +1098,13 @@ export function Stade3Form({
                     className={inp}
                     placeholder={getLabel("concurrent_differentiation")}
                   />
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex gap-2 items-center">
                     <input
                       type="number" min={0}
                       {...register(`concurrents.${i}.part_globale_pct`, {
                         valueAsNumber: true,
                       })}
-                      className={inp}
+                      className={cn(inp, "flex-1")}
                       placeholder="% marché global"
                     />
                     <input
@@ -1094,7 +1112,7 @@ export function Stade3Form({
                       {...register(`concurrents.${i}.prix_estime_ar`, {
                         valueAsNumber: true,
                       })}
-                      className={inp}
+                      className={cn(inp, "flex-1")}
                       placeholder="Prix estimé (Ar)"
                     />
                   </div>

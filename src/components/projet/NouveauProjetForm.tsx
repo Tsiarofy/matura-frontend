@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 import { DOMAINE_LABELS, TYPE_CIBLE_LABELS, REGIONS_MADAGASCAR } from '@/lib/constants'
 
 interface NouveauProjetFormProps {
@@ -49,8 +50,9 @@ export function NouveauProjetForm({ open, onOpenChange, onSubmit }: NouveauProje
       await onSubmit(data)
       reset()
       onOpenChange(false)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur création projet:', error)
+      toast.error("Erreur", { description: error.response?.data?.message || 'Erreur lors de la création du projet' })
     } finally {
       setIsLoading(false)
     }

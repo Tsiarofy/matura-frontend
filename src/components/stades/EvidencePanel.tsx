@@ -4,6 +4,7 @@ import { File, Image as ImageIcon, Video, Link as LinkIcon, Trash2, UploadCloud,
 // import { cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 interface Props {
   stadeId: string;
@@ -21,6 +22,10 @@ export function EvidencePanel({ stadeId, readOnly = false }: Props) {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error("Fichier trop lourd", { description: "Le document ne doit pas dépasser 15 Mo." });
+      return;
+    }
     // On peut demander une description ou un type, mais pour simplifier on envoie directement
     uploadDoc.mutate({ file });
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -48,6 +53,7 @@ export function EvidencePanel({ stadeId, readOnly = false }: Props) {
             <input
               type="file"
               ref={fileInputRef}
+              accept="image/*,application/pdf,video/*,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
               className="hidden"
               onChange={handleFileSelect}
             />

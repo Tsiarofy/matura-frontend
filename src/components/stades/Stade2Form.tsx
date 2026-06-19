@@ -1,4 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { DonneesStade2Schema } from "@matura/shared";
 import { cn } from "@/lib/utils";
 import { Plus, Trash2, Save, Loader2 } from "lucide-react";
 import type { StadeData } from "@/hooks/useStades";
@@ -100,16 +102,18 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
   const g = <T,>(k: string, def: T): T => (d[k] as T) ?? def;
 
   const [etapeActive, setEtapeActive] = useState("probleme");
-  const [etapesCompletees, setEtapesCompletees] = useState<Set<string>>(
-    new Set(),
-  );
+  const [etapesCompletees, setEtapesCompletees] = useState<Set<string>>(() => {
+    if (readOnly) return new Set(ETAPES_STADE2.map((e) => e.id));
+    return new Set();
+  });
 
   const getLabel = (key: keyof typeof LABELS_STADE2) =>
     isEntrepreneur
       ? LABELS_STADE2[key].entrepreneur
       : LABELS_STADE2[key].professionnel;
 
-  const { register, control, handleSubmit } = useForm({
+  const { register, control, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(DonneesStade2Schema),
     defaultValues: {
       bloc_probleme: {
         herite_stade1: g<string>("bloc_probleme.herite_stade1", ""),
@@ -233,9 +237,12 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
           </p>
           <input
             {...register("bloc_probleme.herite_stade1")}
-            className={inp}
+            className={cn(inp, errors.bloc_probleme?.herite_stade1 && "border-red-500")}
             placeholder="Décrivez le problème principal hérité du Stade 1..."
           />
+          {errors.bloc_probleme?.herite_stade1 && (
+            <p className="text-red-500 text-[11px] mt-1">{(errors.bloc_probleme.herite_stade1 as any).message}</p>
+          )}
         </SectionWrapper>
 
         {/* Section 2 — Segments clients */}
@@ -243,15 +250,18 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("segment_principal")}
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="bg-zinc-50 rounded-lg p-3 space-y-2">
             <div>
               <label className="text-[11px] text-zinc-500 block mb-1">
                 {getLabel("segment_principal")} *
               </label>
               <input
                 {...register("bloc_segments_clients.principal")}
-                className={inp}
+                className={cn(inp, errors.bloc_segments_clients?.principal && "border-red-500")}
               />
+              {errors.bloc_segments_clients?.principal && (
+                <p className="text-red-500 text-[11px] mt-1">{(errors.bloc_segments_clients.principal as any).message}</p>
+              )}
             </div>
             <div>
               <label className="text-[11px] text-zinc-500 block mb-1">
@@ -321,10 +331,13 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
           </p>
           <input
             {...register("bloc_proposition_valeur.phrase_principale")}
-            className={inp}
+            className={cn(inp, errors.bloc_proposition_valeur?.phrase_principale && "border-red-500")}
             maxLength={80}
             placeholder="Proposition de valeur unique (max 80 car.)"
           />
+          {errors.bloc_proposition_valeur?.phrase_principale && (
+            <p className="text-red-500 text-[11px] mt-1">{(errors.bloc_proposition_valeur.phrase_principale as any).message}</p>
+          )}
           <input
             {...register("bloc_proposition_valeur.slogan")}
             className={cn(inp, "mt-2")}
@@ -413,45 +426,45 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
           {revFields.map((f, i) => (
             <div
               key={f.id}
-              className="bg-zinc-50 rounded-lg p-3 grid grid-cols-2 gap-2 mb-2"
+              className="bg-zinc-50 rounded-lg p-3 space-y-2 mb-2"
             >
-              <select
-                {...register(`bloc_sources_revenus.${i}.modele`)}
-                className={sel}
-              >
-                {[
-                  "ABONNEMENT",
-                  "ACHAT_UNIQUE",
-                  "COMMISSION",
-                  "FREEMIUM",
-                  "B2B_CONTRACT",
-                  "SUBVENTION",
-                  "AUTRE",
-                ].map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
               <input
                 {...register(`bloc_sources_revenus.${i}.description`)}
                 className={inp}
                 placeholder="Description"
               />
-              <input
-                type="number"
-                min={0}
-                {...register(
-                  `bloc_sources_revenus.${i}.estimation_mensuelle_ar`,
-                  { valueAsNumber: true },
-                )}
-                className={inp}
-                placeholder="Estimation Ar/mois"
-              />
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
+                <select
+                  {...register(`bloc_sources_revenus.${i}.modele`)}
+                  className={cn(sel, "flex-1")}
+                >
+                  {[
+                    "ABONNEMENT",
+                    "ACHAT_UNIQUE",
+                    "COMMISSION",
+                    "FREEMIUM",
+                    "B2B_CONTRACT",
+                    "SUBVENTION",
+                    "AUTRE",
+                  ].map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  min={0}
+                  {...register(
+                    `bloc_sources_revenus.${i}.estimation_mensuelle_ar`,
+                    { valueAsNumber: true },
+                  )}
+                  className={cn(inp, "w-28")}
+                  placeholder="Ar/mois"
+                />
                 <select
                   {...register(`bloc_sources_revenus.${i}.confiance`)}
-                  className={cn(sel, "flex-1")}
+                  className={cn(sel, "w-24")}
                 >
                   <option value="FAIBLE">Faible</option>
                   <option value="MOYENNE">Moyenne</option>
@@ -594,30 +607,41 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
             )}
           </div>
           {indicFields.map((f, i) => (
-            <div key={f.id} className="grid grid-cols-4 gap-2 mb-2">
+            <div key={f.id} className="bg-zinc-50 rounded-lg p-3 space-y-2 mb-2">
               <input
                 {...register(`bloc_indicateurs_cles.${i}.indicateur`)}
-                className={cn(inp, "col-span-2")}
+                className={inp}
                 placeholder="Indicateur"
               />
-              <input
-                type="number"
-                min={0}
-                {...register(`bloc_indicateurs_cles.${i}.valeur_cible`, {
-                  valueAsNumber: true,
-                })}
-                className={inp}
-                placeholder="Cible"
-              />
-              <input
-                type="number"
-                min={0}
-                {...register(`bloc_indicateurs_cles.${i}.echeance_mois`, {
-                  valueAsNumber: true,
-                })}
-                className={inp}
-                placeholder="Mois"
-              />
+              <div className="flex gap-2 items-center">
+                <input
+                  type="number"
+                  min={0}
+                  {...register(`bloc_indicateurs_cles.${i}.valeur_cible`, {
+                    valueAsNumber: true,
+                  })}
+                  className={cn(inp, "flex-1")}
+                  placeholder="Cible"
+                />
+                <input
+                  type="number"
+                  min={0}
+                  {...register(`bloc_indicateurs_cles.${i}.echeance_mois`, {
+                    valueAsNumber: true,
+                  })}
+                  className={cn(inp, "flex-1")}
+                  placeholder="Échéance (mois)"
+                />
+                {indicFields.length > 1 && !readOnly && (
+                  <button
+                    type="button"
+                    onClick={() => remIndic(i)}
+                    className="text-red-400"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </SectionWrapper>

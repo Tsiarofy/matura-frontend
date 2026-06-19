@@ -222,3 +222,17 @@ export function getScoreStyle(score: number): { bg: string; border: string; text
     rawAccent: '#DC2626',
   }
 }
+
+/**
+ * Formate un nombre décimal avec une limitation à un certain nombre de chiffres après la virgule.
+ * @param value - La valeur à formater
+ * @param decimals - Le nombre de décimales
+ * @returns Le nombre formaté ou '—'
+ */
+export function formatDecimal(value: number | null | undefined, decimals = 2): string {
+  if (value === null || value === undefined || Number.isNaN(value)) return '—';
+  return new Intl.NumberFormat('fr-FR', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(value);
+}
