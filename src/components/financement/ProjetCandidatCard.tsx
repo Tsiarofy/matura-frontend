@@ -2,7 +2,7 @@ import { type CandidatureAvecProjet } from '@/hooks/useInvestisseur'
 import { Link } from '@tanstack/react-router'
 import { StatutCandidature } from '@matura/shared'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, formatDecimal } from '@/lib/utils'
 import { Briefcase, User, MapPin, Users, Eye, FileText, Check, X, RotateCcw } from 'lucide-react'
 
 const STATUT_LABELS: Record<StatutCandidature, string> = {
@@ -260,7 +260,7 @@ function StadeDetails({ projet, brl }: { projet: CandidatureAvecProjet['projet']
     if (donnees.clients_payants)    items.push({ label: 'Clients payants', valeur: String(donnees.clients_payants) })
     if (donnees.revenus_generes_ar) items.push({ label: 'Revenus générés', valeur: `${Number(donnees.revenus_generes_ar).toLocaleString('fr')} MGA` })
     if (donnees.resume_executif)    items.push({ label: 'Résumé exécutif', valeur: donnees.resume_executif })
-    if (score?.score_global)        items.push({ label: 'Score global', valeur: `${score.score_global.toFixed(1)}/100` })
+    if (score?.score_global)        items.push({ label: 'Score global', valeur: `${formatDecimal(score.score_global)}/100` })
   }
 
   if (items.length === 0) {

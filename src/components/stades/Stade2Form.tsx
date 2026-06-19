@@ -112,7 +112,12 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
       ? LABELS_STADE2[key].entrepreneur
       : LABELS_STADE2[key].professionnel;
 
-  const { register, control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(DonneesStade2Schema),
     defaultValues: {
       bloc_probleme: {
@@ -191,14 +196,20 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
     append: addCout,
     remove: remCout,
   } = useFieldArray({ control, name: "bloc_structure_couts" });
-  const { fields: indicFields, append: addIndic } = useFieldArray({
+  const {
+    fields: indicFields,
+    append: addIndic,
+    remove: remIndic,
+  } = useFieldArray({
     control,
     name: "bloc_indicateurs_cles",
   });
 
   const inp = "flat-input h-11 px-4 py-2.5 text-[13px] rounded-[16px]";
   const sel = cn(inp, "appearance-none");
-  const textareaCls = "flat-input min-h-[90px] px-4 py-2.5 text-[13px] rounded-[16px] resize-none";
+  const textareaCls =
+    "flat-input min-h-[90px] px-4 py-2.5 text-[13px] rounded-[16px] resize-none";
+  const cardCls = "bg-zinc-50 rounded-lg p-3 space-y-2 mb-2";
 
   const markComplete = (id: string, next?: string) => {
     setEtapesCompletees((prev) => new Set([...prev, id]));
@@ -213,8 +224,6 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
       etapeId !== "probleme"
     );
   };
-
-
 
   return (
     <form
@@ -231,22 +240,39 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
 
       <fieldset disabled={readOnly} className="space-y-4 border-none p-0 m-0">
         {/* Section 1 — Problème */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="probleme">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="probleme"
+        >
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("bloc_probleme")}
           </p>
           <input
             {...register("bloc_probleme.herite_stade1")}
-            className={cn(inp, errors.bloc_probleme?.herite_stade1 && "border-red-500")}
+            className={cn(
+              inp,
+              errors.bloc_probleme?.herite_stade1 && "border-red-500",
+            )}
             placeholder="Décrivez le problème principal hérité du Stade 1..."
           />
           {errors.bloc_probleme?.herite_stade1 && (
-            <p className="text-red-500 text-[11px] mt-1">{(errors.bloc_probleme.herite_stade1 as any).message}</p>
+            <p className="text-red-500 text-[11px] mt-1">
+              {(errors.bloc_probleme.herite_stade1 as any).message}
+            </p>
           )}
         </SectionWrapper>
 
         {/* Section 2 — Segments clients */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="segments">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="segments"
+        >
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("segment_principal")}
           </p>
@@ -257,10 +283,15 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
               </label>
               <input
                 {...register("bloc_segments_clients.principal")}
-                className={cn(inp, errors.bloc_segments_clients?.principal && "border-red-500")}
+                className={cn(
+                  inp,
+                  errors.bloc_segments_clients?.principal && "border-red-500",
+                )}
               />
               {errors.bloc_segments_clients?.principal && (
-                <p className="text-red-500 text-[11px] mt-1">{(errors.bloc_segments_clients.principal as any).message}</p>
+                <p className="text-red-500 text-[11px] mt-1">
+                  {(errors.bloc_segments_clients.principal as any).message}
+                </p>
               )}
             </div>
             <div>
@@ -268,15 +299,32 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
                 {getLabel("autres_segments")}
               </label>
               <input
+                {...register("bloc_segments_clients.secondaire")}
+                className={inp}
+                placeholder="Segment secondaire"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-zinc-500 block mb-1">
+                Premiers adoptants
+              </label>
+              <input
                 {...register("bloc_segments_clients.premiers_adoptants")}
                 className={inp}
+                placeholder="Décrivez les premiers utilisateurs visés"
               />
             </div>
           </div>
         </SectionWrapper>
 
         {/* Section 3 — Solution */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="solution">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="solution"
+        >
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("solution")}
@@ -298,45 +346,62 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
             )}
           </div>
           {fonctFields.map((f, i) => (
-            <div key={f.id} className="flex gap-2 items-start mb-2">
+            <div key={f.id} className={cardCls}>
               <input
                 {...register(`bloc_solution.fonctionnalites.${i}.description`)}
-                className={cn(inp, "flex-1")}
-                placeholder="Fonctionnalité..."
+                className={cn(inp, "w-full")}
+                placeholder="Décrivez clairement la fonctionnalité principale..."
               />
-              <select
-                {...register(`bloc_solution.fonctionnalites.${i}.priorite`)}
-                className={cn(sel, "w-36")}
-              >
-                <option value="INDISPENSABLE">Must-have</option>
-                <option value="NICE_TO_HAVE">Nice-to-have</option>
-              </select>
-              {fonctFields.length > 1 && !readOnly && (
-                <button
-                  type="button"
-                  onClick={() => remFonct(i)}
-                  className="text-red-400 mt-2"
+              <div className="flex gap-2 items-center">
+                <select
+                  {...register(`bloc_solution.fonctionnalites.${i}.priorite`)}
+                  className={cn(sel, "flex-1")}
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              )}
+                  <option value="INDISPENSABLE">Must-have</option>
+                  <option value="NICE_TO_HAVE">Nice-to-have</option>
+                </select>
+                {fonctFields.length > 1 && !readOnly && (
+                  <button
+                    type="button"
+                    onClick={() => remFonct(i)}
+                    className="text-red-400 px-2"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </SectionWrapper>
 
         {/* Section 4 — Proposition de valeur */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="proposition">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="proposition"
+        >
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("proposition_valeur")}
           </p>
           <input
             {...register("bloc_proposition_valeur.phrase_principale")}
-            className={cn(inp, errors.bloc_proposition_valeur?.phrase_principale && "border-red-500")}
+            className={cn(
+              inp,
+              errors.bloc_proposition_valeur?.phrase_principale &&
+                "border-red-500",
+            )}
             maxLength={80}
             placeholder="Proposition de valeur unique (max 80 car.)"
           />
           {errors.bloc_proposition_valeur?.phrase_principale && (
-            <p className="text-red-500 text-[11px] mt-1">{(errors.bloc_proposition_valeur.phrase_principale as any).message}</p>
+            <p className="text-red-500 text-[11px] mt-1">
+              {
+                (errors.bloc_proposition_valeur.phrase_principale as any)
+                  .message
+              }
+            </p>
           )}
           <input
             {...register("bloc_proposition_valeur.slogan")}
@@ -346,7 +411,13 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 5 — Canaux */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="canaux">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="canaux"
+        >
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("canaux")}
@@ -364,44 +435,52 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
             )}
           </div>
           {canauxFields.map((f, i) => (
-            <div key={f.id} className="flex gap-2 items-center mb-2">
+            <div key={f.id} className={cardCls}>
               <input
                 {...register(`bloc_canaux.${i}.canal`)}
-                className={cn(inp, "flex-1")}
-                placeholder="Canal..."
+                className={cn(inp, "w-full")}
+                placeholder="Canal principal ou partenaire de distribution"
               />
-              <select
-                {...register(`bloc_canaux.${i}.phase`)}
-                className={cn(sel, "w-32")}
-              >
-                <option value="NOTORIETE">Notoriété</option>
-                <option value="ACQUISITION">Acquisition</option>
-                <option value="RETENTION">Rétention</option>
-              </select>
-              <select
-                {...register(`bloc_canaux.${i}.cout`)}
-                className={cn(sel, "w-28")}
-              >
-                <option value="GRATUIT">Gratuit</option>
-                <option value="FAIBLE">Faible</option>
-                <option value="MOYEN">Moyen</option>
-                <option value="ELEVE">Élevé</option>
-              </select>
-              {canauxFields.length > 1 && !readOnly && (
-                <button
-                  type="button"
-                  onClick={() => remCanal(i)}
-                  className="text-red-400"
+              <div className="flex gap-2 items-center">
+                <select
+                  {...register(`bloc_canaux.${i}.phase`)}
+                  className={cn(sel, "flex-1")}
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              )}
+                  <option value="NOTORIETE">Notoriété</option>
+                  <option value="ACQUISITION">Acquisition</option>
+                  <option value="RETENTION">Rétention</option>
+                </select>
+                <select
+                  {...register(`bloc_canaux.${i}.cout`)}
+                  className={cn(sel, "flex-1")}
+                >
+                  <option value="GRATUIT">Gratuit</option>
+                  <option value="FAIBLE">Faible</option>
+                  <option value="MOYEN">Moyen</option>
+                  <option value="ELEVE">Élevé</option>
+                </select>
+                {canauxFields.length > 1 && !readOnly && (
+                  <button
+                    type="button"
+                    onClick={() => remCanal(i)}
+                    className="text-red-400 px-2"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </SectionWrapper>
 
         {/* Section 6 — Sources de revenus */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="revenus">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="revenus"
+        >
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("sources_revenus")}
@@ -485,7 +564,13 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 7 — Structure de coûts */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="couts">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="couts"
+        >
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("structure_couts")}
@@ -508,53 +593,61 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
             )}
           </div>
           {coutFields.map((f, i) => (
-            <div key={f.id} className="flex gap-2 items-center mb-2">
-              <select
-                {...register(`bloc_structure_couts.${i}.categorie`)}
-                className={cn(sel, "w-32")}
-              >
-                {[
-                  "PERSONNEL",
-                  "TECH",
-                  "MARKETING",
-                  "LOGISTIQUE",
-                  "LOYER",
-                  "AUTRE",
-                ].map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
+            <div key={f.id} className={cardCls}>
               <input
                 {...register(`bloc_structure_couts.${i}.libelle`)}
-                className={cn(inp, "flex-1")}
-                placeholder="Libellé"
+                className={cn(inp, "w-full")}
+                placeholder="Libellé du coût"
               />
-              <input
-                type="number"
-                min={0}
-                {...register(`bloc_structure_couts.${i}.montant_mensuel_ar`, {
-                  valueAsNumber: true,
-                })}
-                className={cn(inp, "w-32")}
-                placeholder="Ar/mois"
-              />
-              {coutFields.length > 1 && !readOnly && (
-                <button
-                  type="button"
-                  onClick={() => remCout(i)}
-                  className="text-red-400"
+              <div className="flex gap-2 items-center">
+                <select
+                  {...register(`bloc_structure_couts.${i}.categorie`)}
+                  className={cn(sel, "flex-1")}
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              )}
+                  {[
+                    "PERSONNEL",
+                    "TECH",
+                    "MARKETING",
+                    "LOGISTIQUE",
+                    "LOYER",
+                    "AUTRE",
+                  ].map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  min={0}
+                  {...register(`bloc_structure_couts.${i}.montant_mensuel_ar`, {
+                    valueAsNumber: true,
+                  })}
+                  className={cn(inp, "flex-1")}
+                  placeholder="Ar/mois"
+                />
+                {coutFields.length > 1 && !readOnly && (
+                  <button
+                    type="button"
+                    onClick={() => remCout(i)}
+                    className="text-red-400 px-2"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </SectionWrapper>
 
         {/* Section 8 — Avantage unique */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="avantage">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="avantage"
+        >
           <p className="text-[12px] font-medium text-zinc-700 mb-2">
             {getLabel("avantage_unique")}
           </p>
@@ -584,7 +677,13 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
         </SectionWrapper>
 
         {/* Section 9 — Indicateurs clés */}
-        <SectionWrapper readOnly={readOnly} etapeActive={etapeActive} isLocked={isLocked} markComplete={markComplete} etapeId="indicateurs">
+        <SectionWrapper
+          readOnly={readOnly}
+          etapeActive={etapeActive}
+          isLocked={isLocked}
+          markComplete={markComplete}
+          etapeId="indicateurs"
+        >
           <div className="flex items-center justify-between mb-2">
             <p className="text-[12px] font-medium text-zinc-700">
               {getLabel("indicateurs_cles")}
@@ -607,7 +706,10 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
             )}
           </div>
           {indicFields.map((f, i) => (
-            <div key={f.id} className="bg-zinc-50 rounded-lg p-3 space-y-2 mb-2">
+            <div
+              key={f.id}
+              className="bg-zinc-50 rounded-lg p-3 space-y-2 mb-2"
+            >
               <input
                 {...register(`bloc_indicateurs_cles.${i}.indicateur`)}
                 className={inp}

@@ -1,11 +1,7 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useNotifications, useMarquerToutesLues, useMarquerLue } from '@/hooks/useNotifications';
 import { Bell, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-export const Route = createFileRoute('/(dashboard)/_layout/notifications/')({
-  component: NotificationsPage,
-});
 
 function formatNotificationCorps(corps: string): string {
   const dateRegex = /\[DATE:([^\]]+)\]/g;
@@ -26,7 +22,7 @@ function formatNotificationCorps(corps: string): string {
   });
 }
 
-function NotificationsPage() {
+export default function NotificationsPage() {
   const { data: notifs, isLoading } = useNotifications();
   const toutLire = useMarquerToutesLues();
   const marquerLue = useMarquerLue();

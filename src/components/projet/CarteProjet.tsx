@@ -3,7 +3,7 @@ import {type ProjetResume } from '@matura/shared'
 import { BRLBadge } from '@/components/shared/BRLBadge'
 import { StatutBadge } from '@/components/shared/StatutBadge'
 import { ProgressBar } from '@/components/shared/ProgressBar'
-import { cn, getScoreStyle } from '@/lib/utils'
+import { cn, formatDecimal, getScoreStyle } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
 import { MapPin, User, Briefcase } from 'lucide-react'
 
@@ -80,7 +80,7 @@ export function CarteProjet({ projet, className }: CarteProjetProps) {
               const scStyle = getScoreStyle(projet.score_global);
               return (
                 <span className={cn("font-bold text-[11px] px-2 py-0.5 rounded-full border", scStyle.text, scStyle.bg, scStyle.border)}>
-                  Score {Math.round(projet.score_global)}
+                  Score {formatDecimal(projet.score_global)}
                 </span>
               );
             })()}

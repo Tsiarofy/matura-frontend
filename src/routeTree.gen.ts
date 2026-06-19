@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as dashboardLayoutRouteImport } from './routes/(dashboard)/_layout'
+import { Route as dashboardLayoutNotificationsIndexRouteImport } from './routes/(dashboard)/_layout/notifications/index'
 import { Route as dashboardLayoutMesFormationsIndexRouteImport } from './routes/(dashboard)/_layout/mes-formations/index'
 import { Route as dashboardLayoutFormationsIndexRouteRouteImport } from './routes/(dashboard)/_layout/formations/index.route'
 import { Route as dashboardLayoutProjetsAFinancerProjetIdRouteImport } from './routes/(dashboard)/_layout/projets-a-financer/$projetId'
@@ -224,6 +225,18 @@ const dashboardLayoutFinancementsIndexLazyRoute =
     } as any)
     .lazy(() =>
       import('./routes/(dashboard)/_layout/financements/index.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+const dashboardLayoutNotificationsIndexRoute =
+  dashboardLayoutNotificationsIndexRouteImport
+    .update({
+      id: '/notifications/',
+      path: '/notifications/',
+      getParentRoute: () => dashboardLayoutRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/notifications/index.lazy').then(
         (d) => d.Route,
       ),
     )
@@ -465,6 +478,7 @@ export interface FileRoutesByFullPath {
   '/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
   '/formations/': typeof dashboardLayoutFormationsIndexRouteRoute
   '/mes-formations/': typeof dashboardLayoutMesFormationsIndexRoute
+  '/notifications/': typeof dashboardLayoutNotificationsIndexRoute
   '/financements/': typeof dashboardLayoutFinancementsIndexLazyRoute
   '/mes-financements/': typeof dashboardLayoutMesFinancementsIndexLazyRoute
   '/projets-a-financer/': typeof dashboardLayoutProjetsAFinancerIndexLazyRoute
@@ -498,6 +512,7 @@ export interface FileRoutesByTo {
   '/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
   '/formations': typeof dashboardLayoutFormationsIndexRouteRoute
   '/mes-formations': typeof dashboardLayoutMesFormationsIndexRoute
+  '/notifications': typeof dashboardLayoutNotificationsIndexRoute
   '/financements': typeof dashboardLayoutFinancementsIndexLazyRoute
   '/mes-financements': typeof dashboardLayoutMesFinancementsIndexLazyRoute
   '/projets-a-financer': typeof dashboardLayoutProjetsAFinancerIndexLazyRoute
@@ -533,6 +548,7 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
   '/(dashboard)/_layout/formations/': typeof dashboardLayoutFormationsIndexRouteRoute
   '/(dashboard)/_layout/mes-formations/': typeof dashboardLayoutMesFormationsIndexRoute
+  '/(dashboard)/_layout/notifications/': typeof dashboardLayoutNotificationsIndexRoute
   '/(dashboard)/_layout/financements/': typeof dashboardLayoutFinancementsIndexLazyRoute
   '/(dashboard)/_layout/mes-financements/': typeof dashboardLayoutMesFinancementsIndexLazyRoute
   '/(dashboard)/_layout/projets-a-financer/': typeof dashboardLayoutProjetsAFinancerIndexLazyRoute
@@ -568,6 +584,7 @@ export interface FileRouteTypes {
     | '/mes-formations/creer'
     | '/formations/'
     | '/mes-formations/'
+    | '/notifications/'
     | '/financements/'
     | '/mes-financements/'
     | '/projets-a-financer/'
@@ -601,6 +618,7 @@ export interface FileRouteTypes {
     | '/mes-formations/creer'
     | '/formations'
     | '/mes-formations'
+    | '/notifications'
     | '/financements'
     | '/mes-financements'
     | '/projets-a-financer'
@@ -635,6 +653,7 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/mes-formations/creer'
     | '/(dashboard)/_layout/formations/'
     | '/(dashboard)/_layout/mes-formations/'
+    | '/(dashboard)/_layout/notifications/'
     | '/(dashboard)/_layout/financements/'
     | '/(dashboard)/_layout/mes-financements/'
     | '/(dashboard)/_layout/projets-a-financer/'
@@ -753,6 +772,13 @@ declare module '@tanstack/react-router' {
       path: '/financements'
       fullPath: '/financements/'
       preLoaderRoute: typeof dashboardLayoutFinancementsIndexLazyRouteImport
+      parentRoute: typeof dashboardLayoutRoute
+    }
+    '/(dashboard)/_layout/notifications/': {
+      id: '/(dashboard)/_layout/notifications/'
+      path: '/notifications'
+      fullPath: '/notifications/'
+      preLoaderRoute: typeof dashboardLayoutNotificationsIndexRouteImport
       parentRoute: typeof dashboardLayoutRoute
     }
     '/(dashboard)/_layout/mes-formations/': {
@@ -920,6 +946,7 @@ interface dashboardLayoutRouteChildren {
   dashboardLayoutMesFormationsCreerLazyRoute: typeof dashboardLayoutMesFormationsCreerLazyRoute
   dashboardLayoutFormationsIndexRouteRoute: typeof dashboardLayoutFormationsIndexRouteRoute
   dashboardLayoutMesFormationsIndexRoute: typeof dashboardLayoutMesFormationsIndexRoute
+  dashboardLayoutNotificationsIndexRoute: typeof dashboardLayoutNotificationsIndexRoute
   dashboardLayoutFinancementsIndexLazyRoute: typeof dashboardLayoutFinancementsIndexLazyRoute
   dashboardLayoutMesFinancementsIndexLazyRoute: typeof dashboardLayoutMesFinancementsIndexLazyRoute
   dashboardLayoutProjetsAFinancerIndexLazyRoute: typeof dashboardLayoutProjetsAFinancerIndexLazyRoute
@@ -955,6 +982,8 @@ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
     dashboardLayoutFormationsIndexRouteRoute,
   dashboardLayoutMesFormationsIndexRoute:
     dashboardLayoutMesFormationsIndexRoute,
+  dashboardLayoutNotificationsIndexRoute:
+    dashboardLayoutNotificationsIndexRoute,
   dashboardLayoutFinancementsIndexLazyRoute:
     dashboardLayoutFinancementsIndexLazyRoute,
   dashboardLayoutMesFinancementsIndexLazyRoute:

@@ -113,6 +113,7 @@ const ETAPES_B2C: Etape[] = [
 const inp = "flat-input h-11 px-4 py-2.5 text-[13px] rounded-[16px]";
 const sel = cn(inp, "appearance-none");
 const sec = "flat-section";
+const cardCls = "bg-zinc-50 rounded-lg p-3 space-y-2";
 
 export function Stade3Form({
   stade,
@@ -482,27 +483,28 @@ export function Stade3Form({
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-4">
+      {/* ── Sélecteur B2B2C ──────────────────────────────────────────────── */}
+      {typeProjet === "B2B2C" && (
+        <div className="flex gap-2">
+          {(["B2C", "B2B"] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => handleTabChange(t)}
+              className={cn(
+                "flex-1 py-2 px-4 rounded-[18px] text-[12px] font-semibold transition-colors border",
+                formulaireActifB2B2C === t
+                  ? "bg-[var(--color-success)] text-white border-[var(--color-success-border)]"
+                  : "bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:border-[var(--color-border-strong)]",
+              )}
+            >
+              Formulaire {t}
+            </button>
+          ))}
+        </div>
+      )}
+
       <fieldset disabled={readOnly} className="space-y-4 border-none p-0 m-0">
-        {/* ── Sélecteur B2B2C ──────────────────────────────────────────────── */}
-        {typeProjet === "B2B2C" && (
-          <div className="flex gap-2 mb-4">
-            {(["B2C", "B2B"] as const).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => handleTabChange(t)}
-                className={cn(
-                  "flex-1 py-2 px-4 rounded-[18px] text-[12px] font-semibold transition-colors border",
-                  formulaireActifB2B2C === t
-                    ? "bg-[var(--color-success)] text-white border-[var(--color-success-border)]"
-                    : "bg-[var(--color-surface-soft)] text-[var(--color-text-muted)] border-[var(--color-border)] hover:border-[var(--color-border-strong)]",
-                )}
-              >
-                Formulaire {t}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* ── Formulaire B2C ───────────────────────────────────────────────── */}
         {estB2C && (
@@ -730,7 +732,7 @@ export function Stade3Form({
               {concFields.map((f, i) => (
                 <div
                   key={f.id}
-                  className="bg-zinc-50 rounded-lg p-3 space-y-2 mb-2"
+                  className={cn(cardCls, "mb-2")}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] text-zinc-500">
@@ -746,15 +748,15 @@ export function Stade3Form({
                       </button>
                     )}
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-[4fr_2fr]">
                     <input
                       {...register(`concurrents.${i}.nom`)}
-                      className={cn(inp, "flex-1")}
+                      className={cn(inp, "w-full")}
                       placeholder={getLabel("concurrent_nom")}
                     />
                     <select
                       {...register(`concurrents.${i}.type`)}
-                      className={cn(sel, "w-1/3")}
+                      className={cn(sel, "w-full")}
                     >
                       <option value="DIRECT">Direct</option>
                       <option value="INDIRECT">Indirect</option>
@@ -766,7 +768,7 @@ export function Stade3Form({
                     className={inp}
                     placeholder={getLabel("concurrent_differentiation")}
                   />
-                  <div className="flex gap-2 items-center">
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
                     <input
                       type="number" min={0}
                       {...register(`concurrents.${i}.part_globale_pct`, {
@@ -1062,7 +1064,7 @@ export function Stade3Form({
               {concFields.map((f, i) => (
                 <div
                   key={f.id}
-                  className="bg-zinc-50 rounded-lg p-3 space-y-2 mb-2"
+                  className={cn(cardCls, "mb-2")}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] text-zinc-500">
@@ -1078,15 +1080,15 @@ export function Stade3Form({
                       </button>
                     )}
                   </div>
-                  <div className="flex gap-2 items-center">
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-[4fr_2fr]">
                     <input
                       {...register(`concurrents.${i}.nom`)}
-                      className={cn(inp, "flex-1")}
+                      className={cn(inp, "w-full")}
                       placeholder={getLabel("concurrent_nom")}
                     />
                     <select
                       {...register(`concurrents.${i}.type`)}
-                      className={cn(sel, "w-1/3")}
+                      className={cn(sel, "w-full")}
                     >
                       <option value="DIRECT">Direct</option>
                       <option value="INDIRECT">Indirect</option>
@@ -1098,7 +1100,7 @@ export function Stade3Form({
                     className={inp}
                     placeholder={getLabel("concurrent_differentiation")}
                   />
-                  <div className="flex gap-2 items-center">
+                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                     <input
                       type="number" min={0}
                       {...register(`concurrents.${i}.part_globale_pct`, {
@@ -1231,47 +1233,49 @@ export function Stade3Form({
               </button>
             </div>
             {srcFields.map((f, i) => (
-              <div key={f.id} className="flex gap-2 items-center mb-1">
-                <select
-                  {...register(`sources_marche.${i}.type`)}
-                  className={cn(sel, "w-28")}
-                >
-                  {[
-                    "INSTAT",
-                    "EDBM",
-                    "GEM",
-                    "HABAKA",
-                    "BANQUE_MONDIALE",
-                    "UPLOAD",
-                    "EXTERNE",
-                  ].map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </select>
+              <div key={f.id} className={cn(cardCls, "mb-2")}>
                 <input
                   {...register(`sources_marche.${i}.titre`)}
-                  className={cn(inp, "flex-1")}
+                  className={cn(inp, "w-full")}
                   placeholder="Titre de la source"
                 />
-                <input
-                  type="number" min={0}
-                  {...register(`sources_marche.${i}.annee`, {
-                    valueAsNumber: true,
-                  })}
-                  className={cn(inp, "w-20")}
-                  placeholder="Année"
-                />
-                {srcFields.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => remSrc(i)}
-                    className="text-red-400"
+                <div className="flex gap-2 items-center">
+                  <select
+                    {...register(`sources_marche.${i}.type`)}
+                    className={cn(sel, "flex-1")}
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                )}
+                    {[
+                      "INSTAT",
+                      "EDBM",
+                      "GEM",
+                      "HABAKA",
+                      "BANQUE_MONDIALE",
+                      "UPLOAD",
+                      "EXTERNE",
+                    ].map((t) => (
+                      <option key={t} value={t}>
+                        {t}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="number" min={0}
+                    {...register(`sources_marche.${i}.annee`, {
+                      valueAsNumber: true,
+                    })}
+                    className={cn(inp, "flex-1")}
+                    placeholder="Année"
+                  />
+                  {srcFields.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => remSrc(i)}
+                      className="text-red-400 px-2"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

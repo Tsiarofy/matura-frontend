@@ -1,5 +1,5 @@
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { useMesFormations } from '@/hooks/useFormations'
+import { useMesFormations, useSupprimerFormation } from '@/hooks/useFormations'
 import { FormationCard } from '@/components/formations/FormationCard'
 import { Button } from '@/components/ui/button'
 import { Loader2, Plus } from 'lucide-react'
@@ -9,11 +9,20 @@ const routeApi = getRouteApi('/(dashboard)/_layout/mes-formations/')
 export default function MesFormationsPage() {
   const { page } = routeApi.useSearch()
   const navigate = useNavigate({ from:'/mes-formations/' })
-  
+  const supprimerFormation = useSupprimerFormation()
+
   const { data, isLoading } = useMesFormations({
     page: page ?? 1,
     limite: 12,
   })
+
+  const handleDelete = (formationId: string, titre: string) => {
+    const confirmed = window.confirm(
+      `Supprimer la formation "${titre}" ? Cette action supprimera aussi ses leçons publiées et peut impacter des entrepreneurs qui la consultent deja.`
+    )
+    if (!confirmed) return
+    supprimerFormation.mutate(formationId)
+  }
 
   return (
     <div className="page-shell">
@@ -38,7 +47,13 @@ export default function MesFormationsPage() {
             </div>
           ) : (
             data?.formations.map((f) => (
-              <FormationCard key={f.id} formation={f} basePath="/mes-formations" />
+              <FormationCard
+                key={f.id}
+                formation={f}
+                basePath="/mes-formations"
+                onDelete={(formation) => handleDelete(formation.id, formation.titre)}
+                isDeleting={supprimerFormation.isPending && supprimerFormation.variables === f.id}
+              />
             ))
           )}
         </div>

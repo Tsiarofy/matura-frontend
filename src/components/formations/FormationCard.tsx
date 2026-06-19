@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { FormationResume } from "@matura/shared";
-import { GraduationCap, PlayCircle } from "lucide-react";
+import { GraduationCap, Loader2, Pencil, PlayCircle, Trash2 } from "lucide-react";
 import { DOMAINE_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { cn, getAvatarStyle } from "@/lib/utils";
@@ -8,16 +8,21 @@ import { cn, getAvatarStyle } from "@/lib/utils";
 interface FormationCardProps {
   formation: FormationResume;
   basePath?: "/formations" | "/mes-formations";
+  onDelete?: (formation: FormationResume) => void;
+  isDeleting?: boolean;
 }
 
 export function FormationCard({
   formation,
   basePath = "/formations",
+  onDelete,
+  isDeleting = false,
 }: FormationCardProps) {
   const formationRoute =
     basePath === "/mes-formations"
       ? "/mes-formations/$formationId"
       : "/formations/$formationId";
+  const canManage = basePath === "/mes-formations";
 
   return (
     <div className="group w-full relative cursor-pointer rounded-[22px] border border-zinc-100 bg-white p-6 transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.03)] hover:border-zinc-200 flex flex-col justify-between gap-5 min-h-[240px]">
@@ -40,6 +45,33 @@ export function FormationCard({
               <span className="rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] bg-[#eafdf3] text-[#318055] border-[#c5f3d8]">
                 BRL ≥ {formation.stade_cible}
               </span>
+            )}
+            {canManage && (
+              <div className="ml-1 flex items-center gap-1">
+                <Link
+                  to={formationRoute}
+                  params={{ formationId: formation.id }}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-zinc-200 text-zinc-500 transition-colors hover:border-zinc-300 hover:bg-zinc-50 hover:text-zinc-700"
+                  aria-label={`Modifier ${formation.titre}`}
+                  title="Modifier"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => onDelete?.(formation)}
+                  disabled={isDeleting}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-red-200 text-red-500 transition-colors hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  aria-label={`Supprimer ${formation.titre}`}
+                  title="Supprimer"
+                >
+                  {isDeleting ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-3.5 w-3.5" />
+                  )}
+                </button>
+              </div>
             )}
           </div>
         </div>

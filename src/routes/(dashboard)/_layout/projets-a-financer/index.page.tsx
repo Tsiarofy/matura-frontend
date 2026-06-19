@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useProjetsInvestisseurs } from '@/hooks/useInvestisseur'
 import { BRLBadge } from '@/components/shared/BRLBadge'
 import { Loader2, ChevronRight, Search } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDecimal } from '@/lib/utils'
 
 export default function ProjetsAFinancerPage() {
   const { data, isLoading } = useProjetsInvestisseurs()
@@ -59,7 +59,7 @@ export default function ProjetsAFinancerPage() {
                   scoreColor,
                 )}>
                   <p className="text-[18px] font-bold leading-none">
-                    {p.score_global ? Math.round(p.score_global) : '—'}
+                    {p.score_global ? formatDecimal(p.score_global) : '—'}
                   </p>
                   <p className="text-[9px] font-semibold mt-0.5 opacity-70 uppercase tracking-wider">score</p>
                 </div>
@@ -98,7 +98,7 @@ export default function ProjetsAFinancerPage() {
 }
 
 function ScoreMiniBar({ label, value }: { label: string; value: number }) {
-  const capped = Math.min(Math.max(Math.round(value), 0), 100)
+  const capped = Math.min(Math.max(value, 0), 100)
   const color = capped >= 70 ? 'bg-[var(--color-success)]' : capped >= 50 ? 'bg-[var(--color-tsisy-amber)]' : 'bg-zinc-300'
   return (
     <div className="flex items-center gap-1.5 min-w-[80px]">
@@ -106,7 +106,7 @@ function ScoreMiniBar({ label, value }: { label: string; value: number }) {
       <div className="flex-1 h-1 bg-[var(--color-surface-soft)] rounded-full overflow-hidden">
         <div className={cn('h-full rounded-full transition-all', color)} style={{ width: `${capped}%` }} />
       </div>
-      <span className="text-[9px] text-[var(--color-text-muted)] font-semibold">{capped}</span>
+      <span className="text-[9px] text-[var(--color-text-muted)] font-semibold">{formatDecimal(capped)}</span>
     </div>
   )
 }
