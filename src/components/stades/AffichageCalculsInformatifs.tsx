@@ -4,7 +4,7 @@
 // NOTE : L'Entrepreneur ne voit PAS cette vue (transparence réservée aux évaluateurs)
 
 import { AlertCircle, Target, Users, MapPin, Search, Database } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatDecimal } from '@/lib/utils'
 
 interface AffichageCalculsInformatifsProps {
   numStade: number
@@ -155,7 +155,7 @@ function RenduStade3({ data }: { data: Record<string, unknown> }) {
                   critical ? 'text-red-600' : warn ? 'text-amber-600' : 'text-purple-700',
                 )}
               >
-                {value.toFixed(1)}%
+                {formatDecimal(value)}%
               </p>
             </div>
           ))}

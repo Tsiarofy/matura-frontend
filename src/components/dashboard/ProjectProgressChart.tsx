@@ -9,7 +9,7 @@ import {
   Cell,
 } from "recharts";
 import { type StadeDashboard } from "@/hooks/useDashboard";
-import { cn } from "@/lib/utils";
+import { cn, formatDecimal } from "@/lib/utils";
 
 // ─── Couleurs par statut ───────────────────────────────────────────────────────
 
@@ -28,7 +28,7 @@ function CustomTooltip({ active, payload, label }: any) {
   return (
     <div className="bg-white border border-[var(--color-border)] px-3 py-2 rounded-[var(--radius-sm)] shadow-md text-[12px] font-medium">
       <p className="text-[var(--color-text-muted)] mb-1">Stade {label}</p>
-      <p className="text-[var(--color-text-primary)]">{d.value}% Complété</p>
+      <p className="text-[var(--color-text-primary)]">{formatDecimal(d.value)}% Complété</p>
     </div>
   );
 }

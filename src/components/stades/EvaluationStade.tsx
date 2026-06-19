@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useEvaluerStade } from "@/hooks/useStades";
 import { authStore } from "@/stores/authStore";
-import { cn, getScoreStyle } from "@/lib/utils";
+import { cn, getScoreStyle, formatDecimal } from "@/lib/utils";
 import { Star, CheckCircle2, RotateCcw, Loader2 } from "lucide-react";
 import type { StadeData } from "@/hooks/useStades";
 import { useEvaluationsProjet } from "@/hooks/useStades";
@@ -105,7 +105,7 @@ export function EvaluationStade({
               <p className="text-[13px] text-[var(--color-text-muted)]">
                 Note globale :{" "}
                 <span className={cn("font-semibold px-2 py-0.5 rounded border", scoreStyle.text, scoreStyle.bg, scoreStyle.border)}>
-                  {stade.score_auto}/100
+                  {formatDecimal(stade.score_auto)}/100
                 </span>
               </p>
             );
@@ -160,7 +160,7 @@ export function EvaluationStade({
                                   />
                                 </div>
                                 <span className={cn('text-[11px] font-semibold px-1.5 py-0.5 rounded-full border', scStyle.text, scStyle.bg, scStyle.border)}>
-                                  {score}/100
+                                  {formatDecimal(score as number)}/100
                                 </span>
                               </>
                             );
@@ -256,7 +256,7 @@ export function EvaluationStade({
             const scStyle = getScoreStyle(note);
             return (
               <span className={cn('text-[14px] font-bold px-3 py-1 rounded-full border', scStyle.text, scStyle.bg, scStyle.border)}>
-                {note}/100
+                {formatDecimal(note)}/100
               </span>
             );
           })()}
@@ -295,7 +295,7 @@ export function EvaluationStade({
                   const scStyle = getScoreStyle(scoresCriteres[c] ?? 70);
                   return (
                     <span className={cn('text-[11px] font-semibold px-2 py-0.5 rounded-full border', scStyle.text, scStyle.bg, scStyle.border)}>
-                      {scoresCriteres[c] ?? 70}/100
+                      {formatDecimal(scoresCriteres[c] ?? 70)}/100
                     </span>
                   );
                 })()}

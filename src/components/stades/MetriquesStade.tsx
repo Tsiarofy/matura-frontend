@@ -1,4 +1,4 @@
-import { cn, formatAr } from '@/lib/utils'
+import { cn, formatAr, formatDecimal } from '@/lib/utils'
 
 interface MetriquesStadeProps {
   metriques: Record<string, unknown>
@@ -63,7 +63,7 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
         {score !== undefined && (
           <MetriqueItem
             label="Score solidité problème"
-            value={`${score}/100`}
+            value={`${formatDecimal(score)}/100`}
             color={score >= 65 ? 'green' : score >= 40 ? 'amber' : 'red'}
           />
         )}
@@ -88,12 +88,12 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
         {score !== undefined && (
           <MetriqueItem
             label="Score marché"
-            value={`${score}/100`}
+            value={`${formatDecimal(score)}/100`}
             color={score >= 65 ? 'green' : score >= 40 ? 'amber' : 'red'}
           />
         )}
         {nb !== undefined && <MetriqueItem label="Nombre de concurrents" value={String(nb)} />}
-        {ratio !== undefined && <MetriqueItem label="Ratio prix/revenu (IRP)" value={`${ratio}%`} />}
+        {ratio !== undefined && <MetriqueItem label="Ratio prix/revenu (IRP)" value={`${formatDecimal(ratio)}%`} />}
         {realisme && (
           <MetriqueItem
             label="Réalisme prix"
@@ -127,12 +127,12 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
           <MetriqueItem label="Marge sur coût variable" value={formatAr(marge)} color={marge > 0 ? 'green' : undefined} />
         )}
         {roi !== undefined && (
-          <MetriqueItem label="ROI estimé (an 3)" value={`${roi}%`} color={roi > 0 ? 'green' : 'red'} />
+          <MetriqueItem label="ROI estimé (an 3)" value={`${formatDecimal(roi)}%`} color={roi > 0 ? 'green' : 'red'} />
         )}
         {scoreEquipe !== undefined && (
           <MetriqueItem
             label="Interdisciplinarité équipe"
-            value={`${scoreEquipe}%`}
+            value={`${formatDecimal(scoreEquipe)}%`}
             color={scoreEquipe >= 50 ? 'green' : 'amber'}
           />
         )}
@@ -179,7 +179,11 @@ export function MetriquesStade({ metriques, numStade }: MetriquesStadeProps) {
         Métriques
       </p>
       {entries.map(([k, v]) => (
-        <MetriqueItem key={k} label={k.replace(/_/g, ' ')} value={String(v)} />
+        <MetriqueItem
+          key={k}
+          label={k.replace(/_/g, ' ')}
+          value={typeof v === 'number' ? formatDecimal(v) : String(v)}
+        />
       ))}
     </div>
   )

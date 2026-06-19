@@ -20,7 +20,7 @@ import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatDecimal } from "@/lib/utils";
 import type { ProjetResume } from "@matura/shared";
 
 interface EntrepreneurDashboardProps {
@@ -213,7 +213,7 @@ export function EntrepreneurDashboard({ user }: EntrepreneurDashboardProps) {
         />
         <StatCard
           label="Taux Accepté"
-          value={`${Math.round((stats.nb_candidatures_acceptees / (stats.nb_candidatures || 1)) * 100)}%`}
+          value={`${formatDecimal((stats.nb_candidatures_acceptees / (stats.nb_candidatures || 1)) * 100)}%`}
           icon={CheckCircle2}
           delta={
             stats.nb_candidatures > 0

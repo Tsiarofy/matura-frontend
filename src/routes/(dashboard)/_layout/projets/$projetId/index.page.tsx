@@ -56,17 +56,17 @@ function StadeCard({
   const inner = (
     <div
       className={cn(
-        "bg-white border rounded-[18px] p-6 transition-all duration-300",
+        "bg-white border rounded-[18px] p-5 transition-all duration-300",
         statut === "VERROUILLE"
           ? "border-zinc-100/80 bg-zinc-50/50 opacity-60"
-          : "border-zinc-100 hover:border-zinc-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.02)] cursor-pointer"
+          : "border-zinc-100 hover:border-zinc-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.02)] cursor-pointer",
       )}
     >
       <div className="flex items-center gap-4">
         {/* Numéro */}
         <div
           className={cn(
-            "w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0",
+            "w-10 h-10 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0",
             numBg[statut],
           )}
         >
@@ -80,7 +80,7 @@ function StadeCard({
         </div>
 
         {/* Infos */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
             <span className="font-heading text-[14px] font-semibold text-zinc-900">
               {numero}. {label}
@@ -90,7 +90,7 @@ function StadeCard({
 
           {/* Barre completion si actif */}
           {!isVerrouille && statut !== "VALIDE" && (
-            <div className="flex items-center gap-2 mt-3">
+            <div className="flex items-center gap-3">
               <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-500 rounded-full transition-all"
@@ -98,24 +98,24 @@ function StadeCard({
                 />
               </div>
               <span className="text-[10px] text-zinc-400 font-semibold shrink-0">
-                {completion_pct}%
+                {formatDecimal(completion_pct)}%
               </span>
             </div>
           )}
 
           {/* Score si évalué */}
           {score_auto !== null && (
-            <div className="flex items-center gap-1.5 mt-3">
+            <div className="flex items-center gap-1.5">
               <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
               <span className="text-[12px] font-medium text-zinc-500">
-                Note mentor : {score_auto}/100
+                Note mentor : {formatDecimal(score_auto)}/100
               </span>
             </div>
           )}
 
           {/* Soumis le */}
           {soumis_le && statut === "SOUMIS" && (
-            <p className="text-[10.5px] text-zinc-400 mt-3 font-medium">
+            <p className="text-[10.5px] text-zinc-400 font-medium">
               Soumis le {new Date(soumis_le).toLocaleDateString("fr-FR")}
             </p>
           )}
@@ -227,7 +227,10 @@ export default function ProjetDetailPage() {
           { label: "Région", value: projet.region },
           { label: "Cible", value: projet.type_cible },
         ].map((item) => (
-          <div key={item.label} className="border border-zinc-100 bg-white rounded-[22px] p-4.5">
+          <div
+            key={item.label}
+            className="border border-zinc-100 bg-white rounded-[22px] p-4.5"
+          >
             <p className="text-[9.5px] font-bold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
               {item.label}
             </p>
@@ -241,8 +244,18 @@ export default function ProjetDetailPage() {
       {/* ── Intervenants (Mentor / Entrepreneur) ── */}
       {isMentor && projet.proprietaire ? (
         <div className="border border-zinc-100 bg-white rounded-[22px] flex items-center gap-3.5 p-5">
-          <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0", getAvatarStyle(projet.proprietaire.prenom).bg)}>
-            <span className={cn("text-[13px] font-bold", getAvatarStyle(projet.proprietaire.prenom).text)}>
+          <div
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+              getAvatarStyle(projet.proprietaire.prenom).bg,
+            )}
+          >
+            <span
+              className={cn(
+                "text-[13px] font-bold",
+                getAvatarStyle(projet.proprietaire.prenom).text,
+              )}
+            >
               {projet.proprietaire.prenom.charAt(0).toUpperCase()}
               {projet.proprietaire.nom.charAt(0).toUpperCase()}
             </span>
@@ -258,7 +271,17 @@ export default function ProjetDetailPage() {
         </div>
       ) : projet.mentor ? (
         <div className="border border-zinc-100 bg-white rounded-[22px] flex items-center gap-3.5 p-5">
-          <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0 overflow-hidden border", (projet.mentor as any).url_avatar ? "border-zinc-200" : getAvatarStyle(projet.mentor.prenom).bg.replace('bg-', 'border-').replace('[', '[').replace(']', ']/50'))}>
+          <div
+            className={cn(
+              "w-10 h-10 rounded-full flex items-center justify-center shrink-0 overflow-hidden border",
+              (projet.mentor as any).url_avatar
+                ? "border-zinc-200"
+                : getAvatarStyle(projet.mentor.prenom)
+                    .bg.replace("bg-", "border-")
+                    .replace("[", "[")
+                    .replace("]", "]/50"),
+            )}
+          >
             {(projet.mentor as any).url_avatar ? (
               <img
                 src={usrAvatarURL}
@@ -266,7 +289,12 @@ export default function ProjetDetailPage() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <span className={cn("text-[13px] font-bold", getAvatarStyle(projet.mentor.prenom).text)}>
+              <span
+                className={cn(
+                  "text-[13px] font-bold",
+                  getAvatarStyle(projet.mentor.prenom).text,
+                )}
+              >
                 {projet.mentor.prenom.charAt(0).toUpperCase()}
                 {projet.mentor.nom.charAt(0).toUpperCase()}
               </span>
@@ -325,18 +353,18 @@ export default function ProjetDetailPage() {
               {STADE_LABELS[stadeActif.numero]} ·{" "}
               {stadeActif.statut === "VALIDE"
                 ? "100%"
-                : `${stadeActif.completion_pct}%`}
+                : `${formatDecimal(stadeActif.completion_pct)}%`}
             </p>
           </div>
           <ArrowRight className="w-5 h-5 shrink-0 text-white" />
         </Link>
       )}
 
-      <div className="pt-4">
-        <p className="mb-5 text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
+      <div className="pt-8">
+        <p className="mb-6 text-center text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
           Parcours de maturation
         </p>
-        <div className="space-y-5">
+        <div className="space-y-8">
           {projet.stades.map((s) => (
             <StadeCard key={s.id} {...s} projetId={projetId} />
           ))}

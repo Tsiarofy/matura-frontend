@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
-import { cn } from "@/lib/utils";
+import { cn, formatDecimal } from "@/lib/utils";
 
 interface ScoreRadarChartProps {
   score: {
@@ -29,7 +29,7 @@ function CustomTooltip({ active, payload }: any) {
   return (
     <div className="bg-white border border-[var(--color-border)] px-3 py-2 rounded-[var(--radius-sm)] shadow-md text-[12px] font-medium">
       <p>
-        {d.name} : {d.value}/100
+        {d.name} : {formatDecimal(d.value)}/100
       </p>
     </div>
   );
@@ -84,7 +84,7 @@ export function ScoreRadarChart({ score, className }: ScoreRadarChartProps) {
 
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-[32px] font-bold text-[var(--color-text-primary)] leading-none">
-            {score.score_global ?? "—"}
+            {score.score_global != null ? formatDecimal(score.score_global) : "—"}
           </span>
           <span className="text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-widest mt-1">
             SCORE
