@@ -7,22 +7,72 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy to Server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.GCP_IP }}
-          username: ${{ secrets.GCP_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "."
-          target: "/var/www/matura/maturproj-frontend"
-          rm: false
-      - name: Build Frontend on Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.GCP_IP }}
-          username: ${{ secrets.GCP_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /var/www/matura/maturproj-frontend
-            npm install
-            npm run build
+
+      - name: Package frontend files for deployment
+        run: |
+          set -e
+          DEPLOY_TAR="$RUNNER_TEMP/frontend-deploy.tar.gz"
+          FILES="package.json package-lock.json tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts index.html src public components.json postcss.config.js tailwind.config.ts"
+          TAR_ARGS=""
+          for f in $FILES; do
+            if [ -e "$f" ]; then
+              TAR_ARGS="$TAR_ARGS $f"
+            fi
+          done
+          echo "Fichiers inclus dans le tar: $TAR_ARGS"
+          tar -zcf "$DEPLOY_TAR" $TAR_ARGS
+          ls -lh "$DEPLOY_TAR"
+          echo "DEPLOY_TAR=$DEPLOY_TAR" >> "$GITHUB_ENV"
+        shell: bash
+
+      - name: Setup SSH key
+        run: |
+          set -e
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.GCP_IP }} >> ~/.ssh/known_hosts 2>/dev/null
+        shell: bash
+
+      - name: Upload tar via scp
+        run: |
+          set -e
+          scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 \
+            "$DEPLOY_TAR" \
+            ${{ secrets.GCP_USER }}@${{ secrets.GCP_IP }}:/tmp/frontend-deploy.tar.gz
+        shell: bash
+
+      - name: Rebuild shared + extract + install + build on remote
+        run: |
+          set -e
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 \
+            ${{ secrets.GCP_USER }}@${{ secrets.GCP_IP }} << 'REMOTE_SCRIPT'
+          set -e
+
+          echo "== 1) Rebuild de @matura/shared (dependance file:../shared) =="
+          cd /var/www/matura/shared
+          npm install
+          npm run build
+
+          echo "== 2) Nettoyage du dossier cible frontend =="
+          cd /var/www/matura/maturproj-frontend
+          rm -rf .git .git_disabled .github .gitignore diff.txt repomix-output.xml
+
+          echo "== 3) Extraction du nouveau code =="
+          tar -xzf /tmp/frontend-deploy.tar.gz
+          rm -f /tmp/frontend-deploy.tar.gz
+
+          echo "== 4) Verification du .env (jamais auto-genere, lu au BUILD time par Vite) =="
+          if [ ! -f .env ] && [ ! -f .env.production ]; then
+            echo "ERREUR: .env / .env.production absent dans /var/www/matura/maturproj-frontend"
+            echo "Cree-le manuellement une seule fois sur le serveur avant de redeployer."
+            exit 1
+          fi
+
+          echo "== 5) Install + build =="
+          npm install
+          npm run build
+
+          echo "Deploy frontend termine (fichiers statiques dans dist/, nginx les sert directement)"
+          REMOTE_SCRIPT
+        shell: bash
