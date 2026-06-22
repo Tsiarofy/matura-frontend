@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { FichierRequis, MissionStade } from '@matura/shared'
+import type { MissionStade, FichierRequis } from '@matura/shared'
 import { toast } from 'sonner'
 import { apiClient } from '@/lib/apiClient'
 
@@ -7,7 +7,7 @@ export type { FichierRequis }
 
 export interface FichierRequisItemDto {
   id?: string
-  type: 'PDF' | 'EXCEL' | 'IMAGE' | 'VIDEO'
+  type: 'PDF' | 'EXCEL' | 'IMAGE' | 'VIDEO' | 'AUCUN'
   description: string
   ordre?: number
 }

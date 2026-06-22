@@ -40,13 +40,13 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
             ?.description as string) ?? "",
         urbanite:
           ((donnees.profil_affecte as Record<string, unknown>)
-            ?.urbanite as string) ?? "URBAIN",
+            ?.urbanite as "URBAIN" | "PERI_URBAIN" | "RURAL") ?? "URBAIN",
         nombre_estime:
           ((donnees.profil_affecte as Record<string, unknown>)
             ?.nombre_estime as number) ?? 0,
         frequence:
           ((donnees.profil_affecte as Record<string, unknown>)
-            ?.frequence as string) ?? "MENSUEL",
+            ?.frequence as "MENSUEL" | "QUOTIDIEN" | "HEBDOMADAIRE" | "OCCASIONNEL") ?? "MENSUEL",
       },
 
       intensite_probleme: {
@@ -55,10 +55,10 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
             ?.cout_actuel_ar as number) ?? 0,
         unite:
           ((donnees.intensite_probleme as Record<string, unknown>)
-            ?.unite as string) ?? "AR_PAR_MOIS",
+            ?.unite as "AR_PAR_MOIS" | "HEURES_PAR_SEMAINE" | "AR_PAR_TRANSACTION") ?? "AR_PAR_MOIS",
         severite:
           ((donnees.intensite_probleme as Record<string, unknown>)
-            ?.severite as number) ?? 3,
+            ?.severite as 1 | 2 | 3 | 4 | 5) ?? 3,
       },
 
       observations_terrain: {
@@ -70,22 +70,22 @@ export function Stade1Form({ stade, onSave, saving, readOnly = false }: Props) {
             ?.nb_personnes_interrogees as number) ?? 0,
         methode:
           ((donnees.observations_terrain as Record<string, unknown>)
-            ?.methode as string) ?? "EN_FACE",
+            ?.methode as "EN_FACE" | "TELEPHONE" | "INFORMEL" | "OBSERVATION") ?? "EN_FACE",
         verbatims: ((donnees.observations_terrain as Record<string, unknown>)
           ?.verbatims as string[]) ?? ["", ""],
       },
 
       solutions_existantes: (donnees.solutions_existantes as {
         nom: string;
-        type: string;
+        type: "FORMELLE" | "INFORMELLE" | "BRICOLAGE" | "RIEN";
         pourquoi_insuffisante: string;
-        satisfaction_utilisateur: number;
+        satisfaction_utilisateur: 1 | 2 | 3 | 4 | 5;
       }[]) ?? [
         {
           nom: "",
-          type: "FORMELLE",
+          type: "FORMELLE" as const,
           pourquoi_insuffisante: "",
-          satisfaction_utilisateur: 3,
+          satisfaction_utilisateur: 3 as 1 | 2 | 3 | 4 | 5,
         },
       ],
 

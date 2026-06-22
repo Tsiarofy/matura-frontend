@@ -1,25 +1,65 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build output
+dist/
+dist-ssr/
+.vite/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-.github/workflows/*
+vite.err.log
+vite.out.log
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# IDE & Editor
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary & Cache files
+*.local
+.tanstack/
+.git_disabled/
+
+# Documentation & Temporary files
+diff.txt
+difference.txt
+*.png
+*.jpg
+*.jpeg
+
+# Patch directories
+patchui/
+last-patch-financement/
+*patch*/
+temp_*.ts
+
+# Miscellaneous
+repomix-output.txt
+repomix.config.json

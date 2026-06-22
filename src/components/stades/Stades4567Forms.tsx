@@ -46,12 +46,12 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
         hypotheses_infirmees: (g<Record<string,unknown>>('evolution_lean_canvas', {})).hypotheses_infirmees as string[] ?? [''],
       },
       propositions_valeur: g<{ proposition: string; pour_segment: string; validee_par_enquete: boolean }[]>('propositions_valeur', [{ proposition: '', pour_segment: '', validee_par_enquete: false }]),
-      segments_clients: g<{ nom: string; taille_estimee: number; potentiel_revenu_ar: number; priorite: string }[]>('segments_clients', [{ nom: '', taille_estimee: 0, potentiel_revenu_ar: 0, priorite: 'PRINCIPAL' }]),
-      ressources_cles: g<{ ressource: string; type: string; deja_possedee: boolean }[]>('ressources_cles', [{ ressource: '', type: 'HUMAIN', deja_possedee: false }]),
-      activites_cles: g<{ activite: string; type: string; est_coeur_metier: boolean }[]>('activites_cles', [{ activite: '', type: 'PRODUCTION', est_coeur_metier: true }]),
-      partenaires_cles: g<{ partenaire: string; type: string; pourquoi_essentiel: string; risque_si_absent: string; statut: string }[]>('partenaires_cles', [{ partenaire: '', type: 'FOURNISSEUR', pourquoi_essentiel: '', risque_si_absent: 'MOYEN', statut: 'IDENTIFIE' }]),
-      sources_revenus: g<{ nom: string; modele: string; prix_ar: number; volume_mensuel: number; confiance: string }[]>('sources_revenus', [{ nom: '', modele: 'ABONNEMENT', prix_ar: 0, volume_mensuel: 0, confiance: 'MOYENNE' }]),
-      structure_couts: g<{ categorie: string; libelle: string; montant_mensuel_ar: number; est_fixe: boolean }[]>('structure_couts', [{ categorie: 'PERSONNEL', libelle: '', montant_mensuel_ar: 0, est_fixe: true }]),
+      segments_clients: g<{ nom: string; taille_estimee: number; potentiel_revenu_ar: number; priorite: 'PRINCIPAL' | 'SECONDAIRE' }[]>('segments_clients', [{ nom: '', taille_estimee: 0, potentiel_revenu_ar: 0, priorite: 'PRINCIPAL' }]),
+      ressources_cles: g<{ ressource: string; type: 'PHYSIQUE' | 'INTELLECTUEL' | 'HUMAIN' | 'FINANCIER'; deja_possedee: boolean }[]>('ressources_cles', [{ ressource: '', type: 'HUMAIN', deja_possedee: false }]),
+      activites_cles: g<{ activite: string; type: 'PRODUCTION' | 'PLATEFORME' | 'RESOLUTION_PROBLEME'; est_coeur_metier: boolean; peut_etre_externalisee: boolean }[]>('activites_cles', [{ activite: '', type: 'PRODUCTION', est_coeur_metier: true, peut_etre_externalisee: false }]),
+      partenaires_cles: g<{ partenaire: string; type: 'FOURNISSEUR' | 'ALLIANCE_STRATEGIQUE' | 'CO_ENTREPRISE' | 'ACHETEUR_VENDEUR'; pourquoi_essentiel: string; risque_si_absent: 'FAIBLE' | 'MOYEN' | 'ELEVE' | 'CRITIQUE'; statut: 'IDENTIFIE' | 'CONTACTE' | 'ACCORD' }[]>('partenaires_cles', [{ partenaire: '', type: 'FOURNISSEUR', pourquoi_essentiel: '', risque_si_absent: 'MOYEN', statut: 'IDENTIFIE' }]),
+      sources_revenus: g<{ nom: string; modele: 'ABONNEMENT' | 'ACHAT_UNIQUE' | 'COMMISSION' | 'FREEMIUM' | 'B2B_CONTRACT' | 'SUBVENTION' | 'AUTRE'; prix_ar: number; volume_mensuel: number; revenu_mensuel_ar: number; confiance: 'FAIBLE' | 'MOYENNE' | 'ELEVEE' }[]>('sources_revenus', [{ nom: '', modele: 'ABONNEMENT', prix_ar: 0, volume_mensuel: 0, revenu_mensuel_ar: 0, confiance: 'MOYENNE' }]),
+      structure_couts: g<{ categorie: 'PERSONNEL' | 'TECH' | 'MARKETING' | 'LOGISTIQUE' | 'LOYER' | 'AUTRE'; libelle: string; montant_mensuel_ar: number; est_fixe: boolean }[]>('structure_couts', [{ categorie: 'PERSONNEL', libelle: '', montant_mensuel_ar: 0, est_fixe: true }]),
     },
   })
 
@@ -148,7 +148,7 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
           <p className="text-[12px] font-medium text-zinc-700">{getLabel('activites_cles')}</p>
-          <button type="button" onClick={() => addAct({ activite: '', type: 'PRODUCTION', est_coeur_metier: true })}
+          <button type="button" onClick={() => addAct({ activite: '', type: 'PRODUCTION', est_coeur_metier: true, peut_etre_externalisee: false })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {actF.map((f, i) => (
@@ -201,7 +201,7 @@ export function Stade4Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
           <p className="text-[12px] font-medium text-zinc-700">{getLabel('sources_revenus')}</p>
-          <button type="button" onClick={() => addRev({ nom: '', modele: 'ABONNEMENT', prix_ar: 0, volume_mensuel: 0, confiance: 'MOYENNE' })}
+          <button type="button" onClick={() => addRev({ nom: '', modele: 'ABONNEMENT', prix_ar: 0, volume_mensuel: 0, revenu_mensuel_ar: 0, confiance: 'MOYENNE' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {revF.map((f, i) => (
@@ -269,22 +269,22 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
   const { register, control, handleSubmit, watch, formState: { errors } } = useForm({
     resolver: zodResolver(DonneesStade5Schema),
     defaultValues: {
-      disciplines_requises_projet: g<string[]>('disciplines_requises_projet', []),
-      membres_equipe: g<{ prenom_nom: string; role_projet: string; disciplines: string[]; annees_experience: number; engagement: string; est_fondateur: boolean }[]>('membres_equipe', [
+      disciplines_requises_projet: g<('FINANCE' | 'TECH' | 'DESIGN' | 'VENTE' | 'JURIDIQUE' | 'MARKETING' | 'OPERATIONS' | 'EXPERT_DOMAINE' | 'COMMUNICATION')[]>('disciplines_requises_projet', []),
+      membres_equipe: g<{ prenom_nom: string; role_projet: string; disciplines: ('FINANCE' | 'TECH' | 'DESIGN' | 'VENTE' | 'JURIDIQUE' | 'MARKETING' | 'OPERATIONS' | 'EXPERT_DOMAINE' | 'COMMUNICATION')[]; annees_experience: number; engagement: 'TEMPS_PLEIN' | 'TEMPS_PARTIEL' | 'CONSEILLER'; est_fondateur: boolean }[]>('membres_equipe', [
         { prenom_nom: '', role_projet: '', disciplines: [], annees_experience: 0, engagement: 'TEMPS_PLEIN', est_fondateur: true },
       ]),
       finances: {
         prix_vente_ar: 0,
         investissement_initial_ar: 0,
         besoin_financement_ar: 0,
-        type_financement: 'MIXTE',
+        type_financement: 'MIXTE' as 'SUBVENTION' | 'PRET' | 'CAPITAL' | 'PARTAGE_REVENUS' | 'MIXTE',
         unites_projetees: { annee1: 0, annee2: 0, annee3: 0 },
         charges_fixes: [{ libelle: '', montant_mensuel_ar: 0 }],
         charges_variables: [{ libelle: '', montant_par_unite_ar: 0 }],
         ...g<Record<string,unknown>>('finances', {}),
       },
-      jalons: g<{ titre: string; date_cible: string; responsable: string; metrique_succes: string; budget_ar: number }[]>('jalons', [
-        { titre: '', date_cible: '', responsable: '', metrique_succes: '', budget_ar: 0 },
+      jalons: g<{ titre: string; date_cible: string; responsable: string; metrique_succes: string; budget_ar: number; dependances: string[] }[]>('jalons', [
+        { titre: '', date_cible: '', responsable: '', metrique_succes: '', budget_ar: 0, dependances: [] },
       ]),
     },
   })
@@ -444,7 +444,7 @@ export function Stade5Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <p className="text-[12px] font-medium text-zinc-700">{getLabel('jalons')} (min. 3)</p>
-          <button type="button" onClick={() => addJal({ titre: '', date_cible: '', responsable: '', metrique_succes: '', budget_ar: 0 })}
+          <button type="button" onClick={() => addJal({ titre: '', date_cible: '', responsable: '', metrique_succes: '', budget_ar: 0, dependances: [] })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {jalF.map((f, i) => (
@@ -495,8 +495,8 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
         fonctionnalites_testees: [{ fonctionnalite: '', resultat: 'FONCTIONNE', raison: '' }],
         ...g<Record<string,unknown>>('mvp', {}),
       },
-      retours_clients: g<{ date: string; profil: string; type_interaction: string; verbatim: string; sentiment: string; action_prise: string }[]>('retours_clients', [
-        { date: '', profil: '', type_interaction: 'ENTRETIEN', verbatim: '', sentiment: 'POSITIF', action_prise: '' },
+      retours_clients: g<{ date: string; profil: string; type_interaction: 'ENTRETIEN' | 'SESSION_USAGE' | 'QUESTIONNAIRE' | 'SPONTANE'; verbatim: string; sentiment: 'POSITIF' | 'NEGATIF' | 'NEUTRE' | 'MIXTE'; themes: ('ERGONOMIE' | 'VALEUR' | 'PRIX' | 'CONFIANCE' | 'SUGGESTION' | 'BUG')[]; action_prise: string }[]>('retours_clients', [
+        { date: '', profil: '', type_interaction: 'ENTRETIEN' as const, verbatim: '', sentiment: 'POSITIF' as const, themes: [] as ('ERGONOMIE' | 'VALEUR' | 'PRIX' | 'CONFIANCE' | 'SUGGESTION' | 'BUG')[], action_prise: '' },
       ]),
       metriques_usage: {
         total_utilisateurs_atteints: 0, clients_payants: 0, revenus_generes_ar: 0,
@@ -554,7 +554,7 @@ export function Stade6Form({ stade, onSave, saving, readOnly = false }: Props) {
       <div className="space-y-3 pb-5 border-b border-zinc-100">
         <div className="flex items-center justify-between">
           <p className="text-[12px] font-medium text-zinc-700">{getLabel('retours_clients')} (min. 5) — {retF.length}</p>
-          <button type="button" onClick={() => addRet({ date: '', profil: '', type_interaction: 'ENTRETIEN', verbatim: '', sentiment: 'POSITIF', action_prise: '' })}
+          <button type="button" onClick={() => addRet({ date: '', profil: '', type_interaction: 'ENTRETIEN', verbatim: '', sentiment: 'POSITIF', themes: [], action_prise: '' })}
             className="flex items-center gap-1 text-[11px] text-green-600"><Plus className="w-3.5 h-3.5" /> Ajouter</button>
         </div>
         {retF.map((f, i) => (

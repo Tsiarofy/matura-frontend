@@ -152,7 +152,7 @@ export function Stade2Form({ stade, onSave, saving, readOnly = false }: Props) {
       ]),
       bloc_avantage_unique: {
         description: g<string>("bloc_avantage_unique.description", ""),
-        type: g<string>("bloc_avantage_unique.type", "SAVOIR_LOCAL"),
+        type: g<"SAVOIR_LOCAL" | "RESEAU" | "EXPERTISE" | "TECHNOLOGIE" | "REGLEMENTAIRE" | "AUTRE">("bloc_avantage_unique.type", "SAVOIR_LOCAL"),
       },
       bloc_sources_revenus: g<any[]>("bloc_sources_revenus", [
         {
