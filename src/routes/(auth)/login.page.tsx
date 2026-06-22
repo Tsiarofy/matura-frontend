@@ -36,7 +36,19 @@ export default function LoginPage() {
       form.reset();
     } catch (err: any) {
       console.error("Erreur de connexion :", err);
-      setError(err.response?.data?.message || "Identifiants incorrects. Veuillez réessayer.");
+      let errorMsg = "Identifiants incorrects. Veuillez réessayer.";
+      if (err.response) {
+        if (err.response.status >= 500) {
+          errorMsg = `Le serveur est temporairement indisponible (Erreur ${err.response.status}).`;
+        } else if (err.response.data?.message) {
+          errorMsg = Array.isArray(err.response.data.message) 
+            ? err.response.data.message.join(", ") 
+            : err.response.data.message;
+        }
+      } else if (err.request) {
+        errorMsg = "Impossible de joindre le serveur. Veuillez vérifier votre connexion.";
+      }
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }

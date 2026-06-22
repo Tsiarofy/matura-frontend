@@ -1,4 +1,5 @@
 // src/routes/(auth)/register.page.tsx
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -30,11 +31,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { apiClient } from "@/lib/apiClient";
 import { authStore } from "@/stores/authStore";
-import { Sprout, Users, Briefcase } from "lucide-react";
+import { Sprout, Users, Briefcase, AlertCircle, Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const store = authStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm<InscriptionDto>({
     resolver: zodResolver(InscriptionSchema),
@@ -48,6 +51,8 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (formData: InscriptionDto) => {
+    setIsLoading(true);
+    setError(null);
     try {
       const { data }: { data: AuthResponse } = await apiClient.post(
         "/auth/inscription",
@@ -56,15 +61,23 @@ export default function RegisterPage() {
       store.setAuth(data.token, data.utilisateur);
       form.reset();
       navigate({ to: "/profil" });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error(
-          "Erreur d'inscription :",
-          error.response?.data?.message || error.message,
-        );
-      } else {
-        console.error("Une erreur inattendue est survenue", error);
+    } catch (err: any) {
+      console.error("Erreur d'inscription :", err);
+      let errorMsg = "Une erreur est survenue lors de l'inscription.";
+      if (err.response) {
+        if (err.response.status >= 500) {
+          errorMsg = `Le serveur est temporairement indisponible (Erreur ${err.response.status}).`;
+        } else if (err.response.data?.message) {
+          errorMsg = Array.isArray(err.response.data.message) 
+            ? err.response.data.message.join(", ") 
+            : err.response.data.message;
+        }
+      } else if (err.request) {
+        errorMsg = "Impossible de joindre le serveur. Veuillez vérifier votre connexion.";
       }
+      setError(errorMsg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -146,6 +159,12 @@ export default function RegisterPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <div className="mb-5 flex items-start gap-2.5 rounded-[18px] border border-[var(--color-error-border)] bg-[var(--color-error-bg)] p-3 text-sm">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-error)]" />
+                <p className="text-[var(--color-text-primary)]">{error}</p>
+              </div>
+            )}
             <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
                 <div className="grid grid-cols-2 gap-4">
@@ -155,7 +174,7 @@ export default function RegisterPage() {
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel>Nom</FieldLabel>
-                        <Input {...field} placeholder="Rakoto" className="h-9 text-sm" />
+                        <Input {...field} placeholder="Rakoto" className="h-9 text-sm" disabled={isLoading} />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                       </Field>
                     )}
@@ -166,7 +185,7 @@ export default function RegisterPage() {
                     render={({ field, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
                         <FieldLabel>Prénom</FieldLabel>
-                        <Input {...field} placeholder="Jean" className="h-9 text-sm" />
+                        <Input {...field} placeholder="Jean" className="h-9 text-sm" disabled={isLoading} />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                       </Field>
                     )}
@@ -184,6 +203,7 @@ export default function RegisterPage() {
                         type="email"
                         placeholder="jean.rakoto@exemple.mg"
                         className="h-9 text-sm"
+                        disabled={isLoading}
                       />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
@@ -201,6 +221,7 @@ export default function RegisterPage() {
                         type="password"
                         placeholder="••••••••"
                         className="h-9 text-sm"
+                        disabled={isLoading}
                       />
                       <FieldDescription className="text-xs">
                         8 caractères min. (1 majuscule, 1 chiffre)
@@ -253,8 +274,11 @@ export default function RegisterPage() {
               form="register-form"
               variant="success"
               className="h-11 w-full text-sm font-semibold"
+              disabled={isLoading}
             >
-              Créer mon compte
+              {isLoading ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Inscription en cours...</>
+              ) : "Créer mon compte"}
             </Button>
             <p className="text-center text-sm text-[var(--color-text-muted)]">
               Vous avez déjà un compte ?{" "}
