@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import {
   InscriptionSchema,
   type InscriptionDto,
