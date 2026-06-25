@@ -17,7 +17,7 @@ import {
   XCircle, Clock, AlertCircle, Briefcase,
 } from 'lucide-react'
 
-// ─── CARTE DEMANDE ────────────────────────────────────────────────────────────
+
 
 function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
   const repondre = useRepondreDemande()
@@ -53,7 +53,7 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
           </div>
         </div>
 
-        {/* Content Block indented */}
+   
         <div className="pl-12 space-y-3">
           {entrepreneur && (
             <p className="text-[12px] text-zinc-505 font-semibold leading-none">
@@ -128,7 +128,6 @@ function CarteDemande({ demande }: { demande: DemandeAccompagnement }) {
   )
 }
 
-// ─── CARTE PROJET SUIVI ───────────────────────────────────────────────────────
 
 function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
   const stade = projet.stade_actif
@@ -157,7 +156,7 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
           )}
         </div>
 
-        {/* Content block: owner, region, stade details indented */}
+
         <div className="pl-12 space-y-2.5">
           <p className="text-[11.5px] text-zinc-550 font-semibold leading-none">
             {projet.proprietaire.prenom} {projet.proprietaire.nom} · <span className="text-zinc-400 font-medium">{projet.region}</span>
@@ -184,7 +183,6 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
   )
 }
 
-// ─── PAGE DEMANDES ────────────────────────────────────────────────────────────
 
 export default function DemandesPage() {
   const [onglet, setOnglet] = useState<'demandes' | 'projets'>('demandes')
@@ -209,7 +207,6 @@ export default function DemandesPage() {
         </p>
       </div>
 
-      {/* Onglets */}
       <div className="flex p-1 bg-zinc-100/70 backdrop-blur-sm rounded-[16px] border border-zinc-200/40 max-w-full overflow-x-auto hide-scrollbar">
         <button
           onClick={() => setOnglet('demandes')}

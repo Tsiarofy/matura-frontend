@@ -5,7 +5,7 @@ import { STADE_LABELS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { Loader2, FolderOpen, Clock, AlertCircle } from 'lucide-react'
 
-// ─── CARTE PROJET SUIVI ───────────────────────────────────────────────────────
+
 
 function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
   const stade = projet.stade_actif
@@ -61,7 +61,7 @@ function CarteProjetSuivi({ projet }: { projet: ProjetSuivi }) {
   )
 }
 
-// ─── PAGE PROJETS SUIVIS ──────────────────────────────────────────────────────
+
 
 export default function ProjetsSuivisPage() {
   const { data: projetsSuivis, isLoading: loadingProjets } = useProjetsSuivis()

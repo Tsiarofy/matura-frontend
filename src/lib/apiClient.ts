@@ -7,7 +7,7 @@ export const BASE_URL = import.meta.env.VITE_BASE_URL || window.location.origin;
 
 const apiClient = axios.create({
   baseURL: `${BASE_URL}/api`,
-  timeout: 10000,
+  timeout: 300000, // 5 minutes (300000ms) pour éviter les erreurs d'upload vidéo (canceled après 10s)
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });

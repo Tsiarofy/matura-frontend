@@ -18,7 +18,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-// ─── CARTE MENTOR ─────────────────────────────────────────────────────────────
+
 
 function CarteMentor({
   mentor,
@@ -120,7 +120,7 @@ function CarteMentor({
   );
 }
 
-// ─── MODAL DEMANDE ────────────────────────────────────────────────────────────
+//MODAL DEMANDE 
 
 function ModalDemande({
   mentor,
@@ -268,7 +268,6 @@ function ModalDemande({
   );
 }
 
-// ─── PAGE PRINCIPALE ──────────────────────────────────────────────────────────
 
 export default function MentorsPage() {
   const [search, setSearch] = useState("");
@@ -290,7 +289,7 @@ export default function MentorsPage() {
 
   return (
     <div className="page-shell">
-      {/* En-tête */}
+
       <div>
         <h1 className="text-[28px] font-semibold tracking-[-0.04em] text-[var(--color-text-primary)]">
           Mentors disponibles
@@ -300,7 +299,6 @@ export default function MentorsPage() {
         </p>
       </div>
 
-      {/* Barre de recherche */}
       <SearchInput
         value={search}
         onChange={(e) => setSearch(e.target.value)}

@@ -8,10 +8,10 @@ import { ROLE_LABELS } from "@/lib/constants";
 
 export default function DashboardLayout() {
   const user = authStore((state) => state.utilisateur);
-  const role = user?.role ?? "INVESTISSEUR";
+  const role = user?.role ??"ENTREPRENEUR";
   const navigate = useNavigate();
 
-  // ── Déconnexion (logique inchangée) ──────────────────────────────────────
+
   const onDeconnexion = async () => {
     try {
       await apiClient.delete("auth/deconnexion");
@@ -22,7 +22,7 @@ export default function DashboardLayout() {
     }
   };
 
-  // ── Projet courant (ENTREPRENEUR uniquement, logique inchangée) ───────────
+
 
   const { data: projetCourant } = useProjetCourant({
     enabled: role === "ENTREPRENEUR",

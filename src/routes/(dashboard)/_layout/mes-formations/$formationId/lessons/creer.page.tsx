@@ -78,7 +78,8 @@ export default function CreerLessonPage() {
         const formData = new FormData()
         formData.append('video', videoFile)
         const res = await apiClient.post('/upload/video', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
+          timeout: 0 // Désactive le timeout spécifiquement pour l'upload de vidéos
         })
         finalVideoUrl = res.data.url
       } catch(e) {
