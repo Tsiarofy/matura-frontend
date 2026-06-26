@@ -14,7 +14,7 @@ interface NavItem {
 
 const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
   ENTREPRENEUR: [
-    { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
+    { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
     { icon: "FolderKanban", lien: "/projets", label: "Mes Projets" },
     { icon: "HandCoins", lien: "/financements", label: "Financements" },
     { icon: "UsersRound", lien: "/mentors", label: "Mentors" },
@@ -22,14 +22,14 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   MENTOR: [
-    { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
+    { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
     { icon: "FolderOpen", lien: "/projets-suivis", label: "Projets suivis" },
     { icon: "BellDot", lien: "/demandes", label: "Demandes" },
     { icon: "BookOpenText", lien: "/mes-formations", label: "Mes Formations" },
     { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   INVESTISSEUR: [
-    { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
+    { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
     {
       icon: "HandCoins",
       lien: "/mes-financements",
@@ -43,7 +43,7 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   ADMIN: [
-    { icon: "LayoutGrid", lien: "/dashboard", label: "Dashboard" },
+    { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
     { icon: "UsersRound", lien: "/admin/mentors", label: "Mentors" },
     {
       icon: "BriefcaseBusiness",

@@ -141,6 +141,7 @@ function ModalDemande({
 
   const envoyer = useEnvoyerDemande(projetId);
 
+
   const handleSubmit = async () => {
     if (!projetId) return;
     await envoyer.mutateAsync({
@@ -151,7 +152,13 @@ function ModalDemande({
   };
 
   const initiales = `${mentor.prenom[0]}${mentor.nom[0]}`.toUpperCase();
-
+  // console.log("LALALALLAL")
+  console.log(projetId)
+  console.log('- - - - -  - - - - -  --')
+  console.log(projetsDisponibles);
+  console.log('- - - - -- - - - - - - --')
+  console.log(projetId)
+    // console.log(envoyer,"    ",projetsDisponibles.length, "    ",projetId);
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
       <div className="panel-flat w-full max-w-md">

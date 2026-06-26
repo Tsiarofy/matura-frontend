@@ -16,7 +16,6 @@ import { Route as dashboardLayoutNotificationsIndexRouteImport } from './routes/
 import { Route as dashboardLayoutMesFormationsIndexRouteImport } from './routes/(dashboard)/_layout/mes-formations/index'
 import { Route as dashboardLayoutFormationsIndexRouteRouteImport } from './routes/(dashboard)/_layout/formations/index.route'
 import { Route as dashboardLayoutProjetsAFinancerProjetIdRouteImport } from './routes/(dashboard)/_layout/projets-a-financer/$projetId'
-import { Route as dashboardLayoutFinancementsIndexLazyOldRouteImport } from './routes/(dashboard)/_layout/financements/index.lazy.old'
 
 const authRegisterLazyRouteImport = createFileRoute('/(auth)/register')()
 const authLoginLazyRouteImport = createFileRoute('/(auth)/login')()
@@ -372,12 +371,6 @@ const dashboardLayoutMesFinancementsOffreIdCandidaturesLazyRoute =
         (d) => d.Route,
       ),
     )
-const dashboardLayoutFinancementsIndexLazyOldRoute =
-  dashboardLayoutFinancementsIndexLazyOldRouteImport.update({
-    id: '/financements/index/lazy/old',
-    path: '/financements/index/lazy/old',
-    getParentRoute: () => dashboardLayoutRoute,
-  } as any)
 const dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute =
   dashboardLayoutFormationsFormationIdLessonsIndexLazyRouteImport
     .update({
@@ -493,7 +486,6 @@ export interface FileRoutesByFullPath {
   '/mes-formations/$formationId/lessons/creer': typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   '/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   '/formations/$formationId/lessons/': typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
-  '/financements/index/lazy/old': typeof dashboardLayoutFinancementsIndexLazyOldRoute
   '/projets/$projetId/stades/$numStade/definir-missions': typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
   '/formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   '/mes-formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
@@ -527,7 +519,6 @@ export interface FileRoutesByTo {
   '/mes-formations/$formationId/lessons/creer': typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   '/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   '/formations/$formationId/lessons': typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
-  '/financements/index/lazy/old': typeof dashboardLayoutFinancementsIndexLazyOldRoute
   '/projets/$projetId/stades/$numStade/definir-missions': typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
   '/formations/$formationId/lessons/$lessonId': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   '/mes-formations/$formationId/lessons/$lessonId': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
@@ -563,7 +554,6 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/mes-formations/$formationId/lessons/creer': typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   '/(dashboard)/_layout/projets/$projetId/stades/$numStade': typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   '/(dashboard)/_layout/formations/$formationId/lessons/': typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
-  '/(dashboard)/_layout/financements/index/lazy/old': typeof dashboardLayoutFinancementsIndexLazyOldRoute
   '/(dashboard)/_layout/projets/$projetId/stades/$numStade/definir-missions': typeof dashboardLayoutProjetsProjetIdStadesNumStadeDefinirMissionsLazyRoute
   '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/': typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
@@ -599,7 +589,6 @@ export interface FileRouteTypes {
     | '/mes-formations/$formationId/lessons/creer'
     | '/projets/$projetId/stades/$numStade'
     | '/formations/$formationId/lessons/'
-    | '/financements/index/lazy/old'
     | '/projets/$projetId/stades/$numStade/definir-missions'
     | '/formations/$formationId/lessons/$lessonId/'
     | '/mes-formations/$formationId/lessons/$lessonId/'
@@ -633,7 +622,6 @@ export interface FileRouteTypes {
     | '/mes-formations/$formationId/lessons/creer'
     | '/projets/$projetId/stades/$numStade'
     | '/formations/$formationId/lessons'
-    | '/financements/index/lazy/old'
     | '/projets/$projetId/stades/$numStade/definir-missions'
     | '/formations/$formationId/lessons/$lessonId'
     | '/mes-formations/$formationId/lessons/$lessonId'
@@ -668,7 +656,6 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/mes-formations/$formationId/lessons/creer'
     | '/(dashboard)/_layout/projets/$projetId/stades/$numStade'
     | '/(dashboard)/_layout/formations/$formationId/lessons/'
-    | '/(dashboard)/_layout/financements/index/lazy/old'
     | '/(dashboard)/_layout/projets/$projetId/stades/$numStade/definir-missions'
     | '/(dashboard)/_layout/formations/$formationId/lessons/$lessonId/'
     | '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/'
@@ -858,13 +845,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutMesFinancementsOffreIdCandidaturesLazyRouteImport
       parentRoute: typeof dashboardLayoutRoute
     }
-    '/(dashboard)/_layout/financements/index/lazy/old': {
-      id: '/(dashboard)/_layout/financements/index/lazy/old'
-      path: '/financements/index/lazy/old'
-      fullPath: '/financements/index/lazy/old'
-      preLoaderRoute: typeof dashboardLayoutFinancementsIndexLazyOldRouteImport
-      parentRoute: typeof dashboardLayoutRoute
-    }
     '/(dashboard)/_layout/formations/$formationId/lessons/': {
       id: '/(dashboard)/_layout/formations/$formationId/lessons/'
       path: '/formations/$formationId/lessons'
@@ -961,7 +941,6 @@ interface dashboardLayoutRouteChildren {
   dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute: typeof dashboardLayoutMesFormationsFormationIdLessonsCreerLazyRoute
   dashboardLayoutProjetsProjetIdStadesNumStadeLazyRoute: typeof dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren
   dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute: typeof dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute
-  dashboardLayoutFinancementsIndexLazyOldRoute: typeof dashboardLayoutFinancementsIndexLazyOldRoute
   dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute: typeof dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute
   dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute: typeof dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute
 }
@@ -1010,8 +989,6 @@ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
     dashboardLayoutProjetsProjetIdStadesNumStadeLazyRouteWithChildren,
   dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute:
     dashboardLayoutFormationsFormationIdLessonsIndexLazyRoute,
-  dashboardLayoutFinancementsIndexLazyOldRoute:
-    dashboardLayoutFinancementsIndexLazyOldRoute,
   dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute:
     dashboardLayoutFormationsFormationIdLessonsLessonIdIndexLazyRoute,
   dashboardLayoutMesFormationsFormationIdLessonsLessonIdIndexLazyRoute:

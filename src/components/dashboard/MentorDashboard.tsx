@@ -78,7 +78,7 @@ export function MentorDashboard({ user }: MentorDashboardProps) {
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-0.5">
           <h1 className="text-[28px] font-semibold leading-none tracking-[-0.04em] text-[var(--color-text-primary)]">
-            Dashboard Mentor
+          Acceuil Mentor
           </h1>
           <p className="text-[13px] font-medium text-[var(--color-text-muted)]">
             Bienvenue, {user.prenom}. Voici les projets que vous accompagnez.
