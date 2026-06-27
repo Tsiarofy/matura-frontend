@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { ProfilMentorSchema, type ProfilMentor } from "@matura/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient, getFileUrl } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,9 +32,7 @@ export function ProfilMentorForm() {
     undefined,
   );
 
-  const urlAvatar = userData?.url_avatar
-    ? `${import.meta.env.VITE_BASE_URL}${userData.url_avatar}`
-    : undefined;
+  const urlAvatar = getFileUrl(userData?.url_avatar);
 
   const avatarToShow = previewAvatar ?? urlAvatar;
 

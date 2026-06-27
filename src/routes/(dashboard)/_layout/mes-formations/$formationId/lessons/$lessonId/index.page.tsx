@@ -4,6 +4,8 @@ import ReactMarkdown from 'react-markdown'
 import { Link } from '@tanstack/react-router'
 import { PlayCircle, ChevronLeft, Loader2 } from 'lucide-react'
 
+import { getFileUrl } from '@/lib/apiClient'
+
 export default function MentorLessonViewerPage() {
   const { formationId, lessonId } = useParams({
     from: '/(dashboard)/_layout/mes-formations/$formationId/lessons/$lessonId/',
@@ -14,14 +16,7 @@ export default function MentorLessonViewerPage() {
   const lessonPrecedente = formation?.lessons[lessonIndex - 1]
   const lessonSuivante = formation?.lessons[lessonIndex + 1]
 
-  // ✅ Construit et valide l'URL — jamais de "undefinedundefined" ou "localhost:3000undefined"
-const validVideoUrl = (() => {
-  if (!lesson?.url_video) return null
-  const url = lesson.url_video.startsWith('http')
-    ? lesson.url_video
-    : `${import.meta.env.VITE_BASE_URL}${lesson.url_video}`
-  return url.includes('undefined') ? null : url
-})()
+  const validVideoUrl = getFileUrl(lesson?.url_video);
 
   if (isLoading) {
     return (

@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card'
 import {type  UtilisateurPublic } from '@matura/shared'
 import { cn, getInitiales } from '@/lib/utils'
+import { getFileUrl } from '@/lib/apiClient'
 import { ROLE_LABELS } from '@/lib/constants'
 import { ChevronRight } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
@@ -25,7 +26,7 @@ export function ProfilCard({ user, className }: ProfilCardProps) {
           <div className="w-[26px] h-[26px] rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
             {user.url_avatar ? (
               <img
-                src={user.url_avatar}
+                src={getFileUrl(user.url_avatar) || undefined}
                 alt={`${user.prenom} ${user.nom}`}
                 className="w-full h-full rounded-full object-cover"
               />

@@ -8,7 +8,7 @@ import {
   Video,
 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { BASE_URL } from '@/lib/apiClient'
+import { getFileUrl } from '@/lib/apiClient'
 
 interface FichierMiniViewerProps {
   url: string
@@ -25,15 +25,7 @@ export function FichierMiniViewer({ url, type, nom, trigger }: FichierMiniViewer
     return url.replace(/\\/g, '/')
   }, [url])
 
-  const fullUrl = useMemo(() => {
-    if (!normalizedUrl) return ''
-    if (normalizedUrl.startsWith('http://') || normalizedUrl.startsWith('https://')) {
-      return normalizedUrl
-    }
-    const base = BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL
-    const path = normalizedUrl.startsWith('/') ? normalizedUrl : `/${normalizedUrl}`
-    return `${base}${path}`
-  }, [normalizedUrl])
+  const fullUrl = getFileUrl(normalizedUrl) || '';
 
   const normalizedType = useMemo(() => {
     return type ? type.toUpperCase().trim() : ''

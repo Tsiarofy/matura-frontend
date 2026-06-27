@@ -1,4 +1,5 @@
 import { useParams } from '@tanstack/react-router'
+import { getFileUrl } from '@/lib/apiClient'
 import { useFormationDetail } from '@/hooks/useFormations'
 // import ReactPlayer from 'react-player'
 import ReactMarkdown from 'react-markdown'
@@ -19,7 +20,7 @@ export default function LessonViewerPage() {
   const lessonIndex = formation?.lessons.findIndex((l) => l.id === lessonId) ?? 0
   const lessonPrecedente = formation?.lessons[lessonIndex - 1]
   const lessonSuivante = formation?.lessons[lessonIndex + 1]
-const videoUrl = lesson?.url_video ? (lesson.url_video.startsWith('https') ? lesson.url_video : `${import.meta.env.VITE_BASE_URL}${lesson.url_video}`) : null;
+  const videoUrl = getFileUrl(lesson?.url_video);
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">

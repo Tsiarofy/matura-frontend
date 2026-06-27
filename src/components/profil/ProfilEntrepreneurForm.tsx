@@ -7,7 +7,7 @@ import {
   type ProfilEntrepreneur,
 } from "@matura/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient, getFileUrl } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,10 +47,7 @@ export function ProfilEntrepreneurForm() {
         "Initialisation du formulaire avec les données utilisateur:",
         userData.profil,
       );
-      // console.log("URL de l'avatar:", userData.url_avatar);
-      // // console.log(userData?.url_avatar)
-      // console.log(`${import.meta.env.VITE_BASE_URL}${userData.url_avatar}`)
-      setUrlAvatar(userData.url_avatar);
+      setUrlAvatar(getFileUrl(userData.url_avatar) || undefined);
       form.reset(userData.profil);
     }
   }, [userData, form]);

@@ -7,7 +7,7 @@ import {
   SousTypeInvestisseurEnum,
 } from "@matura/shared";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient, getFileUrl } from "@/lib/apiClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -47,7 +47,7 @@ export function ProfilInvestisseurForm() {
 
   useEffect(() => {
     if (userData?.profil && !form.formState.isDirty) {
-      setUrlAvatar(userData.url_avatar);
+      setUrlAvatar(getFileUrl(userData.url_avatar) || undefined);
       form.reset({
         ...userData.profil,
         domaines_interet: userData.profil.domaines_interet || [],
