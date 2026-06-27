@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect} from "react";
 import {
   useMentors,
   useEnvoyerDemande,
@@ -138,6 +138,12 @@ function ModalDemande({
 
   const [projetId, setProjetId] = useState(projetsDisponibles[0]?.id ?? "");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (projetsDisponibles.length > 0 && !projetId) {
+      setProjetId(projetsDisponibles[0].id);
+    }
+  }, [projetsDisponibles, projetId]);
 
   const envoyer = useEnvoyerDemande(projetId);
 

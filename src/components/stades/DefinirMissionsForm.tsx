@@ -257,7 +257,7 @@ export function DefinirMissionsForm({
         }
         if (m.objectif.trim().length < 5) {
           toast.error(`Mission #${i + 1} invalide`, {
-            description: "L'objectif de la mission doit comporter au moins 5 caractères.",
+            description: "L'objectif doit contenir au moins 5 caractères.",
           });
           return;
         }
@@ -271,7 +271,7 @@ export function DefinirMissionsForm({
           }
           if (fr.description.trim().length < 3) {
             toast.error(`Mission #${i + 1} — Fichier #${j + 1} invalide`, {
-              description: "La description du fichier requis doit comporter au moins 3 caractères.",
+              description: "La description du fichier requis doit contenir au moins 3 caractères.",
             });
             return;
           }

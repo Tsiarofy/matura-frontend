@@ -50,7 +50,7 @@ function LigneMissionOverview({ mission, projetId, numStade }: { mission: Missio
           <div>
             <p className={cn(
               "text-[14px] font-semibold",
-              isDone && "text-[#333333] line-through opacity-60",
+              isDone && "text-[#333333]",
               isActive && "text-[#141414]",
               isTodo && "text-[#757575]"
             )}>

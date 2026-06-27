@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/apiClient";
 import {
   useFormationDetail,
   useModifierFormation,
@@ -25,6 +27,9 @@ import {
   PlayCircle,
   Pencil,
   Trash2,
+  UploadCloud,
+  Link as LinkIcon,
+  Video,
 } from "lucide-react";
 import {
   DOMAINE_LABELS,
@@ -43,7 +48,7 @@ const formationSchema = z.object({
 const lessonSchema = z.object({
   titre: z.string().min(1, "Le titre est requis").max(150),
   ordre: z.number().min(1, "L'ordre doit etre superieur a 0"),
-  url_video: z.string().min(1, "L’URL de la video est requise"),
+  url_video: z.string().optional(),
   contenu_texte: z.string().min(1, "Le contenu texte est requis"),
 });
 
@@ -63,6 +68,10 @@ export default function MesFormationsDetailPage() {
   const [formationDialogOpen, setFormationDialogOpen] = useState(false);
   const [lessonDialogOpen, setLessonDialogOpen] = useState(false);
   const [selectedLessonId, setSelectedLessonId] = useState<string | null>(null);
+
+  const [uploadMode, setUploadMode] = useState<"url" | "file">("url");
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const selectedLesson =
     formation?.lessons.find((lesson) => lesson.id === selectedLessonId) ?? null;
@@ -128,6 +137,8 @@ export default function MesFormationsDetailPage() {
 
   const openLessonEditor = (lessonId: string) => {
     setSelectedLessonId(lessonId);
+    setUploadMode("url");
+    setVideoFile(null);
     setLessonDialogOpen(true);
   };
 
@@ -467,9 +478,41 @@ export default function MesFormationsDetailPage() {
             </DialogDescription>
           </DialogHeader>
           <form
-            onSubmit={handleLessonSubmit((data) => {
+            onSubmit={handleLessonSubmit(async (data) => {
               if (!selectedLessonId) return;
-              modifierLesson.mutate(data, {
+              
+              let finalVideoUrl = data.url_video;
+
+              if (uploadMode === "file") {
+                if (!videoFile) {
+                  toast.error("Veuillez sélectionner un fichier vidéo");
+                  return;
+                }
+                try {
+                  setIsUploading(true);
+                  const formData = new FormData();
+                  formData.append("video", videoFile);
+                  const res = await apiClient.post("/upload/video", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    timeout: 0,
+                  });
+                  finalVideoUrl = res.data.url;
+                } catch (e) {
+                  console.error("Erreur d'upload", e);
+                  toast.error("Erreur lors de l'upload de la vidéo");
+                  setIsUploading(false);
+                  return;
+                } finally {
+                  setIsUploading(false);
+                }
+              }
+
+              if (!finalVideoUrl) {
+                toast.error("Une URL de vidéo ou un fichier est requis");
+                return;
+              }
+
+              modifierLesson.mutate({ ...data, url_video: finalVideoUrl }, {
                 onSuccess: () => setLessonDialogOpen(false),
               });
             })}
@@ -508,13 +551,55 @@ export default function MesFormationsDetailPage() {
             </div>
             <div>
               <label className="block text-[13px] font-medium text-zinc-700 mb-1">
-                URL vidéo *
+                Vidéo de la leçon *
               </label>
-              <input
-                {...registerLesson("url_video")}
-                className="w-full text-[13px] border border-zinc-200 rounded-lg px-3 py-2 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all"
-              />
-              {lessonErrors.url_video && (
+              <div className="flex gap-2 mb-3">
+                <button
+                  type="button"
+                  onClick={() => setUploadMode("url")}
+                  className={`flex-1 flex justify-center items-center gap-2 py-2 border rounded-lg text-[13px] transition-all ${
+                    uploadMode === "url"
+                      ? "border-green-600 text-green-700 bg-green-50"
+                      : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                  }`}
+                >
+                  <LinkIcon className="w-4 h-4" /> URL externe
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadMode("file")}
+                  className={`flex-1 flex justify-center items-center gap-2 py-2 border rounded-lg text-[13px] transition-all ${
+                    uploadMode === "file"
+                      ? "border-green-600 text-green-700 bg-green-50"
+                      : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                  }`}
+                >
+                  <UploadCloud className="w-4 h-4" /> Uploader un fichier
+                </button>
+              </div>
+
+              {uploadMode === "url" ? (
+                <input
+                  {...registerLesson("url_video")}
+                  className="w-full text-[13px] border border-zinc-200 rounded-lg px-3 py-2 outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all"
+                  placeholder="Ex: https://www.youtube.com/watch?v=..."
+                />
+              ) : (
+                <div className="border-2 border-dashed border-zinc-200 rounded-lg p-6 flex flex-col items-center justify-center bg-zinc-50 hover:bg-zinc-100 transition-colors cursor-pointer relative overflow-hidden">
+                  <input
+                    type="file"
+                    accept="video/mp4,video/x-m4v,video/*"
+                    onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
+                  <Video className="w-8 h-8 text-zinc-400 mb-2" />
+                  <p className="text-[13px] font-medium text-zinc-700">
+                    {videoFile ? videoFile.name : "Cliquez ou glissez une vidéo"}
+                  </p>
+                  <p className="text-[11px] text-zinc-400 mt-1">MP4, MOV, AVI jusqu'à 500MB</p>
+                </div>
+              )}
+              {lessonErrors.url_video && uploadMode === "url" && (
                 <p className="text-red-500 text-[11px] mt-1">
                   {lessonErrors.url_video.message}
                 </p>
@@ -545,13 +630,13 @@ export default function MesFormationsDetailPage() {
               </button>
               <button
                 type="submit"
-                disabled={modifierLesson.isPending}
+                disabled={modifierLesson.isPending || isUploading}
                 className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-green-700 disabled:opacity-60"
               >
-                {modifierLesson.isPending && (
+                {(modifierLesson.isPending || isUploading) && (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 )}
-                Enregistrer
+                {isUploading ? "Upload en cours..." : "Enregistrer"}
               </button>
             </DialogFooter>
           </form>
