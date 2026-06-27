@@ -47,7 +47,7 @@ export function ProfilEntrepreneurForm() {
         "Initialisation du formulaire avec les données utilisateur:",
         userData.profil,
       );
-      setUrlAvatar(getFileUrl(userData.url_avatar) || undefined);
+      setUrlAvatar(getFileUrl(userData.url_avatar) || null);
       form.reset(userData.profil);
     }
   }, [userData, form]);

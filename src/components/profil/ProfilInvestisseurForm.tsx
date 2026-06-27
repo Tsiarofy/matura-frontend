@@ -47,7 +47,7 @@ export function ProfilInvestisseurForm() {
 
   useEffect(() => {
     if (userData?.profil && !form.formState.isDirty) {
-      setUrlAvatar(getFileUrl(userData.url_avatar) || undefined);
+      setUrlAvatar(getFileUrl(userData.url_avatar) || null);
       form.reset({
         ...userData.profil,
         domaines_interet: userData.profil.domaines_interet || [],
