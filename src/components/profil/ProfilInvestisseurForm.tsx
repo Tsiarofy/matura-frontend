@@ -77,7 +77,7 @@ export function ProfilInvestisseurForm() {
     },
     onSuccess: (response) => {
       const urlAvatarResponse = response.data.url;
-      setUrlAvatar(urlAvatarResponse);
+      setUrlAvatar(getFileUrl(urlAvatarResponse) || null);
       apiClient.patch("/utilisateurs/moi/avatar", {
         url_avatar: urlAvatarResponse,
       });
@@ -139,7 +139,7 @@ export function ProfilInvestisseurForm() {
 
   const imageSrc = urlAvatar?.startsWith("blob:")
     ? urlAvatar
-    : `${import.meta.env.VITE_BASE_URL}${urlAvatar}`;
+    : urlAvatar || undefined;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">

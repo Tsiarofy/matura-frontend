@@ -76,10 +76,10 @@ export function ProfilEntrepreneurForm() {
       })
     },
     onSuccess: (response) => {
-      const urlAvatar = response.data.url;
-      console.log("Avatar uploadé avec succès, URL:", urlAvatar);
-      setUrlAvatar(urlAvatar);
-      apiClient.patch("/utilisateurs/moi/avatar", { url_avatar: urlAvatar });
+      const rawUrl = response.data.url;
+      console.log("Avatar uploadé avec succès, URL:", rawUrl);
+      setUrlAvatar(getFileUrl(rawUrl) || null);
+      apiClient.patch("/utilisateurs/moi/avatar", { url_avatar: rawUrl });
     },
     onError: (error) => {
       console.error("Erreur lors de l'upload de l'avatar:", error);
@@ -130,7 +130,7 @@ export function ProfilEntrepreneurForm() {
             <div className="w-20 h-20 rounded-full bg-zinc-200 flex items-center justify-center overflow-hidden">
               {urlAvatar ? (
                 <img
-                  src={`${import.meta.env.VITE_BASE_URL}${urlAvatar}`}
+                  src={urlAvatar}
                   alt="Avatar"
                   className="w-full h-full object-cover"
                 />
