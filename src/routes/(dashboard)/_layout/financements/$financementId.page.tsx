@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
+import { getFileUrl } from "@/lib/apiClient";
 import { useFinancementDetail } from "@/hooks/useFinancements";
 import { PostulerModal } from "@/components/financement/PostulerModal";
 import { StatutOffre, TypeFinancement } from "@matura/shared";
@@ -117,7 +118,7 @@ export default function FinancementDetailPage() {
           <div className="flex items-start gap-3 flex-1 min-w-0">
             {investisseurAvatar && (
               <img
-                src={`${import.meta.env.VITE_BASE_URL}${investisseurAvatar}`}
+                src={getFileUrl(investisseurAvatar) || undefined}
                 alt={investisseurNom ?? ""}
                 className="w-10 h-10 rounded-lg object-cover shrink-0"
               />

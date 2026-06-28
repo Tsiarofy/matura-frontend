@@ -1,4 +1,5 @@
 import { useParams, Link, useNavigate } from "@tanstack/react-router";
+import { getFileUrl } from '@/lib/apiClient';
 import { useProjetDetail } from "@/hooks/useStades";
 import { BRLBadge } from "@/components/shared/BRLBadge";
 import { StatutBadge } from "@/components/shared/StatutBadge";
@@ -152,8 +153,7 @@ export default function ProjetDetailPage() {
   const isMentor = user?.role === "MENTOR";
   const usrAvatarURL = useMemo(() => {
     const mentorAny = projet?.mentor as any;
-    if (!mentorAny?.url_avatar) return "";
-    return `${import.meta.env.VITE_BASE_URL}${mentorAny.url_avatar}`;
+    return getFileUrl(mentorAny?.url_avatar) || '';
   }, [projet?.mentor]);
 
   // ── Loading ──

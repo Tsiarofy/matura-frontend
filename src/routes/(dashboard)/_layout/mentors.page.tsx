@@ -7,6 +7,7 @@ import {
 import { useProjets } from "@/hooks/useProjets";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "@/components/ui/input";
+import { getFileUrl } from "@/lib/apiClient";
 // import { cn } from '@/lib/utils'
 // import { DOMAINE_LABELS } from '@/lib/constants'
 import {
@@ -38,9 +39,7 @@ function CarteMentor({
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full border border-zinc-100 bg-zinc-50 flex items-center justify-center shrink-0 overflow-hidden shadow-sm">
               <img
-                src={
-                  mentor.url_avatar ? `${import.meta.env.VITE_BASE_URL}${mentor.url_avatar}` : undefined
-                }
+                src={getFileUrl(mentor.url_avatar) || undefined}
                 alt={`${mentor.prenom} ${mentor.nom}`}
                 className="w-full h-full object-cover rounded-full"
                 onError={(e) => {
