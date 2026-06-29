@@ -32,6 +32,7 @@ export default function CreerLessonPage() {
   const [uploadMode, setUploadMode] = useState<'url' | 'file'>('url')
   const [videoFile, setVideoFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
 
   const {
     register,
@@ -78,8 +79,13 @@ export default function CreerLessonPage() {
         const formData = new FormData()
         formData.append('video', videoFile)
         const res = await apiClient.post('/upload/video', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          timeout: 0 // Désactive le timeout spécifiquement pour l'upload de vidéos
+          timeout: 0, // Désactive le timeout spécifiquement pour l'upload de vidéos
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              setUploadProgress(percentCompleted);
+            }
+          }
         })
         finalVideoUrl = res.data.url
       } catch(e) {
@@ -89,9 +95,11 @@ export default function CreerLessonPage() {
         console.log(e);
         toast.error('Erreur lors de l\'upload de la vidéo')
         setIsUploading(false)
+        setUploadProgress(0)
         return
       } finally {
         setIsUploading(false)
+        setUploadProgress(0)
       }
     }
 
@@ -283,10 +291,18 @@ export default function CreerLessonPage() {
           <button
             type="submit"
             disabled={ajouterLesson.isPending || isUploading}
-            className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg text-[13px] font-medium hover:bg-green-700 transition-colors disabled:opacity-50"
+            className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg text-[13px] font-medium hover:bg-green-700 transition-colors disabled:opacity-50 relative overflow-hidden"
           >
-            {(ajouterLesson.isPending || isUploading) && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isUploading ? 'Upload en cours...' : 'Ajouter la leçon'}
+            {isUploading && (
+              <div 
+                className="absolute inset-0 bg-green-500/20" 
+                style={{ width: `${uploadProgress}%`, transition: 'width 0.3s' }} 
+              />
+            )}
+            {(ajouterLesson.isPending || isUploading) && <Loader2 className="w-4 h-4 animate-spin relative z-10" />}
+            <span className="relative z-10">
+              {isUploading ? `Upload en cours... ${uploadProgress}%` : 'Ajouter la leçon'}
+            </span>
           </button>
         </div>
       </form>

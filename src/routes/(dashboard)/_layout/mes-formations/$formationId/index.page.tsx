@@ -72,6 +72,7 @@ export default function MesFormationsDetailPage() {
   const [uploadMode, setUploadMode] = useState<"url" | "file">("url");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const selectedLesson =
     formation?.lessons.find((lesson) => lesson.id === selectedLessonId) ?? null;
@@ -493,17 +494,24 @@ export default function MesFormationsDetailPage() {
                   const formData = new FormData();
                   formData.append("video", videoFile);
                   const res = await apiClient.post("/upload/video", formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
                     timeout: 0,
+                    onUploadProgress: (progressEvent) => {
+                      if (progressEvent.total) {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        setUploadProgress(percentCompleted);
+                      }
+                    }
                   });
                   finalVideoUrl = res.data.url;
                 } catch (e) {
                   console.error("Erreur d'upload", e);
                   toast.error("Erreur lors de l'upload de la vidéo");
                   setIsUploading(false);
+                  setUploadProgress(0);
                   return;
                 } finally {
                   setIsUploading(false);
+                  setUploadProgress(0);
                 }
               }
 
@@ -631,12 +639,20 @@ export default function MesFormationsDetailPage() {
               <button
                 type="submit"
                 disabled={modifierLesson.isPending || isUploading}
-                className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-green-700 disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-[13px] font-medium text-white hover:bg-green-700 disabled:opacity-60 relative overflow-hidden"
               >
-                {(modifierLesson.isPending || isUploading) && (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                {isUploading && (
+                  <div 
+                    className="absolute inset-0 bg-green-500/20" 
+                    style={{ width: `${uploadProgress}%`, transition: 'width 0.3s' }} 
+                  />
                 )}
-                {isUploading ? "Upload en cours..." : "Enregistrer"}
+                {(modifierLesson.isPending || isUploading) && (
+                  <Loader2 className="w-4 h-4 animate-spin relative z-10" />
+                )}
+                <span className="relative z-10">
+                  {isUploading ? `Upload en cours... ${uploadProgress}%` : "Enregistrer"}
+                </span>
               </button>
             </DialogFooter>
           </form>

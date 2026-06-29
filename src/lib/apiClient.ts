@@ -30,6 +30,14 @@ apiClient.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // Si le body est un FormData (upload de fichier), supprimer le Content-Type fixé
+  // pour que le navigateur génère automatiquement "multipart/form-data; boundary=..."
+  // avec le bon boundary. Sans ça, multer rejette avec "Aucun fichier uploadé".
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+
   return config;
 });
 
