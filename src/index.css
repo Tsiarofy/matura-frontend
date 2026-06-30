@@ -97,6 +97,16 @@
   --color-tsisy-teal-border:   #A6E3E1;
   --color-tsisy-teal-text:     #0D7A75;
 
+  --color-tsisy-sage:          #93A696;
+  --color-tsisy-sage-bg:       #F3F6F3;
+  --color-tsisy-sage-border:   #DCE5DC;
+  --color-tsisy-sage-text:     #5C6E5E;
+
+  --color-tsisy-clay:          #B5654A;
+  --color-tsisy-clay-bg:       #FAEEE8;
+  --color-tsisy-clay-border:   #E7C4B3;
+  --color-tsisy-clay-text:     #823F2C;
+
   /* ── Extensions vert ── */
   --color-tsisy-green-dark:    #318055;
 
@@ -111,6 +121,10 @@
   --color-kpi-green-icon-bg:   #eafdf3;
   --color-kpi-teal-icon:       #1BA8A0;
   --color-kpi-teal-icon-bg:    #E2F7F6;
+  --color-kpi-sage-icon:       #93A696;
+  --color-kpi-sage-icon-bg:    #F3F6F3;
+  --color-kpi-clay-icon:       #B5654A;
+  --color-kpi-clay-icon-bg:    #FAEEE8;
   --color-kpi-amber-icon:      #f3b63f;
   --color-kpi-amber-icon-bg:   #fff8e8;
 
@@ -128,6 +142,8 @@
   /* ── Micro-surfaces (tints ultra-légers pour alternances subtiles) ── */
   --color-surface-green-micro:   #F5FDF8;
   --color-surface-teal-micro:    #F3FBFB;
+  --color-surface-sage-micro:    #F8FAF8;
+  --color-surface-clay-micro:    #FDF8F6;
   --color-surface-blue-micro:    #F2F8FD;
   --color-surface-amber-micro:   #FEFBF3;
 
@@ -135,12 +151,8 @@
   --color-chart-1: #41A677;
   --color-chart-2: #1BA8A0;
   --color-chart-3: #3A8FC4;
-  --color-chart-4: #f3b63f;
+  --color-chart-4: #B5654A;
   --color-chart-5: #6f74f7;
-
-  --color-secondary-orange: #F97316;
-  --color-secondary-orange-bg: #FFF7ED;
-  --color-secondary-orange-border: #FED7AA;
 
   --color-success: var(--color-tsisy-green);
   --color-success-bg: var(--color-tsisy-green-bg);
@@ -373,9 +385,9 @@
     left: 0;
     top: 20%;
     bottom: 20%;
-    width: 0;
+    width: 3px;
     border-radius: 0 3px 3px 0;
-    background: transparent;
+    background: var(--color-tsisy-teal);
   }
 
   /* Glassmorphism */
@@ -387,4 +399,38 @@
   .dark .glass {
     background: rgba(20, 20, 22, 0.80);
   }
+
+  .auth-left-panel {
+    position: relative;
+    overflow: hidden;
+    background: #F1F0F0;
+  }
+
+  .auth-left-panel > *:not(.auth-stairs) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .auth-stairs {
+    position: absolute;
+    inset: 0;
+    right: -28px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .auth-stairs span {
+    width: 96px;
+    border-radius: 28px 28px 0 0;
+    flex-shrink: 0;
+  }
+
+  .auth-stairs span:nth-child(1) { height: 180px;  background: #EAF3E2; }
+  .auth-stairs span:nth-child(2) { height: 300px; background: #D9EBDB; }
+  .auth-stairs span:nth-child(3) { height: 420px; background: #C5E2C9; }
+  .auth-stairs span:nth-child(4) { height: 540px; background: #AED8B7; }
+  .auth-stairs span:nth-child(5) { height: 660px; background: #93CCA0; }
 }

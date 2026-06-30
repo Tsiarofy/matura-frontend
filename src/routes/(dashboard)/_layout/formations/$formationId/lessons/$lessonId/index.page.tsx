@@ -71,13 +71,13 @@ export default function LessonViewerPage() {
 
         {/* Contenu texte (Markdown) */}
         <div className="prose prose-sm prose-zinc max-w-none
-          prose-headings:font-semibold prose-headings:text-[#6f74f7]
-          prose-p:text-[var(--color-text-secondary)] prose-p:leading-relaxed
-          prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:underline
+          prose-headings:font-semibold prose-headings:text-zinc-900
+          prose-p:text-zinc-700 prose-p:leading-relaxed
+          prose-a:text-green-600 prose-a:no-underline hover:prose-a:underline
           prose-code:bg-zinc-100 prose-code:text-zinc-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[0.85em]
           prose-pre:bg-zinc-900 prose-pre:text-zinc-100 prose-pre:rounded-xl
-          prose-blockquote:border-[var(--color-border-strong)] prose-blockquote:text-[var(--color-text-secondary)]
-          prose-strong:text-[var(--color-text-primary)]
+          prose-blockquote:border-green-400 prose-blockquote:text-zinc-600
+          prose-strong:text-zinc-900
         ">
           <ReactMarkdown>{lesson.contenu_texte}</ReactMarkdown>
         </div>

@@ -30,7 +30,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { apiClient } from "@/lib/apiClient";
 import { authStore } from "@/stores/authStore";
-import { Sprout, Users, Briefcase, AlertCircle, Loader2 } from "lucide-react";
+import { Sprout, Users, Briefcase, AlertCircle, Loader2, TrendingUp } from "lucide-react";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -102,49 +102,70 @@ export default function RegisterPage() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--color-bg-app)] p-4 md:flex-row md:p-5">
-      {/* Left Panel – Branding (identique à login, cohérence) */}
-      <div className="flex flex-1 flex-col justify-between rounded-[30px] border border-[var(--color-border)] bg-[var(--color-sidebar-surface)] p-6 md:p-10 lg:p-12">
+    <div className="flex min-h-screen flex-col bg-[var(--color-sidebar-surface)] p-4 md:flex-row md:p-5">
+      {/* Left Panel – Branding */}
+      <div className="hidden w-[47%] flex-col justify-between p-12 md:flex auth-left-panel">
+        <div className="auth-stairs" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] border border-[#41A677]/40 bg-[#41A677] shadow-sm">
+            <span className="text-white font-bold text-sm">M</span>
+          </div>
+          <div>
+            <p className="text-base font-semibold leading-none text-[var(--color-text-primary)]">MaturaProj</p>
+            <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">Madagascar</p>
+          </div>
+        </div>
+
+        {/* Titre */}
         <div>
-          <div className="flex items-center gap-2 mb-6">
-            <div className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-[var(--color-success-border)] bg-[var(--color-success)] shadow-sm">
-              <span className="text-white text-xs font-bold">M</span>
-            </div>
-            <span className="text-lg font-semibold text-[var(--color-text-primary)]">MaturaProj</span>
-          </div>
-          <div className="mb-4 inline-flex rounded-full border border-[var(--color-success-border)] bg-[var(--color-success-bg)] px-3 py-1 text-[11px] font-semibold text-[var(--color-success-text)]">
-            Inspiré de Tsisy, adapté à MaturaProj
-          </div>
-          <h1 className="mb-3 text-2xl font-semibold tracking-[-0.04em] text-[var(--color-text-primary)] md:text-3xl">
-            Rejoignez l'écosystème<br />de l'innovation malgache.
+          <h1 className="mb-5 text-[2.8rem] font-semibold leading-[1.12] tracking-[-0.05em] text-[var(--color-text-primary)]">
+            Rejoignez l'écosystème<br />de l'innovation<br />malgache.
           </h1>
-          <p className="max-w-md text-sm text-[var(--color-text-muted)]">
-            Créez votre compte en quelques secondes et commencez à donner vie à
-            vos idées.
+          <p className="max-w-[340px] text-[14px] leading-relaxed text-[var(--color-text-muted)]">
+            Créez votre compte en quelques secondes et commencez à donner vie à vos idées.
           </p>
         </div>
 
-        <div className="mt-8 space-y-4">
-          {rolesDisponibles.map((role) => {
-            const Icon = role.icon;
-            return (
-              <div key={role.id} className="flex items-start gap-3 rounded-[20px] border border-[var(--color-border)] bg-white/86 p-3 shadow-sm">
-                <div className="flex items-center justify-center rounded-[12px] border border-[var(--color-success-border)] bg-[var(--color-success-bg)] p-2">
-                  <Icon className="h-4 w-4 text-[var(--color-success)]" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-[var(--color-text-primary)]">{role.label}</p>
-                  <p className="text-xs text-[var(--color-text-muted)]">{role.desc}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        {/* Feature pills */}
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] bg-white border border-[#41A677]">
+              <Sprout className="h-4 w-4 text-[#41A677]" />
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">7 stades de maturation</p>
+              <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">Un parcours validé par des experts</p>
+            </div>
+          </div>
 
-        <p className="mt-8 text-xs text-[var(--color-text-muted)]">
-          © 2026 MaturaProj — Tous droits réservés
-        </p>
+          <div className="flex items-center gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] bg-white border border-[#41A677]">
+              <Users className="h-4 w-4 text-[#41A677]" />
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">Mentors qualifiés</p>
+              <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">Bénéficiez de retours terrain</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] bg-white border border-[#41A677]">
+              <TrendingUp className="h-4 w-4 text-[#41A677]" />
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">Accès aux financements</p>
+              <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">Subventions, prêts, capital</p>
+            </div>
+          </div>
+
+          <p className="mt-1 text-xs text-[var(--color-text-muted)]">© 2026 MaturaProj — Tous droits réservés</p>
+        </div>
       </div>
+
 
       {/* Right Panel – Registration Form */}
       <div className="flex flex-1 items-center justify-center rounded-[30px] border border-[var(--color-border)] bg-[var(--color-bg-shell)] p-6 md:p-10 lg:p-12">
@@ -241,24 +262,48 @@ export default function RegisterPage() {
                         onValueChange={field.onChange}
                         className="grid grid-cols-1 gap-2"
                       >
-                        {rolesDisponibles.map((r) => (
-                          <label
-                            key={r.id}
-                            className={`flex cursor-pointer items-start gap-3 rounded-[18px] border p-3 transition-colors ${
-                              field.value === r.id
-                                ? 'border-[var(--color-success-border)] bg-[var(--color-success-bg)]/75'
-                                : 'border-[var(--color-border)] bg-[var(--color-surface-soft)]/45 hover:bg-[var(--color-surface-soft)]'
-                            }`}
-                          >
-                            <RadioGroupItem value={r.id} id={r.id} className="mt-0.5" />
-                            <div className="flex flex-col">
-                              <span className="text-sm font-semibold text-[var(--color-text-primary)]">
-                                {r.label}
-                              </span>
-                              <span className="text-xs text-[var(--color-text-muted)]">{r.desc}</span>
-                            </div>
-                          </label>
-                        ))}
+                        {rolesDisponibles.map((r) => {
+                          const isSelected = field.value === r.id;
+                          let selectedBg = '';
+                          let selectedBorder = '';
+                          let primaryColor = '';
+
+                          if (isSelected) {
+                            if (r.id === 'entrepreneur') {
+                              selectedBg = 'bg-[#eafdf3]';
+                              selectedBorder = 'border-[#41A677]';
+                              primaryColor = '#41A677';
+                            } else if (r.id === 'mentor') {
+                              selectedBg = 'bg-[#E2F7F6]';
+                              selectedBorder = 'border-[#1BA8A0]';
+                              primaryColor = '#1BA8A0';
+                            } else if (r.id === 'investisseur') {
+                              selectedBg = 'bg-[#eef0ff]';
+                              selectedBorder = 'border-[#6f74f7]';
+                              primaryColor = '#6f74f7';
+                            }
+                          }
+
+                          return (
+                            <label
+                              key={r.id}
+                              style={isSelected ? { '--primary': primaryColor, borderWidth: '1.5px' } as React.CSSProperties : undefined}
+                              className={`flex cursor-pointer items-start gap-3 rounded-[18px] border p-3 transition-colors ${
+                                isSelected
+                                  ? `${selectedBg} ${selectedBorder}`
+                                  : 'border-[var(--color-border)] bg-[var(--color-surface-soft)]/45 hover:bg-[var(--color-surface-soft)]'
+                              }`}
+                            >
+                              <RadioGroupItem value={r.id} id={r.id} className="mt-0.5" />
+                              <div className="flex flex-col">
+                                <span className="text-sm font-semibold text-[var(--color-text-primary)]">
+                                  {r.label}
+                                </span>
+                                <span className="text-xs text-[var(--color-text-muted)]">{r.desc}</span>
+                              </div>
+                            </label>
+                          );
+                        })}
                       </RadioGroup>
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </FieldSet>

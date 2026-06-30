@@ -55,21 +55,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[var(--color-bg-app)] p-4 md:p-5">
+    <div className="flex min-h-screen bg-[var(--color-sidebar-surface)] p-4 md:p-5">
 
       {/* ── Panneau gauche — Branding ── */}
-      <div className="relative hidden w-[47%] flex-col justify-between overflow-hidden rounded-[30px] border border-[var(--color-border)] bg-[var(--color-sidebar-surface)] p-12 md:flex">
-
-        {/* Blobs décoratifs atténués */}
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-[#dff5e7] opacity-70" />
-          <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-[#bfe9cb] opacity-18" />
-          <div className="absolute right-0 top-1/3 h-48 w-48 rounded-full bg-[#fff3de] opacity-55" />
+      <div className="hidden w-[47%] flex-col justify-between p-12 md:flex auth-left-panel">
+        <div className="auth-stairs" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span>
         </div>
 
         {/* Logo */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] border border-[var(--color-success-border)] bg-[var(--color-success)] shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] border border-[#41A677]/40 bg-[#41A677] shadow-sm">
             <span className="text-white font-bold text-sm">M</span>
           </div>
           <div>
@@ -79,10 +75,7 @@ export default function LoginPage() {
         </div>
 
         {/* Titre principal */}
-        <div className="relative z-10">
-          <div className="mb-5 inline-flex rounded-full border border-[var(--color-success-border)] bg-[var(--color-success-bg)] px-3 py-1 text-[11px] font-semibold text-[var(--color-success-text)]">
-            Flat minimal + productif
-          </div>
+        <div>
           <h1 className="mb-5 text-[2.8rem] font-semibold leading-[1.12] tracking-[-0.05em] text-[var(--color-text-primary)]">
             Structurez votre<br />projet, trouvez<br />des financements.
           </h1>
@@ -93,26 +86,38 @@ export default function LoginPage() {
         </div>
 
         {/* Feature pills */}
-        <div className="relative z-10 flex flex-col gap-3">
-          {[
-            { Icon: Sprout, label: "7 stades de maturation", sub: "Un parcours structuré, validé par des experts" },
-            { Icon: Users, label: "Mentors qualifiés", sub: "Bénéficiez de retours d'expérience terrain" },
-            { Icon: TrendingUp, label: "Accès aux financements", sub: "Subventions, prêts d'honneur, capital" },
-          ].map(({ Icon, label, sub }) => (
-            <div
-              key={label}
-              className="flex items-center gap-3 rounded-[22px] border border-[var(--color-border)] bg-white/88 px-4 py-3 shadow-sm backdrop-blur-sm"
-            >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] border border-[var(--color-success-border)] bg-[var(--color-success-bg)]">
-                <Icon className="h-4 w-4 text-[var(--color-success)]" />
-              </div>
-              <div>
-                <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">{label}</p>
-                <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">{sub}</p>
-              </div>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] bg-white border border-[#41A677]">
+              <Sprout className="h-4 w-4 text-[#41A677]" />
             </div>
-          ))}
-          <p className="mt-2 text-xs text-[var(--color-text-muted)]/80">© 2026 MaturaProj — Tous droits réservés</p>
+            <div>
+              <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">7 stades de maturation</p>
+              <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">Un parcours structuré, validé par des experts</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] bg-white border border-[#41A677]">
+              <Users className="h-4 w-4 text-[#41A677]" />
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">Mentors qualifiés</p>
+              <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">Bénéficiez de retours d'expérience terrain</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[13px] bg-white border border-[#41A677]">
+              <TrendingUp className="h-4 w-4 text-[#41A677]" />
+            </div>
+            <div>
+              <p className="text-[13px] font-semibold leading-tight text-[var(--color-text-primary)]">Accès aux financements</p>
+              <p className="mt-0.5 text-[11px] text-[var(--color-text-muted)]">Subventions, prêts d'honneur, capital</p>
+            </div>
+          </div>
+
+          <p className="mt-1 text-xs text-[var(--color-text-muted)]">© 2026 MaturaProj — Tous droits réservés</p>
         </div>
       </div>
 
