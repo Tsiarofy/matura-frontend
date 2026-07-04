@@ -55,6 +55,15 @@ const dashboardLayoutMesFormationsCreerLazyRouteImport = createFileRoute(
 const dashboardLayoutFinancementsFinancementIdLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/financements/$financementId',
 )()
+const dashboardLayoutAdminMentorsLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/admin/mentors',
+)()
+const dashboardLayoutAdminInvestisseursLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/admin/investisseurs',
+)()
+const dashboardLayoutAdminEntrepreneursLazyRouteImport = createFileRoute(
+  '/(dashboard)/_layout/admin/entrepreneurs',
+)()
 const dashboardLayoutReunionsReunionIdIndexLazyRouteImport = createFileRoute(
   '/(dashboard)/_layout/reunions/$reunionId/',
 )()
@@ -287,6 +296,42 @@ const dashboardLayoutFinancementsFinancementIdLazyRoute =
         (d) => d.Route,
       ),
     )
+const dashboardLayoutAdminMentorsLazyRoute =
+  dashboardLayoutAdminMentorsLazyRouteImport
+    .update({
+      id: '/admin/mentors',
+      path: '/admin/mentors',
+      getParentRoute: () => dashboardLayoutRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/admin/mentors.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+const dashboardLayoutAdminInvestisseursLazyRoute =
+  dashboardLayoutAdminInvestisseursLazyRouteImport
+    .update({
+      id: '/admin/investisseurs',
+      path: '/admin/investisseurs',
+      getParentRoute: () => dashboardLayoutRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/admin/investisseurs.lazy').then(
+        (d) => d.Route,
+      ),
+    )
+const dashboardLayoutAdminEntrepreneursLazyRoute =
+  dashboardLayoutAdminEntrepreneursLazyRouteImport
+    .update({
+      id: '/admin/entrepreneurs',
+      path: '/admin/entrepreneurs',
+      getParentRoute: () => dashboardLayoutRoute,
+    } as any)
+    .lazy(() =>
+      import('./routes/(dashboard)/_layout/admin/entrepreneurs.lazy').then(
+        (d) => d.Route,
+      ),
+    )
 const dashboardLayoutProjetsAFinancerProjetIdRoute =
   dashboardLayoutProjetsAFinancerProjetIdRouteImport
     .update({
@@ -467,6 +512,9 @@ export interface FileRoutesByFullPath {
   '/profil': typeof dashboardLayoutProfilLazyRoute
   '/projets-suivis': typeof dashboardLayoutProjetsSuivisLazyRoute
   '/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdRoute
+  '/admin/entrepreneurs': typeof dashboardLayoutAdminEntrepreneursLazyRoute
+  '/admin/investisseurs': typeof dashboardLayoutAdminInvestisseursLazyRoute
+  '/admin/mentors': typeof dashboardLayoutAdminMentorsLazyRoute
   '/financements/$financementId': typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   '/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
   '/formations/': typeof dashboardLayoutFormationsIndexRouteRoute
@@ -500,6 +548,9 @@ export interface FileRoutesByTo {
   '/profil': typeof dashboardLayoutProfilLazyRoute
   '/projets-suivis': typeof dashboardLayoutProjetsSuivisLazyRoute
   '/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdRoute
+  '/admin/entrepreneurs': typeof dashboardLayoutAdminEntrepreneursLazyRoute
+  '/admin/investisseurs': typeof dashboardLayoutAdminInvestisseursLazyRoute
+  '/admin/mentors': typeof dashboardLayoutAdminMentorsLazyRoute
   '/financements/$financementId': typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   '/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
   '/formations': typeof dashboardLayoutFormationsIndexRouteRoute
@@ -535,6 +586,9 @@ export interface FileRoutesById {
   '/(dashboard)/_layout/profil': typeof dashboardLayoutProfilLazyRoute
   '/(dashboard)/_layout/projets-suivis': typeof dashboardLayoutProjetsSuivisLazyRoute
   '/(dashboard)/_layout/projets-a-financer/$projetId': typeof dashboardLayoutProjetsAFinancerProjetIdRoute
+  '/(dashboard)/_layout/admin/entrepreneurs': typeof dashboardLayoutAdminEntrepreneursLazyRoute
+  '/(dashboard)/_layout/admin/investisseurs': typeof dashboardLayoutAdminInvestisseursLazyRoute
+  '/(dashboard)/_layout/admin/mentors': typeof dashboardLayoutAdminMentorsLazyRoute
   '/(dashboard)/_layout/financements/$financementId': typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   '/(dashboard)/_layout/mes-formations/creer': typeof dashboardLayoutMesFormationsCreerLazyRoute
   '/(dashboard)/_layout/formations/': typeof dashboardLayoutFormationsIndexRouteRoute
@@ -570,6 +624,9 @@ export interface FileRouteTypes {
     | '/profil'
     | '/projets-suivis'
     | '/projets-a-financer/$projetId'
+    | '/admin/entrepreneurs'
+    | '/admin/investisseurs'
+    | '/admin/mentors'
     | '/financements/$financementId'
     | '/mes-formations/creer'
     | '/formations/'
@@ -603,6 +660,9 @@ export interface FileRouteTypes {
     | '/profil'
     | '/projets-suivis'
     | '/projets-a-financer/$projetId'
+    | '/admin/entrepreneurs'
+    | '/admin/investisseurs'
+    | '/admin/mentors'
     | '/financements/$financementId'
     | '/mes-formations/creer'
     | '/formations'
@@ -637,6 +697,9 @@ export interface FileRouteTypes {
     | '/(dashboard)/_layout/profil'
     | '/(dashboard)/_layout/projets-suivis'
     | '/(dashboard)/_layout/projets-a-financer/$projetId'
+    | '/(dashboard)/_layout/admin/entrepreneurs'
+    | '/(dashboard)/_layout/admin/investisseurs'
+    | '/(dashboard)/_layout/admin/mentors'
     | '/(dashboard)/_layout/financements/$financementId'
     | '/(dashboard)/_layout/mes-formations/creer'
     | '/(dashboard)/_layout/formations/'
@@ -796,6 +859,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardLayoutFinancementsFinancementIdLazyRouteImport
       parentRoute: typeof dashboardLayoutRoute
     }
+    '/(dashboard)/_layout/admin/mentors': {
+      id: '/(dashboard)/_layout/admin/mentors'
+      path: '/admin/mentors'
+      fullPath: '/admin/mentors'
+      preLoaderRoute: typeof dashboardLayoutAdminMentorsLazyRouteImport
+      parentRoute: typeof dashboardLayoutRoute
+    }
+    '/(dashboard)/_layout/admin/investisseurs': {
+      id: '/(dashboard)/_layout/admin/investisseurs'
+      path: '/admin/investisseurs'
+      fullPath: '/admin/investisseurs'
+      preLoaderRoute: typeof dashboardLayoutAdminInvestisseursLazyRouteImport
+      parentRoute: typeof dashboardLayoutRoute
+    }
+    '/(dashboard)/_layout/admin/entrepreneurs': {
+      id: '/(dashboard)/_layout/admin/entrepreneurs'
+      path: '/admin/entrepreneurs'
+      fullPath: '/admin/entrepreneurs'
+      preLoaderRoute: typeof dashboardLayoutAdminEntrepreneursLazyRouteImport
+      parentRoute: typeof dashboardLayoutRoute
+    }
     '/(dashboard)/_layout/projets-a-financer/$projetId': {
       id: '/(dashboard)/_layout/projets-a-financer/$projetId'
       path: '/projets-a-financer/$projetId'
@@ -922,6 +1006,9 @@ interface dashboardLayoutRouteChildren {
   dashboardLayoutProfilLazyRoute: typeof dashboardLayoutProfilLazyRoute
   dashboardLayoutProjetsSuivisLazyRoute: typeof dashboardLayoutProjetsSuivisLazyRoute
   dashboardLayoutProjetsAFinancerProjetIdRoute: typeof dashboardLayoutProjetsAFinancerProjetIdRoute
+  dashboardLayoutAdminEntrepreneursLazyRoute: typeof dashboardLayoutAdminEntrepreneursLazyRoute
+  dashboardLayoutAdminInvestisseursLazyRoute: typeof dashboardLayoutAdminInvestisseursLazyRoute
+  dashboardLayoutAdminMentorsLazyRoute: typeof dashboardLayoutAdminMentorsLazyRoute
   dashboardLayoutFinancementsFinancementIdLazyRoute: typeof dashboardLayoutFinancementsFinancementIdLazyRoute
   dashboardLayoutMesFormationsCreerLazyRoute: typeof dashboardLayoutMesFormationsCreerLazyRoute
   dashboardLayoutFormationsIndexRouteRoute: typeof dashboardLayoutFormationsIndexRouteRoute
@@ -953,6 +1040,11 @@ const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
   dashboardLayoutProjetsSuivisLazyRoute: dashboardLayoutProjetsSuivisLazyRoute,
   dashboardLayoutProjetsAFinancerProjetIdRoute:
     dashboardLayoutProjetsAFinancerProjetIdRoute,
+  dashboardLayoutAdminEntrepreneursLazyRoute:
+    dashboardLayoutAdminEntrepreneursLazyRoute,
+  dashboardLayoutAdminInvestisseursLazyRoute:
+    dashboardLayoutAdminInvestisseursLazyRoute,
+  dashboardLayoutAdminMentorsLazyRoute: dashboardLayoutAdminMentorsLazyRoute,
   dashboardLayoutFinancementsFinancementIdLazyRoute:
     dashboardLayoutFinancementsFinancementIdLazyRoute,
   dashboardLayoutMesFormationsCreerLazyRoute:

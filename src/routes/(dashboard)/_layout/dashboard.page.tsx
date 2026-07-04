@@ -2,6 +2,7 @@ import { authStore } from "@/stores/authStore"
 import { EntrepreneurDashboard } from "@/components/dashboard/EntrepreneurDashboard"
 import { MentorDashboard } from "@/components/dashboard/MentorDashboard"
 import { InvestisseurDashboard } from "@/components/dashboard/InvestisseurDashboard"
+import { AdminDashboard } from "@/components/dashboard/AdminDashboard"
 
 export default function DashboardPage() {
   const user = authStore((state) => state.utilisateur)
@@ -16,6 +17,8 @@ export default function DashboardPage() {
 
   // Rendu conditionnel selon le rôle
   switch (user.role) {
+    case 'ADMIN':
+      return <AdminDashboard user={user} />
     case 'MENTOR':
       return <MentorDashboard user={user} />
     case 'INVESTISSEUR':

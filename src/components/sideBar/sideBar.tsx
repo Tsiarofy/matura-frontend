@@ -19,14 +19,12 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: "HandCoins", lien: "/financements", label: "Financements" },
     { icon: "UsersRound", lien: "/mentors", label: "Mentors" },
     { icon: "BookOpenText", lien: "/formations", label: "Formations" },
-    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   MENTOR: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
     { icon: "FolderOpen", lien: "/projets-suivis", label: "Projets suivis" },
     { icon: "BellDot", lien: "/demandes", label: "Demandes" },
     { icon: "BookOpenText", lien: "/mes-formations", label: "Mes Formations" },
-    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   INVESTISSEUR: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
@@ -40,7 +38,6 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
       lien: "/projets-a-financer",
       label: "À financer",
     },
-    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
   ADMIN: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
@@ -51,7 +48,6 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
       label: "Investisseurs",
     },
     { icon: "Rocket", lien: "/admin/entrepreneurs", label: "Entrepreneurs" },
-    { icon: "Video", lien: "/reunions", label: "Réunions" },
   ],
 };
 
