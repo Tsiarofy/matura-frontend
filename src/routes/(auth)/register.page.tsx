@@ -115,7 +115,7 @@ export default function RegisterPage() {
             <span className="text-white font-bold text-sm">M</span>
           </div>
           <div>
-            <p className="text-base font-semibold leading-none text-[var(--color-text-primary)]">MaturaProj</p>
+            <p className="text-base font-semibold leading-none text-[var(--color-text-primary)]">Matura</p>
             <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">Madagascar</p>
           </div>
         </div>
@@ -162,7 +162,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <p className="mt-1 text-xs text-[var(--color-text-muted)]">© 2026 MaturaProj — Tous droits réservés</p>
+          <p className="mt-1 text-xs text-[var(--color-text-muted)]">© 2026 Matura — Tous droits réservés</p>
         </div>
       </div>
 

@@ -104,7 +104,7 @@ export default function AdminMentorsPage() {
                     <p className="text-[12px] text-zinc-500">{mentor.email}</p>
                   </div>
                 </div>
-                <StatutBadge statut={mentor.statut_compte} type="compte" />
+                <StatutBadge statut={mentor.statut_compte} />
               </div>
               
               <div className="bg-zinc-50 rounded-xl p-3 text-[12px] text-zinc-600 space-y-1">

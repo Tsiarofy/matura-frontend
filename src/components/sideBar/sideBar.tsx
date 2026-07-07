@@ -77,7 +77,7 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
           />
         </div>
         <p className="text-[14px] font-semibold tracking-tight text-[var(--color-text-primary)]">
-          MaturaProj
+          Matura
         </p>
       </div>
 

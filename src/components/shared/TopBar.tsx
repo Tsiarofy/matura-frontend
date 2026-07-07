@@ -4,10 +4,6 @@ import * as Icon from "lucide-react";
 import { cn, getAvatarStyle } from "@/lib/utils";
 import { useNotifications, useNonLues, useMarquerToutesLues, useMarquerLue } from "@/hooks/useNotifications";
 
-// ─── BREADCRUMB ───────────────────────────────────────────────────────────────
-// Breadcrumb supprimé pour un design plus minimaliste
-
-
 // ─── USER MENU DROPDOWN ───────────────────────────────────────────────────────
 
 export interface UserMenuProps {
@@ -82,7 +78,7 @@ export function UserMenu({
         />
       </button>
 
-      {/* Menu panel — glassmorphism */}
+      {/* Menu panel */}
       {open && (
         <div
           role="menu"
@@ -130,23 +126,21 @@ export function UserMenu({
             Mon profil
           </Link>
 
-          {/* Paramètres (non-cliquable pour l'instant) */}
-          <button
-            className={cn(
-              "flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-[13px]",
-              "text-[var(--color-text-secondary)]",
-              "hover:bg-black/[0.04]",
-              "transition-colors duration-150",
-            )}
-            role="menuitem"
-          >
-            <Icon.Settings
-              size={16}
-              strokeWidth={1.25}
-              className="shrink-0 text-[var(--color-text-muted)]"
-            />
-            Paramètres
-          </button>
+          {/* Séparateur */}
+          <div className="h-px mx-1 my-1 bg-[var(--color-border)]" />
+
+          {/* Bloc À propos — Matura v1.0 */}
+          <div className="px-3 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex h-6 w-6 items-center justify-center rounded-[8px] bg-[var(--color-tsisy-green)] shrink-0">
+                <span className="text-white text-[10px] font-bold">M</span>
+              </div>
+              <span className="text-[12px] font-semibold text-[var(--color-text-primary)]">Matura</span>
+            </div>
+            <span className="text-[10px] text-[var(--color-text-muted)] bg-[var(--color-surface-soft)] px-1.5 py-0.5 rounded-full border border-[var(--color-border)]">
+              v1.0
+            </span>
+          </div>
 
           {/* Séparateur */}
           <div className="h-px mx-1 my-1 bg-[var(--color-border)]" />
@@ -352,15 +346,6 @@ export function TopBar({ userName, userInitials, userRole, onDeconnexion }: TopB
     >
       {/* ── Actions droite ── */}
       <div className="flex shrink-0 items-center gap-2">
-        <button
-          className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-border)] bg-white text-[var(--color-text-muted)] transition-all duration-150 hover:bg-[var(--color-surface-soft)]',
-          )}
-          aria-label="Settings"
-        >
-          <Icon.Settings size={20} strokeWidth={1.25} />
-        </button>
-
         <NotificationBell />
 
         <div className="w-px h-6 bg-[var(--color-border)] mx-1 hidden sm:block" />

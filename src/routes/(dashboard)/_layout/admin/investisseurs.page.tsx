@@ -105,7 +105,7 @@ export default function AdminInvestisseursPage() {
                     <p className="text-[12px] text-zinc-500">{investisseur.email}</p>
                   </div>
                 </div>
-                <StatutBadge statut={investisseur.statut_compte} type="compte" />
+                <StatutBadge statut={investisseur.statut_compte} />
               </div>
               
               <div className="bg-zinc-50 rounded-xl p-3 text-[12px] text-zinc-600 space-y-1">

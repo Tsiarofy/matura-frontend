@@ -69,7 +69,7 @@ export default function LoginPage() {
             <span className="text-white font-bold text-sm">M</span>
           </div>
           <div>
-            <p className="text-base font-semibold leading-none text-[var(--color-text-primary)]">MaturaProj</p>
+            <p className="text-base font-semibold leading-none text-[var(--color-text-primary)]">Matura</p>
             <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">Madagascar</p>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <p className="mt-1 text-xs text-[var(--color-text-muted)]">© 2026 MaturaProj — Tous droits réservés</p>
+          <p className="mt-1 text-xs text-[var(--color-text-muted)]">© 2026 Matura — Tous droits réservés</p>
         </div>
       </div>
 
@@ -130,7 +130,7 @@ export default function LoginPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-[14px] border border-[var(--color-success-border)] bg-[var(--color-success)]">
               <span className="text-white text-sm font-bold">M</span>
             </div>
-            <span className="text-base font-semibold text-[var(--color-text-primary)]">MaturaProj</span>
+            <span className="text-base font-semibold text-[var(--color-text-primary)]">Matura</span>
           </div>
 
           {/* En-tête */}
