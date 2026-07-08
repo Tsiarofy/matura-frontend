@@ -95,7 +95,7 @@ export function InvestisseurDashboard({ user }: InvestisseurDashboardProps) {
             Bienvenue, {user.prenom}. Gestion de vos offres de financement.
           </p>
         </div>
-        <Button className="h-10 px-4 text-[12px] font-semibold bg-[#41A677] hover:bg-[#358E64] text-white border-none shadow-none cursor-pointer">
+        <Button className="h-10 w-35 px-4 text-[12px] font-semibold flex  bg-[#41A677] hover:bg-[#358E64] text-white border-none shadow-none cursor-pointer">
           <Link to="/mes-financements">
             <Plus className="mr-1.5 h-4 w-4" />
             Nouvelle offre

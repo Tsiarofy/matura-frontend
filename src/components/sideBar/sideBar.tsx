@@ -18,6 +18,7 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: "FolderKanban", lien: "/projets", label: "Mes Projets" },
     { icon: "HandCoins", lien: "/financements", label: "Financements" },
     { icon: "UsersRound", lien: "/mentors", label: "Mentors" },
+    { icon: "Calendar", lien: "/reunions", label: "Réunions" },
     { icon: "BookOpenText", lien: "/formations", label: "Formations" },
   ],
   MENTOR: [
@@ -25,6 +26,7 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
     { icon: "FolderOpen", lien: "/projets-suivis", label: "Projets suivis" },
     { icon: "BellDot", lien: "/demandes", label: "Demandes" },
     { icon: "BookOpenText", lien: "/mes-formations", label: "Mes Formations" },
+    { icon: "Calendar", lien: "/reunions", label: "Réunions" },
   ],
   INVESTISSEUR: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
@@ -38,6 +40,7 @@ const NAV_DATA: Record<RoleUtilisateur, NavItem[]> = {
       lien: "/projets-a-financer",
       label: "À financer",
     },
+    { icon: "Calendar", lien: "/reunions", label: "Réunions" },
   ],
   ADMIN: [
     { icon: "LayoutGrid", lien: "/dashboard", label: "Acceuil" },
@@ -69,16 +72,25 @@ export const SideBar = ({ role, projetCourant, userName }: SideBarProps) => {
     <aside className="flex h-full w-[232px] shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-sidebar-surface)]">
       {/* ── Brand ── */}
       <div className="flex shrink-0 items-center gap-3 px-5 py-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-[12px] border border-[var(--color-border-strong)] bg-white shadow-sm">
+       <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[15px] border border-[#41A677]/40 bg-[#41A677] shadow-sm">
+            <span className="text-white font-bold text-sm">M</span>
+          </div>
+          <div>
+            <p className="text-16 font-semibold leading-none text-[var(--color-text-primary)]">Matura</p>
+            <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">Madagascar</p>
+          </div>
+        </div>
+        {/* <div className="flex h-8 w-8 items-center justify-center rounded-[12px] border border-[var(--color-border-strong)] bg-white shadow-sm">
           <Icon.LayoutGrid
             size={16}
             strokeWidth={1.25}
             className="text-[var(--color-text-primary)]"
           />
-        </div>
-        <p className="text-[14px] font-semibold tracking-tight text-[var(--color-text-primary)]">
+        </div> */}
+        {/* <p className="text-[14px] font-semibold tracking-tight text-[var(--color-text-primary)]">
           Matura
-        </p>
+        </p> */}
       </div>
 
       {/* ── Navigation ── */}
